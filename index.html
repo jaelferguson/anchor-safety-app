@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anchor — Emergency Safety App</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: sans-serif; background: #F4F0E8; }
+.screen { display: none; min-height: 100vh; padding: 20px; }
+.screen.active { display: block; }
+
+/* DAILY MODE */
+#daily { background: #F4F0E8; }
+.daily-header { background: #2B6052; color: white; padding: 20px; border-radius: 16px; margin-bottom: 16px; }
+.daily-header h1 { font-size: 24px; margin-bottom: 4px; }
+.daily-header p { opacity: 0.8; font-size: 14px; }
+.readiness { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; text-align: center; }
+.readiness h2 { color: #2B6052; font-size: 48px; font-weight: bold; }
+.readiness p { color: #888; margin-top: 4px; }
+.section-title { font-size: 14px; font-weight: bold; color: #555; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.care-circle { background: white; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+.member { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+.member:last-child { border-bottom: none; }
+.avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; background: #E8F0ED; }
+.member-info { flex: 1; }
+.member-name { font-weight: 600; font-size: 14px; }
+.member-status { font-size: 12px; color: #888; }
+.tag { padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: bold; }
+.tag.safe { background: #E8F5EE; color: #2B6052; }
+.tag.away { background: #FFF4E6; color: #C05E1A; }
+.missions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.mission { background: white; border-radius: 16px; padding: 16px; border-left: 4px solid #2B6052; }
+.mission.orange { border-left-color: #E8845A; }
+.mission-icon { font-size: 28px; margin-bottom: 8px; }
+.mission-title { font-size: 13px; font-weight: bold; color: #1A1A18; }
+.mission-xp { font-size: 11px; color: #2B6052; margin-top: 4px; font-weight: bold; }
+.mission.orange .mission-xp { color: #E8845A; }
+.sos-daily { background: #2B6052; color: white; width: 100%; padding: 16px; border-radius: 100px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+
+/* EMERGENCY MODE */
+#emergency { background: #0A0A0A; }
+.em-header { background: #FF3B30; color: white; padding: 16px 20px; border-radius: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+.em-dot { width: 10px; height: 10px; background: white; border-radius: 50%; animation: blink 1s infinite; }
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+.em-header h1 { font-size: 18px; font-weight: bold; }
+.em-event { background: #1A1A1A; border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid #333; }
+.em-event-type { color: #FF3B30; font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.em-event-title { color: white; font-size: 22px; font-weight: bold; margin-bottom: 8px; }
+.em-event-desc { color: #888; font-size: 14px; line-height: 1.5; }
+.sos-btn { background: #FF3B30; color: white; width: 100%; padding: 20px; border-radius: 16px; border: none; font-size: 20px; font-weight: bold; cursor: pointer; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.em-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.em-btn { border-radius: 14px; padding: 16px; border: none; cursor: pointer; text-align: left; }
+.em-btn.dark { background: #1E1E1E; color: white; border: 1px solid #333; }
+.em-btn.yellow { background: #FFD60A; color: #1A1A00; }
+.em-btn.green { background: #30D158; color: #001A07; }
+.em-btn-icon { font-size: 24px; margin-bottom: 6px; }
+.em-btn-title { font-size: 13px; font-weight: bold; }
+.em-family { background: #1A1A1A; border-radius: 16px; padding: 16px; border: 1px solid #333; }
+.em-member { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #2A2A2A; }
+.em-member:last-child { border-bottom: none; }
+.em-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; background: #2A2A2A; }
+.em-member-info { flex: 1; }
+.em-member-name { color: white; font-weight: bold; font-size: 14px; }
+.em-member-loc { color: #666; font-size: 12px; }
+.status-safe { color: #30D158; font-size: 12px; font-weight: bold; }
+.status-danger { color: #FF3B30; font-size: 12px; font-weight: bold; animation: blink 1s infinite; }
+.status-unknown { color: #FFD60A; font-size: 12px; font-weight: bold; }
+
+/* MODE SWITCHER */
+.mode-switch { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; border-radius: 100px; padding: 6px; display: flex; gap: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 100; }
+.mode-btn { padding: 10px 20px; border-radius: 100px; border: none; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+.mode-btn.daily-btn { background: #2B6052; color: white; }
+.mode-btn.emergency-btn { background: transparent; color: #888; }
+.mode-btn.daily-btn.inactive { background: transparent; color: #888; }
+.mode-btn.emergency-btn.active { background: #FF3B30; color: white; }
+</style>
+</head>
+<body>
+
+<!-- DAILY MODE -->
+<div id="daily" class="screen active">
+  <div class="daily-header">
+    <h1>⚓ Anchor</h1>
+    <p>Your family is ready · Auckland, NZ</p>
+  </div>
+
+  <div class="readiness">
+    <div class="section-title">Preparedness Score</div>
+    <h2>75%</h2>
+    <p>Complete 2 tasks to reach Silver status</p>
+  </div>
+
+  <div class="care-circle">
+    <div class="section-title">Care Circle</div>
+    <div class="member">
+      <div class="avatar">👵</div>
+      <div class="member-info">
+        <div class="member-name">Margaret (Neighbour)</div>
+        <div class="member-status">📍 Home · 12 min ago</div>
+      </div>
+      <span class="tag safe">Safe</span>
+    </div>
+    <div class="member">
+      <div class="avatar">👦</div>
+      <div class="member-info">
+        <div class="member-name">Liam (Son)</div>
+        <div class="member-status">🏫 School</div>
+      </div>
+      <span class="tag safe">Safe</span>
+    </div>
+    <div class="member">
+      <div class="avatar">🧔</div>
+      <div class="member-info">
+        <div class="member-name">David (Partner)</div>
+        <div class="member-status">🚗 In transit</div>
+      </div>
+      <span class="tag away">Away</span>
+    </div>
+  </div>
+
+  <div class="section-title">Family Missions</div>
+  <div class="missions">
+    <div class="mission">
+      <div class="mission-icon">🎒</div>
+      <div class="mission-title">Pack Go-Bag</div>
+      <div class="mission-xp">+150 XP</div>
+    </div>
+    <div class="mission orange">
+      <div class="mission-icon">🔦</div>
+      <div class="mission-title">Blackout Drill</div>
+      <div class="mission-xp">+200 XP</div>
+    </div>
+    <div class="mission">
+      <div class="mission-icon">📋</div>
+      <div class="mission-title">Family Plan</div>
+      <div class="mission-xp">+100 XP ✓</div>
+    </div>
+    <div class="mission orange">
+      <div class="mission-icon">🏃</div>
+      <div class="mission-title">Evacuation Run</div>
+      <div class="mission-xp">+300 XP</div>
+    </div>
+  </div>
+
+  <button class="sos-daily" onclick="switchMode('emergency')">🚨 Switch to Emergency Mode</button>
+  <div style="height:80px;"></div>
+</div>
+
+<!-- EMERGENCY MODE -->
+<div id="emergency" class="screen">
+  <div class="em-header">
+    <div class="em-dot"></div>
+    <h1>ACTIVE EMERGENCY</h1>
+  </div>
+
+  <div class="em-event">
+    <div class="em-event-type">⚠ Earthquake · M 6.2</div>
+    <div class="em-event-title">Seismic Activity Detected</div>
+    <div class="em-event-desc">Strong shaking reported. Avoid damaged buildings and downed power lines. Aftershocks likely.</div>
+  </div>
+
+  <button class="sos-btn">🆘 SEND SOS — GPS Attached</button>
+
+  <div class="em-actions">
+    <button class="em-btn dark" style="grid-column: 1/-1; display:flex; align-items:center; gap:12px; background:#FF3B30;">
+      <div>
+        <div class="em-btn-icon">📍</div>
+        <div class="em-btn-title" style="color:white; font-size:15px;">Navigate to Safety</div>
+        <div style="color:rgba(255,255,255,0.7); font-size:12px;">Nearest shelter: 0.4mi</div>
+      </div>
+    </button>
+    <button class="em-btn dark">
+      <div class="em-btn-icon">🏠</div>
+      <div class="em-btn-title">Drop & Cover</div>
+    </button>
+    <button class="em-btn yellow">
+      <div class="em-btn-icon">📻</div>
+      <div class="em-btn-title">Emergency Broadcast</div>
+    </button>
+    <button class="em-btn green">
+      <div class="em-btn-icon">🩺</div>
+      <div class="em-btn-title">First Aid</div>
+    </button>
+    <button class="em-btn dark">
+      <div class="em-btn-icon">📲</div>
+      <div class="em-btn-title">Cast to TV</div>
+    </button>
+  </div>
+
+  <div class="em-family">
+    <div class="section-title" style="color:#666;">Family Status</div>
+    <div class="em-member">
+      <div class="em-avatar">👦</div>
+      <div class="em-member-info">
+        <div class="em-member-name">Liam</div>
+        <div class="em-member-loc">📍 School · Shelter-in-place</div>
+      </div>
+      <span class="status-safe">SAFE</span>
+    </div>
+    <div class="em-member">
+      <div class="em-avatar">🧔</div>
+      <div class="em-member-info">
+        <div class="em-member-name">David</div>
+        <div class="em-member-loc">Last seen: Route 7</div>
+      </div>
+      <span class="status-unknown">CHECKING</span>
+    </div>
+    <div class="em-member">
+      <div class="em-avatar">👵</div>
+      <div class="em-member-info">
+        <div class="em-member-name">Margaret</div>
+        <div class="em-member-loc">📍 Home · Needs help</div>
+      </div>
+      <span class="status-danger">NEEDS HELP</span>
+    </div>
+  </div>
+  <div style="height:80px;"></div>
+</div>
+
+<!-- MODE SWITCHER -->
+<div class="mode-switch">
+  <button class="mode-btn daily-btn" id="dailyBtn" onclick="switchMode('daily')">☀️ Daily</button>
+  <button class="mode-btn emergency-btn" id="emergencyBtn" onclick="switchMode('emergency')">🚨 Emergency</button>
+</div>
+
+<script>
+function switchMode(mode) {
+  document.getElementById('daily').classList.remove('active');
+  document.getElementById('emergency').classList.remove('active');
+  document.getElementById(mode).classList.add('active');
+  if(mode === 'emergency') {
+    document.getElementById('emergencyBtn').classList.add('active');
+    document.getElementById('dailyBtn').classList.add('inactive');
+  } else {
+    document.getElementById('emergencyBtn').classList.remove('active');
+    document.getElementById('dailyBtn').classList.remove('inactive');
+  }
+}
+</script>
+</body>
+          </html>
