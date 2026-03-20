@@ -358,7 +358,7 @@
 
 <script>
 var uLat=-36.9042,uLng=174.9457,mapInit=false,myMap=null,dn='111';
-var layers={hosp:L.layerGroup(),fam:L.layerGroup(),shel:L.layerGroup(),dang:L.layerGroup(),route:L.layerGroup()};
+var layers={};
 var visible={hosp:true,fam:true,shel:true,dang:true,route:true};
 
 function ss(id){
@@ -381,8 +381,10 @@ function mkIcon(emoji,color,size){
 }
 
 function initMap(){
+  if(!window.L){showToast('Map loading, please wait...');setTimeout(()=>initMap(),1000);return;}
   if(mapInit){if(myMap)setTimeout(()=>myMap.invalidateSize(),200);return;}
   mapInit=true;
+  layers={hosp:L.layerGroup(),fam:L.layerGroup(),shel:L.layerGroup(),dang:L.layerGroup(),route:L.layerGroup()};
   myMap=L.map('map',{zoomControl:true,attributionControl:false}).setView([uLat,uLng],14);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(myMap);
   Object.values(layers).forEach(l=>l.addTo(myMap));
@@ -457,7 +459,7 @@ function loadRealHospitals(){
       var type=el.tags.amenity||'healthcare';
       var typeLabel=type==='hospital'?'🏥 Hospital':type==='clinic'?'🏥 Clinic':type==='doctors'?'👨‍⚕️ Doctor':type==='pharmacy'?'💊 Pharmacy':'🏥 Medical';
       var phone=el.tags.phone||el.tags['contact:phone']||'';
-      var popup='<div class="lp"><h3>'+name+'</h3><p>'+typeLabel+'</p>'+(phone?'<p>📞 '+phone+'</p>')+'<p class="open">OPEN ✓</p></div>';
+      var phoneHtml=phone?('<p>'+phone+'</p>'):'';var popup='<div class="lp"><h3>'+name+'</h3><p>'+typeLabel+'</p>'+phoneHtml+'<p class="open">OPEN</p></div>';
       L.marker([lat,lng],{icon:mkIcon('🏥','#FFD60A',32)}).addTo(layers.hosp).bindPopup(popup);
       count++;
     });
