@@ -6,13 +6,15 @@
 <title>Anchor — Emergency Safety App</title>
 <meta name="description" content="A digital survival companion for every human being on earth.">
 <meta name="theme-color" content="#2B6052">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   :root {
-    --green: #2B6052; --green-light: #3D8C78; --orange: #E8845A;
-    --cream: #F4F0E8; --dark: #1A1A18; --muted: #7A7A70;
-    --border: #E0DDD4; --red: #FF3B30; --yellow: #FFD60A;
-    --em-green: #30D158; --em-bg: #0A0A0A; --em-surface: #141414;
+    --green: #2B6052; --orange: #E8845A; --cream: #F4F0E8;
+    --dark: #1A1A18; --muted: #7A7A70; --border: #E0DDD4;
+    --red: #FF3B30; --yellow: #FFD60A; --em-green: #30D158;
+    --em-bg: #0A0A0A; --em-surface: #141414;
   }
   html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; height: 100%; overflow: hidden; background: var(--em-bg); }
   .screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; overflow-x: hidden; display: none; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 80px; }
@@ -77,123 +79,147 @@
   .trigger-sub { font-size: 12px; color: rgba(255,255,255,0.5); }
   .trigger-arrow { color: rgba(255,59,48,0.6); font-size: 20px; }
 
+  /* MAP */
+  #mapscreen { background: #0A0A0A; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 0; }
+  #mapscreen.active { display: flex; }
+  .map-header { background: var(--green); padding: 48px 16px 14px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .map-header-title { font-size: 18px; font-weight: 800; color: white; }
+  .map-header-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+  .map-filter-row { display: flex; gap: 8px; padding: 10px 16px; background: #111; overflow-x: auto; scrollbar-width: none; flex-shrink: 0; border-bottom: 1px solid #1E1E1E; }
+  .map-filter-row::-webkit-scrollbar { display: none; }
+  .map-filter-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 100px; border: none; cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+  .map-filter-btn.af { background: var(--green); color: white; }
+  .map-filter-btn.rf { background: var(--red); color: white; }
+  .map-filter-btn.if { background: #1E1E1E; color: #666; border: 1px solid #2A2A2A; }
+  #map { flex: 1; min-height: 0; z-index: 1; }
+  .map-legend-bar { background: #111; border-top: 1px solid #1E1E1E; padding: 10px 16px; flex-shrink: 0; display: flex; gap: 14px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #666; font-weight: 600; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
   /* EMERGENCY */
   #emergency { background: var(--em-bg); }
   .em-status-bar { background: var(--red); padding: 48px 16px 14px; display: flex; align-items: center; justify-content: space-between; }
   .em-active-badge { display: flex; align-items: center; gap: 8px; }
-  .em-pulse { width: 10px; height: 10px; background: white; border-radius: 50%; animation: em-pulse 1s infinite; }
-  @keyframes em-pulse { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)} }
+  .em-pulse { width: 10px; height: 10px; background: white; border-radius: 50%; animation: ep 1s infinite; }
+  @keyframes ep { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)} }
   .em-active-text { font-size: 14px; font-weight: 800; color: white; letter-spacing: 0.5px; }
-  .em-clock { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); font-variant-numeric: tabular-nums; }
+  .em-clock { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
   .em-content { padding: 14px 16px; }
   .conn-row { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; }
   .conn-row::-webkit-scrollbar { display: none; }
-  .conn-badge { display: flex; align-items: center; gap: 5px; background: var(--em-surface); border: 1px solid #2A2A2A; border-radius: 100px; padding: 6px 12px; white-space: nowrap; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; flex-shrink: 0; }
+  .conn-badge { display: flex; align-items: center; gap: 5px; background: var(--em-surface); border: 1px solid #2A2A2A; border-radius: 100px; padding: 6px 12px; white-space: nowrap; font-size: 10px; font-weight: 700; flex-shrink: 0; }
   .conn-badge.active { color: var(--em-green); border-color: rgba(48,209,88,0.25); background: rgba(48,209,88,0.06); }
   .conn-badge.satellite { color: var(--yellow); border-color: rgba(255,214,10,0.25); background: rgba(255,214,10,0.06); }
-  .conn-badge.offline-maps { color: #6CC2FF; border-color: rgba(108,194,255,0.25); background: rgba(108,194,255,0.06); }
+  .conn-badge.om { color: #6CC2FF; border-color: rgba(108,194,255,0.25); background: rgba(108,194,255,0.06); }
   .conn-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-  .satellite .conn-dot { animation: em-pulse 1.5s infinite; }
+  .satellite .conn-dot { animation: ep 1.5s infinite; }
   .event-card { background: var(--em-surface); border: 1px solid #2A2A2A; border-radius: 18px; padding: 18px; margin-bottom: 14px; position: relative; overflow: hidden; }
-  .event-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--red); animation: scan 2.5s linear infinite; }
-  @keyframes scan { 0%{transform:scaleX(0);transform-origin:left}49%{transform:scaleX(1);transform-origin:left}50%{transform:scaleX(1);transform-origin:right}100%{transform:scaleX(0);transform-origin:right} }
+  .event-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--red); animation: sc 2.5s linear infinite; }
+  @keyframes sc { 0%{transform:scaleX(0);transform-origin:left}49%{transform:scaleX(1);transform-origin:left}50%{transform:scaleX(1);transform-origin:right}100%{transform:scaleX(0);transform-origin:right} }
   .event-type { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
   .event-title { font-size: 22px; font-weight: 800; color: white; line-height: 1.15; margin-bottom: 8px; }
   .event-desc { font-size: 13px; color: #AAAAAA; line-height: 1.5; margin-bottom: 14px; }
-  .severity-row { display: flex; align-items: center; gap: 6px; }
-  .sev-bar { flex: 1; height: 5px; background: #2A2A2A; border-radius: 3px; overflow: hidden; }
-  .sev-bar.filled { background: var(--red); }
-  .sev-bar.half { background: #FF7A32; }
-  .sev-label { font-size: 10px; font-weight: 700; color: var(--red); letter-spacing: 0.5px; }
+  .sev-row { display: flex; align-items: center; gap: 6px; }
+  .sev-bar { flex: 1; height: 5px; background: #2A2A2A; border-radius: 3px; }
+  .sev-bar.f { background: var(--red); }
+  .sev-bar.h { background: #FF7A32; }
+  .sev-label { font-size: 10px; font-weight: 700; color: var(--red); }
   .sos-wrap { margin-bottom: 14px; }
-  .sos-btn { width: 100%; background: linear-gradient(135deg,#CC2020,#FF3B30); border: none; border-radius: 18px; padding: 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; position: relative; overflow: hidden; transition: transform 0.15s; }
+  .sos-btn { width: 100%; background: linear-gradient(135deg,#CC2020,#FF3B30); border: none; border-radius: 18px; padding: 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: transform 0.15s; }
   .sos-btn:active { transform: scale(0.98); }
-  .sos-pulse-ring { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; animation: sos-ring 2s infinite; }
-  @keyframes sos-ring { 0%,100%{transform:scale(1)}50%{transform:scale(1.08)} }
+  .sos-ring { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; animation: sr 2s infinite; }
+  @keyframes sr { 0%,100%{transform:scale(1)}50%{transform:scale(1.08)} }
   .sos-text { flex: 1; text-align: left; }
-  .sos-title { font-size: 20px; font-weight: 800; color: white; letter-spacing: 0.5px; }
+  .sos-title { font-size: 20px; font-weight: 800; color: white; }
   .sos-sub { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px; }
-  .sos-arrow { font-size: 20px; color: rgba(255,255,255,0.5); }
-  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-  .action-btn { border-radius: 16px; padding: 16px 14px; border: none; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; transition: transform 0.15s, opacity 0.15s; }
-  .action-btn:active { transform: scale(0.96); opacity: 0.85; }
-  .action-btn.navigate { grid-column: 1/-1; background: var(--red); flex-direction: row; align-items: center; padding: 18px 20px; }
-  .action-btn.dark { background: var(--em-surface); border: 1px solid #2A2A2A; }
-  .action-btn.yellow { background: var(--yellow); }
-  .action-btn.em-green { background: var(--em-green); }
-  .action-icon { font-size: 26px; }
-  .action-btn.navigate .action-icon { font-size: 30px; margin-right: 4px; }
-  .action-title { font-size: 13px; font-weight: 700; }
-  .action-btn.navigate .action-title { font-size: 16px; color: white; }
-  .action-btn.dark .action-title { color: white; }
-  .action-btn.yellow .action-title { color: #1A1A00; }
-  .action-btn.em-green .action-title { color: #001A07; }
-  .action-sub { font-size: 11px; }
-  .action-btn.navigate .action-sub { color: rgba(255,255,255,0.7); margin-left: auto; font-weight: 700; font-size: 13px; }
-  .action-btn.dark .action-sub { color: #666; }
-  .action-btn.yellow .action-sub { color: rgba(26,26,0,0.6); }
-  .action-btn.em-green .action-sub { color: rgba(0,26,7,0.6); }
-  .family-card { background: var(--em-surface); border: 1px solid #2A2A2A; border-radius: 18px; padding: 16px; margin-bottom: 14px; }
-  .em-section-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 12px; }
-  .em-member-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1E1E1E; cursor: pointer; }
-  .em-member-row:last-child { border-bottom: none; padding-bottom: 0; }
-  .em-member-row:first-child { padding-top: 0; }
-  .em-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; position: relative; }
-  .em-status-dot { position: absolute; bottom: 0; right: 0; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--em-surface); }
-  .em-status-dot.safe { background: var(--em-green); }
-  .em-status-dot.unknown { background: var(--yellow); }
-  .em-status-dot.danger { background: var(--red); animation: em-pulse 1s infinite; }
-  .em-member-info { flex: 1; }
-  .em-member-name { font-size: 14px; font-weight: 700; color: white; }
-  .em-member-loc { font-size: 12px; color: #555; margin-top: 2px; }
-  .em-member-status { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
-  .em-member-status.safe { color: var(--em-green); }
-  .em-member-status.unknown { color: var(--yellow); }
-  .em-member-status.danger { color: var(--red); }
+  .ag { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .ab { border-radius: 16px; padding: 16px 14px; border: none; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; transition: transform 0.15s; }
+  .ab:active { transform: scale(0.96); }
+  .ab.nav { grid-column: 1/-1; background: var(--red); flex-direction: row; align-items: center; padding: 18px 20px; }
+  .ab.dk { background: var(--em-surface); border: 1px solid #2A2A2A; }
+  .ab.yw { background: var(--yellow); }
+  .ab.eg { background: var(--em-green); }
+  .ai { font-size: 26px; }
+  .ab.nav .ai { font-size: 30px; margin-right: 4px; }
+  .at { font-size: 13px; font-weight: 700; }
+  .ab.nav .at { font-size: 16px; color: white; }
+  .ab.dk .at { color: white; }
+  .ab.yw .at { color: #1A1A00; }
+  .ab.eg .at { color: #001A07; }
+  .as { font-size: 11px; }
+  .ab.nav .as { color: rgba(255,255,255,0.7); margin-left: auto; font-weight: 700; font-size: 13px; }
+  .ab.dk .as { color: #666; }
+  .ab.yw .as { color: rgba(26,26,0,0.6); }
+  .ab.eg .as { color: rgba(0,26,7,0.6); }
+  .fc { background: var(--em-surface); border: 1px solid #2A2A2A; border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+  .esl { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 12px; }
+  .emr { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1E1E1E; }
+  .emr:last-child { border-bottom: none; padding-bottom: 0; }
+  .emr:first-child { padding-top: 0; }
+  .ea { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; position: relative; }
+  .esd { position: absolute; bottom: 0; right: 0; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--em-surface); }
+  .esd.s { background: var(--em-green); }
+  .esd.u { background: var(--yellow); }
+  .esd.d { background: var(--red); animation: ep 1s infinite; }
+  .emi { flex: 1; }
+  .emn { font-size: 14px; font-weight: 700; color: white; }
+  .eml { font-size: 12px; color: #555; margin-top: 2px; }
+  .ems { font-size: 11px; font-weight: 800; }
+  .ems.s { color: var(--em-green); }
+  .ems.u { color: var(--yellow); }
+  .ems.d { color: var(--red); }
 
   /* MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(4px); }
-  .modal-overlay.open { display: flex; }
-  .modal-sheet { background: #141414; border-radius: 28px 28px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 480px; border-top: 1px solid #2A2A2A; }
-  .modal-handle { width: 36px; height: 4px; background: #3A3A3A; border-radius: 2px; margin: 0 auto 20px; }
-  .modal-title { font-size: 22px; font-weight: 800; color: white; text-align: center; margin-bottom: 6px; }
-  .modal-sub { font-size: 14px; color: #666; text-align: center; margin-bottom: 24px; line-height: 1.4; }
-  .modal-country { background: #1E1E1E; border: 1px solid #2A2A2A; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
-  .country-flag { font-size: 28px; flex-shrink: 0; }
-  .country-info { flex: 1; }
-  .country-name { font-size: 14px; font-weight: 600; color: white; }
-  .country-number { font-size: 12px; color: #666; margin-top: 2px; }
-  .country-detected { font-size: 11px; color: var(--em-green); font-weight: 700; }
-  .sos-call-btn { width: 100%; background: var(--red); color: white; border: none; border-radius: 16px; padding: 18px; font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 14px; transition: transform 0.15s; }
-  .sos-call-btn:active { transform: scale(0.98); }
-  .sos-location-btn { width: 100%; background: #1E1E1E; color: white; border: 1px solid #2A2A2A; border-radius: 16px; padding: 16px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: transform 0.15s; }
-  .sos-cancel-btn { width: 100%; background: transparent; color: #555; border: none; padding: 16px; font-size: 15px; cursor: pointer; margin-top: 6px; }
+  .mo { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(4px); }
+  .mo.open { display: flex; }
+  .ms { background: #141414; border-radius: 28px 28px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 480px; border-top: 1px solid #2A2A2A; }
+  .mh { width: 36px; height: 4px; background: #3A3A3A; border-radius: 2px; margin: 0 auto 20px; }
+  .mt { font-size: 22px; font-weight: 800; color: white; text-align: center; margin-bottom: 6px; }
+  .msub { font-size: 14px; color: #666; text-align: center; margin-bottom: 24px; line-height: 1.4; }
+  .mc { background: #1E1E1E; border: 1px solid #2A2A2A; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+  .cf { font-size: 28px; flex-shrink: 0; }
+  .ci { flex: 1; }
+  .cn { font-size: 14px; font-weight: 600; color: white; }
+  .cnu { font-size: 12px; color: #666; margin-top: 2px; }
+  .cd { font-size: 11px; color: var(--em-green); font-weight: 700; }
+  .scb { width: 100%; background: var(--red); color: white; border: none; border-radius: 16px; padding: 18px; font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 14px; }
+  .slb { width: 100%; background: #1E1E1E; color: white; border: 1px solid #2A2A2A; border-radius: 16px; padding: 16px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+  .sxb { width: 100%; background: transparent; color: #555; border: none; padding: 16px; font-size: 15px; cursor: pointer; margin-top: 6px; }
 
   /* NAV */
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 72px; display: flex; align-items: center; justify-content: space-around; z-index: 100; transition: background 0.4s; border-top: 1px solid; padding-bottom: env(safe-area-inset-bottom,0); }
-  .bottom-nav.daily-nav { background: rgba(244,240,232,0.95); border-color: var(--border); backdrop-filter: blur(20px); }
-  .bottom-nav.emergency-nav { background: rgba(10,10,10,0.97); border-color: #1E1E1E; backdrop-filter: blur(20px); }
-  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; flex: 1; padding: 8px 0; transition: transform 0.15s; }
-  .nav-item:active { transform: scale(0.9); }
-  .nav-icon { font-size: 22px; }
-  .nav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.3px; }
-  .daily-nav .nav-label { color: var(--muted); }
-  .daily-nav .nav-item.active .nav-label { color: var(--green); }
-  .emergency-nav .nav-label { color: #444; }
-  .emergency-nav .nav-item.active .nav-label { color: var(--red); }
-  .mode-fab { position: fixed; bottom: 86px; right: 16px; z-index: 101; display: none; }
-  .mode-fab-btn { background: var(--green); color: white; border: none; border-radius: 100px; padding: 12px 18px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(43,96,82,0.4); display: flex; align-items: center; gap: 7px; transition: transform 0.15s; }
-  .mode-fab-btn:active { transform: scale(0.95); }
-  .toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #1E1E1E; color: white; padding: 12px 20px; border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 300; opacity: 0; transition: all 0.3s; white-space: nowrap; border: 1px solid #3A3A3A; }
+  .bn { position: fixed; bottom: 0; left: 0; right: 0; height: 72px; display: flex; align-items: center; justify-content: space-around; z-index: 100; border-top: 1px solid; }
+  .bn.dn { background: rgba(244,240,232,0.95); border-color: var(--border); backdrop-filter: blur(20px); }
+  .bn.en { background: rgba(10,10,10,0.97); border-color: #1E1E1E; backdrop-filter: blur(20px); }
+  .bn.mn { background: rgba(10,10,10,0.97); border-color: #1E1E1E; backdrop-filter: blur(20px); }
+  .ni { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; flex: 1; padding: 8px 0; border: none; background: transparent; }
+  .nx { font-size: 22px; }
+  .nl { font-size: 9px; font-weight: 700; }
+  .dn .nl { color: var(--muted); }
+  .dn .ni.active .nl { color: var(--green); }
+  .en .nl { color: #444; }
+  .en .ni.active .nl { color: var(--red); }
+  .mn .nl { color: #444; }
+  .mn .ni.active .nl { color: var(--green); }
+  .mf { position: fixed; bottom: 86px; right: 16px; z-index: 101; display: none; }
+  .mfb { background: var(--green); color: white; border: none; border-radius: 100px; padding: 12px 18px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(43,96,82,0.4); }
+  .toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #1E1E1E; color: white; padding: 12px 20px; border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 300; opacity: 0; transition: all 0.3s; white-space: nowrap; border: 1px solid #3A3A3A; pointer-events: none; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .leaflet-container { background: #1A1A2E; }
+  .lp { background: #1E1E1E; border: 1px solid #3A3A3A; border-radius: 12px; color: white; padding: 10px 14px; font-family: -apple-system,sans-serif; }
+  .lp h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .lp p { font-size: 12px; color: #888; }
+  .leaflet-popup-content-wrapper { background: transparent; border: none; box-shadow: none; padding: 0; }
+  .leaflet-popup-tip-container { display: none; }
+  .leaflet-popup-close-button { color: #666 !important; }
 </style>
 </head>
 <body>
 
-<!-- DAILY MODE -->
+<!-- DAILY -->
 <div id="daily" class="screen active">
   <div class="daily-hero">
-    <div class="daily-greeting" id="dailyGreeting">Good afternoon · Auckland, NZ</div>
+    <div class="daily-greeting" id="dg">Good afternoon · Auckland, NZ</div>
     <div class="daily-title">Your family is <em>ready.</em></div>
     <div class="alert-pill"><div class="alert-dot"></div>No active alerts · Monitoring 3 zones</div>
   </div>
@@ -214,180 +240,209 @@
     </div>
     <div class="section-header">Care Circle — 3 Members</div>
     <div class="care-card">
-      <div class="member-row">
-        <div class="avatar">👵<div class="avatar-dot online"></div></div>
-        <div class="member-info"><div class="member-name">Margaret</div><div class="member-sub">📍 Home · 12 min ago</div></div>
-        <span class="status-tag safe">Safe</span>
-      </div>
-      <div class="member-row">
-        <div class="avatar">👦<div class="avatar-dot online"></div></div>
-        <div class="member-info"><div class="member-name">Liam (Son)</div><div class="member-sub">🏫 Lincoln Elementary</div></div>
-        <span class="status-tag safe">Safe</span>
-      </div>
-      <div class="member-row">
-        <div class="avatar">🧔<div class="avatar-dot away"></div></div>
-        <div class="member-info"><div class="member-name">David (Partner)</div><div class="member-sub">🚗 In transit · 23 min away</div></div>
-        <span class="status-tag away">Away</span>
-      </div>
+      <div class="member-row"><div class="avatar">👵<div class="avatar-dot online"></div></div><div class="member-info"><div class="member-name">Margaret</div><div class="member-sub">📍 Home · 12 min ago</div></div><span class="status-tag safe">Safe</span></div>
+      <div class="member-row"><div class="avatar">👦<div class="avatar-dot online"></div></div><div class="member-info"><div class="member-name">Liam (Son)</div><div class="member-sub">🏫 Lincoln Elementary</div></div><span class="status-tag safe">Safe</span></div>
+      <div class="member-row"><div class="avatar">🧔<div class="avatar-dot away"></div></div><div class="member-info"><div class="member-name">David (Partner)</div><div class="member-sub">🚗 In transit · 23 min away</div></div><span class="status-tag away">Away</span></div>
     </div>
     <div class="section-header">Family Missions</div>
     <div class="missions-grid">
-      <div class="mission-card" onclick="showToast('Opening Go-Bag mission...')">
-        <div class="mission-icon">🎒</div><div class="mission-title">Pack the Go-Bag</div><div class="mission-xp">+150 XP</div>
-        <div class="mission-progress"><div class="mission-bar" style="width:60%"></div></div>
-      </div>
-      <div class="mission-card orange" onclick="showToast('Opening Blackout Drill...')">
-        <div class="mission-icon">🔦</div><div class="mission-title">Blackout Drill</div><div class="mission-xp">+200 XP</div>
-        <div class="mission-progress"><div class="mission-bar" style="width:30%"></div></div>
-      </div>
-      <div class="mission-card completed" onclick="showToast('Mission complete! ✓')">
-        <div class="mission-icon">📋</div><div class="mission-title">Family Plan</div><div class="mission-xp">✓ Complete</div>
-        <div class="mission-progress"><div class="mission-bar" style="width:100%"></div></div>
-      </div>
-      <div class="mission-card orange" onclick="showToast('Opening Evacuation Run...')">
-        <div class="mission-icon">🏃</div><div class="mission-title">Evacuation Run</div><div class="mission-xp">+300 XP</div>
-        <div class="mission-progress"><div class="mission-bar" style="width:0%"></div></div>
-      </div>
+      <div class="mission-card" onclick="showToast('Opening Go-Bag mission...')"><div class="mission-icon">🎒</div><div class="mission-title">Pack the Go-Bag</div><div class="mission-xp">+150 XP</div><div class="mission-progress"><div class="mission-bar" style="width:60%"></div></div></div>
+      <div class="mission-card orange" onclick="showToast('Opening Blackout Drill...')"><div class="mission-icon">🔦</div><div class="mission-title">Blackout Drill</div><div class="mission-xp">+200 XP</div><div class="mission-progress"><div class="mission-bar" style="width:30%"></div></div></div>
+      <div class="mission-card completed" onclick="showToast('Mission complete! ✓')"><div class="mission-icon">📋</div><div class="mission-title">Family Plan</div><div class="mission-xp">✓ Complete</div><div class="mission-progress"><div class="mission-bar" style="width:100%"></div></div></div>
+      <div class="mission-card orange" onclick="showToast('Opening Evacuation Run...')"><div class="mission-icon">🏃</div><div class="mission-title">Evacuation Run</div><div class="mission-xp">+300 XP</div><div class="mission-progress"><div class="mission-bar" style="width:0%"></div></div></div>
     </div>
-    <div class="emergency-trigger" onclick="switchToEmergency()">
-      <div class="trigger-icon">🚨</div>
-      <div class="trigger-text"><div class="trigger-title">Emergency Mode</div><div class="trigger-sub">Tap to activate during a crisis</div></div>
-      <div class="trigger-arrow">›</div>
-    </div>
+    <div class="emergency-trigger" onclick="ss('emergency')"><div class="trigger-icon">🚨</div><div class="trigger-text"><div class="trigger-title">Emergency Mode</div><div class="trigger-sub">Tap to activate during a crisis</div></div><div class="trigger-arrow">›</div></div>
   </div>
-  <div class="bottom-nav daily-nav">
-    <div class="nav-item active"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
-    <div class="nav-item" onclick="showToast('Map coming soon...')"><div class="nav-icon">🗺️</div><div class="nav-label">Map</div></div>
-    <div class="nav-item" onclick="showToast('Family sync active...')"><div class="nav-icon">👨‍👩‍👧</div><div class="nav-label">Family</div></div>
-    <div class="nav-item" onclick="showToast('Missions loading...')"><div class="nav-icon">🏅</div><div class="nav-label">Missions</div></div>
-    <div class="nav-item" onclick="showToast('Settings coming soon...')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+  <div class="bn dn">
+    <button class="ni active" onclick="ss('daily')"><div class="nx">🏠</div><div class="nl">Home</div></button>
+    <button class="ni" onclick="ss('mapscreen')"><div class="nx">🗺️</div><div class="nl">Map</div></button>
+    <button class="ni" onclick="showToast('Family sync active...')"><div class="nx">👨‍👩‍👧</div><div class="nl">Family</div></button>
+    <button class="ni" onclick="showToast('Missions loading...')"><div class="nx">🏅</div><div class="nl">Missions</div></button>
+    <button class="ni" onclick="showToast('Settings coming soon...')"><div class="nx">⚙️</div><div class="nl">Settings</div></button>
   </div>
 </div>
 
-<!-- EMERGENCY MODE -->
-<div id="emergency" class="screen">
-  <div class="em-status-bar">
-    <div class="em-active-badge"><div class="em-pulse"></div><div class="em-active-text">ACTIVE EMERGENCY</div></div>
-    <div class="em-clock" id="emClock">--:--:--</div>
+<!-- MAP -->
+<div id="mapscreen" class="screen">
+  <div class="map-header">
+    <div><div class="map-header-title">🗺️ Safety Map</div><div class="map-header-sub" id="mst">Finding your location...</div></div>
+    <button onclick="cm()" style="background:rgba(255,255,255,0.2);border:none;border-radius:50%;width:40px;height:40px;font-size:20px;cursor:pointer;">📍</button>
   </div>
+  <div class="map-filter-row">
+    <button class="map-filter-btn af" onclick="tf(this)">🏥 Shelters</button>
+    <button class="map-filter-btn af" onclick="tf(this)">👨‍👩‍👧 Family</button>
+    <button class="map-filter-btn af" onclick="tf(this)">🏨 Hospitals</button>
+    <button class="map-filter-btn rf" onclick="tf(this)">⚠️ Danger</button>
+    <button class="map-filter-btn af" onclick="tf(this)">🚗 Route</button>
+  </div>
+  <div id="map" style="flex:1;min-height:0;"></div>
+  <div class="map-legend-bar">
+    <div class="legend-item"><div class="legend-dot" style="background:#30D158"></div>You</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2B6052"></div>Shelters</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#6CC2FF"></div>Family</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FF3B30"></div>Danger</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FFD60A"></div>Hospital</div>
+  </div>
+  <div class="bn mn">
+    <button class="ni" onclick="ss('daily')"><div class="nx">🏠</div><div class="nl">Home</div></button>
+    <button class="ni active" onclick="ss('mapscreen')"><div class="nx">🗺️</div><div class="nl">Map</div></button>
+    <button class="ni" onclick="showToast('Family sync active...')"><div class="nx">👨‍👩‍👧</div><div class="nl">Family</div></button>
+    <button class="ni" onclick="showToast('Missions loading...')"><div class="nx">🏅</div><div class="nl">Missions</div></button>
+    <button class="ni" onclick="showToast('Settings coming soon...')"><div class="nx">⚙️</div><div class="nl">Settings</div></button>
+  </div>
+</div>
+
+<!-- EMERGENCY -->
+<div id="emergency" class="screen">
+  <div class="em-status-bar"><div class="em-active-badge"><div class="em-pulse"></div><div class="em-active-text">ACTIVE EMERGENCY</div></div><div class="em-clock" id="ec">--:--:--</div></div>
   <div class="em-content">
     <div class="conn-row">
       <div class="conn-badge satellite"><div class="conn-dot"></div>SATELLITE</div>
       <div class="conn-badge active"><div class="conn-dot"></div>MESH ACTIVE</div>
-      <div class="conn-badge offline-maps"><div class="conn-dot"></div>OFFLINE MAPS</div>
+      <div class="conn-badge om"><div class="conn-dot"></div>OFFLINE MAPS</div>
     </div>
     <div class="event-card">
       <div class="event-type">⚠ Earthquake · M 6.2</div>
       <div class="event-title">Seismic Activity<br>Detected Nearby</div>
-      <div class="event-desc">Strong shaking reported in your area. Aftershocks likely. Avoid damaged buildings and downed power lines.</div>
-      <div class="severity-row">
-        <div class="sev-bar filled"></div><div class="sev-bar filled"></div><div class="sev-bar filled"></div>
-        <div class="sev-bar half"></div><div class="sev-bar"></div>
-        <div class="sev-label">SEVERE</div>
-      </div>
+      <div class="event-desc">Strong shaking reported. Aftershocks likely. Avoid damaged buildings and downed power lines.</div>
+      <div class="sev-row"><div class="sev-bar f"></div><div class="sev-bar f"></div><div class="sev-bar f"></div><div class="sev-bar h"></div><div class="sev-bar"></div><div class="sev-label">SEVERE</div></div>
     </div>
-    <div class="sos-wrap">
-      <button class="sos-btn" onclick="openSOS()">
-        <div class="sos-pulse-ring">🆘</div>
-        <div class="sos-text"><div class="sos-title">SEND SOS</div><div class="sos-sub">Emergency services + contacts · GPS attached</div></div>
-        <div class="sos-arrow">›</div>
-      </button>
+    <div class="sos-wrap"><button class="sos-btn" onclick="openSOS()"><div class="sos-ring">🆘</div><div class="sos-text"><div class="sos-title">SEND SOS</div><div class="sos-sub">Emergency services + contacts · GPS</div></div><div style="color:rgba(255,255,255,0.5);font-size:20px;">›</div></button></div>
+    <div class="ag">
+      <button class="ab nav" onclick="ss('mapscreen')"><div class="ai">📍</div><div><div class="at">Navigate to Safety</div><div style="color:rgba(255,255,255,0.65);font-size:11px;margin-top:2px;">Nearest shelter: 0.4mi</div></div><div class="as">GO →</div></button>
+      <button class="ab dk" onclick="showToast('Drop, Cover, Hold On!')"><div class="ai">🏠</div><div class="at">Drop & Cover</div><div class="as">Indoor protocol</div></button>
+      <button class="ab yw" onclick="showToast('Tuning broadcast...')"><div class="ai">📻</div><div class="at">Emergency Broadcast</div><div class="as">Live updates</div></button>
+      <button class="ab eg" onclick="showToast('Opening First Aid...')"><div class="ai">🩺</div><div class="at">First Aid</div><div class="as">Step by step</div></button>
+      <button class="ab dk" onclick="showToast('Casting to TV...')"><div class="ai">📲</div><div class="at">Cast to TV</div><div class="as">Family briefing</div></button>
     </div>
-    <div class="action-grid">
-      <button class="action-btn navigate" onclick="showToast('Opening evacuation route...')">
-        <div class="action-icon">📍</div>
-        <div><div class="action-title">Navigate to Safety</div><div style="color:rgba(255,255,255,0.65);font-size:11px;margin-top:2px;">Nearest shelter: 0.4mi</div></div>
-        <div class="action-sub">GO →</div>
-      </button>
-      <button class="action-btn dark" onclick="showToast('Drop, Cover, Hold On!')"><div class="action-icon">🏠</div><div class="action-title">Drop & Cover</div><div class="action-sub">Indoor protocol</div></button>
-      <button class="action-btn yellow" onclick="showToast('Tuning emergency broadcast...')"><div class="action-icon">📻</div><div class="action-title">Emergency Broadcast</div><div class="action-sub">Live updates</div></button>
-      <button class="action-btn em-green" onclick="showToast('Opening First Aid guide...')"><div class="action-icon">🩺</div><div class="action-title">First Aid</div><div class="action-sub">Step by step</div></button>
-      <button class="action-btn dark" onclick="showToast('Casting to nearby TV...')"><div class="action-icon">📲</div><div class="action-title">Cast to TV</div><div class="action-sub">Family briefing</div></button>
-    </div>
-    <div class="family-card">
-      <div class="em-section-label">— Family & Circle Status —</div>
-      <div class="em-member-row">
-        <div class="em-avatar" style="background:#1A2A1A;">👦<div class="em-status-dot safe"></div></div>
-        <div class="em-member-info"><div class="em-member-name">Liam</div><div class="em-member-loc">📍 Lincoln Elementary · Shelter-in-place</div></div>
-        <div class="em-member-status safe">SAFE</div>
-      </div>
-      <div class="em-member-row">
-        <div class="em-avatar" style="background:#2A2A1A;">🧔<div class="em-status-dot unknown"></div></div>
-        <div class="em-member-info"><div class="em-member-name">David</div><div class="em-member-loc">Last seen: Route 7 · 18 min ago</div></div>
-        <div class="em-member-status unknown">CHECKING</div>
-      </div>
-      <div class="em-member-row">
-        <div class="em-avatar" style="background:#2A1A1A;">👵<div class="em-status-dot danger"></div></div>
-        <div class="em-member-info"><div class="em-member-name">Margaret</div><div class="em-member-loc">📍 124 Maple St · Needs assistance</div></div>
-        <div class="em-member-status danger">NEEDS HELP</div>
-      </div>
+    <div class="fc">
+      <div class="esl">— Family & Circle Status —</div>
+      <div class="emr"><div class="ea" style="background:#1A2A1A;">👦<div class="esd s"></div></div><div class="emi"><div class="emn">Liam</div><div class="eml">📍 Lincoln Elementary</div></div><div class="ems s">SAFE</div></div>
+      <div class="emr"><div class="ea" style="background:#2A2A1A;">🧔<div class="esd u"></div></div><div class="emi"><div class="emn">David</div><div class="eml">Last seen: Route 7</div></div><div class="ems u">CHECKING</div></div>
+      <div class="emr"><div class="ea" style="background:#2A1A1A;">👵<div class="esd d"></div></div><div class="emi"><div class="emn">Margaret</div><div class="eml">📍 124 Maple St</div></div><div class="ems d">NEEDS HELP</div></div>
     </div>
   </div>
-  <div class="bottom-nav emergency-nav">
-    <div class="nav-item active"><div class="nav-icon">🚨</div><div class="nav-label">Alerts</div></div>
-    <div class="nav-item" onclick="showToast('Evacuation map loading...')"><div class="nav-icon">🗺️</div><div class="nav-label">Evacuate</div></div>
-    <div class="nav-item" onclick="showToast('Family sync active...')"><div class="nav-icon">👥</div><div class="nav-label">Family</div></div>
-    <div class="nav-item" onclick="showToast('Satellite comms active...')"><div class="nav-icon">📡</div><div class="nav-label">Comms</div></div>
-    <div class="nav-item" onclick="showToast('Settings loading...')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+  <div class="bn en">
+    <button class="ni active" onclick="ss('emergency')"><div class="nx">🚨</div><div class="nl">Alerts</div></button>
+    <button class="ni" onclick="ss('mapscreen')"><div class="nx">🗺️</div><div class="nl">Evacuate</div></button>
+    <button class="ni" onclick="showToast('Family sync...')"><div class="nx">👥</div><div class="nl">Family</div></button>
+    <button class="ni" onclick="showToast('Satellite comms...')"><div class="nx">📡</div><div class="nl">Comms</div></button>
+    <button class="ni" onclick="showToast('Settings...')"><div class="nx">⚙️</div><div class="nl">Settings</div></button>
   </div>
-  <div class="mode-fab" id="modeFab">
-    <button class="mode-fab-btn" onclick="switchToDaily()">☀️ Daily Mode</button>
-  </div>
+  <div class="mf" id="mf"><button class="mfb" onclick="ss('daily')">☀️ Daily Mode</button></div>
 </div>
 
 <!-- SOS MODAL -->
-<div class="modal-overlay" id="sosModal">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title">🆘 Send SOS</div>
-    <div class="modal-sub">Your location will be shared with emergency services and your contacts.</div>
-    <div class="modal-country">
-      <div class="country-flag" id="countryFlag">🇳🇿</div>
-      <div class="country-info">
-        <div class="country-name" id="countryName">New Zealand</div>
-        <div class="country-number" id="countryNumber">Emergency: 111</div>
-      </div>
-      <div class="country-detected">AUTO-DETECTED</div>
-    </div>
+<div class="mo" id="sm">
+  <div class="ms">
+    <div class="mh"></div>
+    <div class="mt">🆘 Send SOS</div>
+    <div class="msub">Your location will be shared with emergency services and your contacts.</div>
+    <div class="mc"><div class="cf" id="cf">🇳🇿</div><div class="ci"><div class="cn" id="cn">New Zealand</div><div class="cnu" id="cnu">Emergency: 111</div></div><div class="cd">AUTO-DETECTED</div></div>
     <div style="background:#1E1E1E;border:1px solid #2A2A2A;border-radius:14px;padding:14px 16px;">
       <div style="font-size:13px;color:#666;margin-bottom:8px;">Global Emergency Numbers</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-        <div style="font-size:12px;color:#888;">🇳🇿 NZ — 111</div>
-        <div style="font-size:12px;color:#888;">🇺🇸 USA — 911</div>
-        <div style="font-size:12px;color:#888;">🇬🇧 UK — 999</div>
-        <div style="font-size:12px;color:#888;">🇦🇺 AUS — 000</div>
-        <div style="font-size:12px;color:#888;">🇫🇷 FR — 18</div>
-        <div style="font-size:12px;color:#888;">🇩🇪 DE — 112</div>
-        <div style="font-size:12px;color:#888;">🇯🇵 JP — 110</div>
-        <div style="font-size:12px;color:#888;">🌍 EU — 112</div>
+        <div style="font-size:12px;color:#888;">🇳🇿 NZ — 111</div><div style="font-size:12px;color:#888;">🇺🇸 USA — 911</div>
+        <div style="font-size:12px;color:#888;">🇬🇧 UK — 999</div><div style="font-size:12px;color:#888;">🇦🇺 AUS — 000</div>
+        <div style="font-size:12px;color:#888;">🇫🇷 FR — 18</div><div style="font-size:12px;color:#888;">🇩🇪 DE — 112</div>
+        <div style="font-size:12px;color:#888;">🇯🇵 JP — 110</div><div style="font-size:12px;color:#888;">🌍 EU — 112</div>
       </div>
     </div>
-    <button class="sos-call-btn" id="sosCallBtn" onclick="callEmergency()">📞 Call 111 — Emergency Services</button>
-    <button class="sos-location-btn" onclick="shareLocation()">📍 Share My Location with Contacts</button>
-    <button class="sos-cancel-btn" onclick="closeSOS()">Cancel</button>
+    <button class="scb" id="scb">📞 Call 111 — Emergency Services</button>
+    <button class="slb" onclick="sl()">📍 Share My Location with Contacts</button>
+    <button class="sxb" onclick="csos()">Cancel</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  function setGreeting(){const h=new Date().getHours();const g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';document.getElementById('dailyGreeting').textContent=g+' · Auckland, NZ';}
-  setGreeting();
-  function updateClock(){const n=new Date();const p=x=>String(x).padStart(2,'0');document.getElementById('emClock').textContent=p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds());}
-  setInterval(updateClock,1000);updateClock();
-  function switchToEmergency(){document.getElementById('daily').classList.remove('active');document.getElementById('emergency').classList.add('active');document.getElementById('modeFab').style.display='block';window.scrollTo(0,0);}
-  function switchToDaily(){document.getElementById('emergency').classList.remove('active');document.getElementById('daily').classList.add('active');document.getElementById('modeFab').style.display='none';window.scrollTo(0,0);}
-  const emergencyNumbers={'NZ':{flag:'🇳🇿',name:'New Zealand',number:'111'},'US':{flag:'🇺🇸',name:'United States',number:'911'},'GB':{flag:'🇬🇧',name:'United Kingdom',number:'999'},'AU':{flag:'🇦🇺',name:'Australia',number:'000'},'FR':{flag:'🇫🇷',name:'France',number:'18'},'DE':{flag:'🇩🇪',name:'Germany',number:'112'},'JP':{flag:'🇯🇵',name:'Japan',number:'110'},'DEFAULT':{flag:'🌍',name:'International',number:'112'}};
-  let detectedNumber='111';
-  function detectCountry(){const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;let c='DEFAULT';if(tz.includes('Auckland')||tz.includes('Pacific/Auckland'))c='NZ';else if(tz.includes('America'))c='US';else if(tz.includes('London'))c='GB';else if(tz.includes('Sydney')||tz.includes('Melbourne'))c='AU';else if(tz.includes('Paris'))c='FR';else if(tz.includes('Berlin'))c='DE';else if(tz.includes('Tokyo'))c='JP';const info=emergencyNumbers[c];document.getElementById('countryFlag').textContent=info.flag;document.getElementById('countryName').textContent=info.name;document.getElementById('countryNumber').textContent='Emergency: '+info.number;document.getElementById('sosCallBtn').textContent='📞 Call '+info.number+' — Emergency Services';detectedNumber=info.number;}
-  function openSOS(){document.getElementById('sosModal').classList.add('open');detectCountry();}
-  function closeSOS(){document.getElementById('sosModal').classList.remove('open');}
-  function callEmergency(){window.location.href='tel:'+detectedNumber;closeSOS();}
-  function shareLocation(){if(navigator.geolocation){navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude.toFixed(6);const lng=pos.coords.longitude.toFixed(6);const msg=encodeURIComponent('🆘 ANCHOR SOS ALERT\nI need help!\nLocation: https://maps.google.com/?q='+lat+','+lng);window.location.href='sms:+640210755147?body='+msg;closeSOS();showToast('📍 Location shared!');},()=>{showToast('Enable location for GPS sharing');});}else{showToast('Location not available');}}
-  let toastTimeout;
-  function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.classList.remove('show'),2500);}
-  document.getElementById('sosModal').addEventListener('click',e=>{if(e.target===document.getElementById('sosModal'))closeSOS();});
-  setTimeout(()=>{document.querySelectorAll('.mission-bar').forEach(b=>{const w=b.style.width;b.style.width='0';setTimeout(()=>{b.style.transition='width 1s ease';b.style.width=w;},100);});},500);
+var uLat=-36.8485,uLng=174.7633,mapInit=false,myMap=null,dn='111';
+
+function ss(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('mf').style.display=(id==='emergency')?'block':'none';
+  if(id==='mapscreen')setTimeout(()=>initMap(),150);
+  window.scrollTo(0,0);
+}
+
+function setG(){const h=new Date().getHours();const g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';document.getElementById('dg').textContent=g+' · Auckland, NZ';}
+setG();
+
+function uc(){const n=new Date();const p=x=>String(x).padStart(2,'0');document.getElementById('ec').textContent=p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds());}
+setInterval(uc,1000);uc();
+
+function initMap(){
+  if(mapInit){if(myMap)setTimeout(()=>myMap.invalidateSize(),200);return;}
+  mapInit=true;
+  myMap=L.map('map',{zoomControl:true,attributionControl:false}).setView([uLat,uLng],14);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(myMap);
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      uLat=pos.coords.latitude;uLng=pos.coords.longitude;
+      myMap.setView([uLat,uLng],14);addMarkers();
+      document.getElementById('mst').textContent='📍 Your live location · Tap markers for info';
+    },()=>{addMarkers();document.getElementById('mst').textContent='📍 Auckland area · Enable GPS for live location';});
+  }else{addMarkers();}
+}
+
+function addMarkers(){
+  const yi=L.divIcon({html:'<div style="width:20px;height:20px;background:#30D158;border-radius:50%;border:3px solid white;box-shadow:0 0 12px rgba(48,209,88,0.7);"></div>',iconSize:[20,20],iconAnchor:[10,10],className:''});
+  L.marker([uLat,uLng],{icon:yi}).addTo(myMap).bindPopup('<div class="lp"><h3>📍 You</h3><p>Live GPS location</p></div>');
+
+  [{lat:uLat+0.012,lng:uLng-0.008,n:'Rosehill College',t:'Emergency Shelter · 500 people'},{lat:uLat-0.009,lng:uLng+0.015,n:'Papakura Rec Centre',t:'Emergency Shelter · 300 people'},{lat:uLat+0.018,lng:uLng+0.010,n:'Drury Community Hall',t:'Emergency Shelter · 200 people'}].forEach(s=>{
+    L.marker([s.lat,s.lng],{icon:L.divIcon({html:'<div style="background:#2B6052;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid white;">🏥</div>',iconSize:[32,32],iconAnchor:[16,16],className:''})}).addTo(myMap).bindPopup('<div class="lp"><h3>'+s.n+'</h3><p>'+s.t+'</p><p style="color:#30D158;margin-top:4px;font-weight:700;">OPEN ✓</p></div>');
+  });
+
+  [{lat:uLat+0.005,lng:uLng+0.006,n:'Liam (Son)',t:'Safe at school',c:'#30D158'},{lat:uLat-0.004,lng:uLng-0.007,n:'David (Partner)',t:'Last seen here',c:'#FFD60A'},{lat:uLat+0.002,lng:uLng+0.012,n:'Margaret',t:'⚠️ Needs assistance',c:'#FF3B30'}].forEach(f=>{
+    L.marker([f.lat,f.lng],{icon:L.divIcon({html:'<div style="background:'+f.c+';color:white;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;">👤</div>',iconSize:[30,30],iconAnchor:[15,15],className:''})}).addTo(myMap).bindPopup('<div class="lp"><h3>'+f.n+'</h3><p>'+f.t+'</p></div>');
+  });
+
+  [{lat:uLat-0.015,lng:uLng+0.008,n:'Middlemore Hospital',t:'Major Hospital · 24hr ED'},{lat:uLat+0.020,lng:uLng-0.012,n:'Botany Downs Clinic',t:'Medical Centre'}].forEach(h=>{
+    L.marker([h.lat,h.lng],{icon:L.divIcon({html:'<div style="background:#FFD60A;color:#1A1A00;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;">🏨</div>',iconSize:[30,30],iconAnchor:[15,15],className:''})}).addTo(myMap).bindPopup('<div class="lp"><h3>'+h.n+'</h3><p>'+h.t+'</p></div>');
+  });
+
+  L.circle([uLat-0.006,uLng-0.003],{color:'#FF3B30',fillColor:'#FF3B30',fillOpacity:0.12,weight:2,dashArray:'6,4',radius:400}).addTo(myMap).bindPopup('<div class="lp"><h3>⚠️ Danger Zone</h3><p>Structural damage · Avoid this area</p></div>');
+  L.polyline([[uLat,uLng],[uLat+0.004,uLng+0.003],[uLat+0.008,uLng+0.005],[uLat+0.012,uLng-0.008]],{color:'#30D158',weight:4,opacity:0.8,dashArray:'10,6'}).addTo(myMap);
+  setTimeout(()=>myMap.invalidateSize(),300);
+}
+
+function cm(){if(myMap){myMap.setView([uLat,uLng],14);showToast('📍 Centered on your location');}}
+function tf(btn){btn.classList.contains('if')?(btn.classList.remove('if'),btn.classList.add(btn.textContent.includes('⚠️')?'rf':'af'),showToast('Layer shown')):(btn.classList.remove('af','rf'),btn.classList.add('if'),showToast('Layer hidden'));}
+
+const en2={'NZ':{flag:'🇳🇿',name:'New Zealand',number:'111'},'US':{flag:'🇺🇸',name:'United States',number:'911'},'GB':{flag:'🇬🇧',name:'United Kingdom',number:'999'},'AU':{flag:'🇦🇺',name:'Australia',number:'000'},'FR':{flag:'🇫🇷',name:'France',number:'18'},'DE':{flag:'🇩🇪',name:'Germany',number:'112'},'JP':{flag:'🇯🇵',name:'Japan',number:'110'},'DEFAULT':{flag:'🌍',name:'International',number:'112'}};
+
+function dc(){
+  const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+  let c='DEFAULT';
+  if(tz.includes('Auckland')||tz.includes('Pacific/Auckland'))c='NZ';
+  else if(tz.includes('America'))c='US';
+  else if(tz.includes('London'))c='GB';
+  else if(tz.includes('Sydney')||tz.includes('Melbourne'))c='AU';
+  else if(tz.includes('Paris'))c='FR';
+  else if(tz.includes('Berlin'))c='DE';
+  else if(tz.includes('Tokyo'))c='JP';
+  const i=en2[c];
+  document.getElementById('cf').textContent=i.flag;
+  document.getElementById('cn').textContent=i.name;
+  document.getElementById('cnu').textContent='Emergency: '+i.number;
+  document.getElementById('scb').textContent='📞 Call '+i.number+' — Emergency Services';
+  document.getElementById('scb').onclick=()=>{window.location.href='tel:'+i.number;csos();};
+  dn=i.number;
+}
+
+function openSOS(){document.getElementById('sm').classList.add('open');dc();}
+function csos(){document.getElementById('sm').classList.remove('open');}
+function sl(){
+  if(navigator.geolocation){navigator.geolocation.getCurrentPosition(pos=>{const la=pos.coords.latitude.toFixed(6);const lo=pos.coords.longitude.toFixed(6);const m=encodeURIComponent('🆘 ANCHOR SOS ALERT\nI need help!\nLocation: https://maps.google.com/?q='+la+','+lo);window.location.href='sms:+640210755147?body='+m;csos();showToast('📍 Location shared!');},()=>{showToast('Enable location for GPS sharing');});}
+  else{showToast('Location not available');}
+}
+
+let tt;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2500);}
+document.getElementById('sm').addEventListener('click',e=>{if(e.target===document.getElementById('sm'))csos();});
+setTimeout(()=>{document.querySelectorAll('.mission-bar').forEach(b=>{const w=b.style.width;b.style.width='0';setTimeout(()=>{b.style.transition='width 1s ease';b.style.width=w;},100);});},500);
 </script>
 </body>
 </html>
