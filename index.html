@@ -2,241 +2,392 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Anchor — Emergency Safety App</title>
+<meta name="description" content="A digital survival companion for every human being on earth.">
+<meta name="theme-color" content="#2B6052">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: sans-serif; background: #F4F0E8; }
-.screen { display: none; min-height: 100vh; padding: 20px; }
-.screen.active { display: block; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --green: #2B6052; --green-light: #3D8C78; --orange: #E8845A;
+    --cream: #F4F0E8; --dark: #1A1A18; --muted: #7A7A70;
+    --border: #E0DDD4; --red: #FF3B30; --yellow: #FFD60A;
+    --em-green: #30D158; --em-bg: #0A0A0A; --em-surface: #141414;
+  }
+  html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; height: 100%; overflow: hidden; background: var(--em-bg); }
+  .screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; overflow-x: hidden; display: none; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 80px; }
+  .screen::-webkit-scrollbar { display: none; }
+  .screen.active { display: block; }
 
-/* DAILY MODE */
-#daily { background: #F4F0E8; }
-.daily-header { background: #2B6052; color: white; padding: 20px; border-radius: 16px; margin-bottom: 16px; }
-.daily-header h1 { font-size: 24px; margin-bottom: 4px; }
-.daily-header p { opacity: 0.8; font-size: 14px; }
-.readiness { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; text-align: center; }
-.readiness h2 { color: #2B6052; font-size: 48px; font-weight: bold; }
-.readiness p { color: #888; margin-top: 4px; }
-.section-title { font-size: 14px; font-weight: bold; color: #555; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-.care-circle { background: white; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-.member { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
-.member:last-child { border-bottom: none; }
-.avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; background: #E8F0ED; }
-.member-info { flex: 1; }
-.member-name { font-weight: 600; font-size: 14px; }
-.member-status { font-size: 12px; color: #888; }
-.tag { padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: bold; }
-.tag.safe { background: #E8F5EE; color: #2B6052; }
-.tag.away { background: #FFF4E6; color: #C05E1A; }
-.missions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-.mission { background: white; border-radius: 16px; padding: 16px; border-left: 4px solid #2B6052; }
-.mission.orange { border-left-color: #E8845A; }
-.mission-icon { font-size: 28px; margin-bottom: 8px; }
-.mission-title { font-size: 13px; font-weight: bold; color: #1A1A18; }
-.mission-xp { font-size: 11px; color: #2B6052; margin-top: 4px; font-weight: bold; }
-.mission.orange .mission-xp { color: #E8845A; }
-.sos-daily { background: #2B6052; color: white; width: 100%; padding: 16px; border-radius: 100px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+  /* DAILY */
+  #daily { background: var(--cream); }
+  .daily-hero { background: linear-gradient(135deg, var(--green), #1E4A3A); padding: 50px 20px 28px; position: relative; overflow: hidden; }
+  .daily-hero::before { content: '⚓'; position: absolute; right: -10px; top: -10px; font-size: 120px; opacity: 0.06; }
+  .daily-greeting { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+  .daily-title { font-size: 26px; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 16px; }
+  .daily-title em { font-style: italic; color: #A8D5C2; }
+  .alert-pill { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15); border-radius: 100px; padding: 8px 14px; font-size: 12px; color: rgba(255,255,255,0.85); font-weight: 500; }
+  .alert-dot { width: 7px; height: 7px; background: #A8D5C2; border-radius: 50%; }
+  .daily-content { padding: 16px; }
+  .readiness-card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .ring-container { position: relative; width: 72px; height: 72px; flex-shrink: 0; }
+  .ring-container svg { transform: rotate(-90deg); }
+  .ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+  .ring-pct { font-size: 18px; font-weight: 800; color: var(--green); line-height: 1; }
+  .ring-label { font-size: 8px; color: var(--muted); margin-top: 2px; }
+  .readiness-text { flex: 1; }
+  .readiness-title { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .readiness-desc { font-size: 12px; color: var(--muted); line-height: 1.4; margin-bottom: 10px; }
+  .readiness-btn { background: var(--green); color: white; border: none; border-radius: 100px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .section-header { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; margin-top: 4px; }
+  .care-card { background: white; border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .member-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .member-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .member-row:first-child { padding-top: 0; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: #E8F0ED; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; position: relative; }
+  .avatar-dot { position: absolute; bottom: 0; right: 0; width: 11px; height: 11px; border-radius: 50%; border: 2px solid white; }
+  .avatar-dot.online { background: var(--em-green); }
+  .avatar-dot.away { background: var(--orange); }
+  .member-info { flex: 1; }
+  .member-name { font-size: 14px; font-weight: 600; color: var(--dark); }
+  .member-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .status-tag { font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 100px; }
+  .status-tag.safe { background: #E8F5EE; color: var(--green); }
+  .status-tag.away { background: #FFF4E6; color: #C05E1A; }
+  .missions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .mission-card { background: white; border-radius: 16px; padding: 16px 14px; position: relative; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.15s; }
+  .mission-card:active { transform: scale(0.97); }
+  .mission-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--green); }
+  .mission-card.orange::after { background: var(--orange); }
+  .mission-card.completed::after { background: var(--em-green); }
+  .mission-icon { font-size: 28px; margin-bottom: 8px; }
+  .mission-title { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .mission-xp { font-size: 11px; font-weight: 700; color: var(--green); }
+  .mission-card.orange .mission-xp { color: var(--orange); }
+  .mission-card.completed .mission-xp { color: var(--em-green); }
+  .mission-progress { margin-top: 8px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .mission-bar { height: 100%; background: var(--green); border-radius: 2px; }
+  .mission-card.orange .mission-bar { background: var(--orange); }
+  .mission-card.completed .mission-bar { background: var(--em-green); }
+  .emergency-trigger { background: linear-gradient(135deg, #1A0A08, #3A1A15); border-radius: 20px; padding: 20px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; cursor: pointer; border: 1px solid rgba(255,59,48,0.2); transition: transform 0.15s; }
+  .emergency-trigger:active { transform: scale(0.98); }
+  .trigger-icon { width: 48px; height: 48px; background: rgba(255,59,48,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+  .trigger-text { flex: 1; }
+  .trigger-title { font-size: 15px; font-weight: 700; color: white; margin-bottom: 2px; }
+  .trigger-sub { font-size: 12px; color: rgba(255,255,255,0.5); }
+  .trigger-arrow { color: rgba(255,59,48,0.6); font-size: 20px; }
 
-/* EMERGENCY MODE */
-#emergency { background: #0A0A0A; }
-.em-header { background: #FF3B30; color: white; padding: 16px 20px; border-radius: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
-.em-dot { width: 10px; height: 10px; background: white; border-radius: 50%; animation: blink 1s infinite; }
-@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
-.em-header h1 { font-size: 18px; font-weight: bold; }
-.em-event { background: #1A1A1A; border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid #333; }
-.em-event-type { color: #FF3B30; font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
-.em-event-title { color: white; font-size: 22px; font-weight: bold; margin-bottom: 8px; }
-.em-event-desc { color: #888; font-size: 14px; line-height: 1.5; }
-.sos-btn { background: #FF3B30; color: white; width: 100%; padding: 20px; border-radius: 16px; border: none; font-size: 20px; font-weight: bold; cursor: pointer; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-.em-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.em-btn { border-radius: 14px; padding: 16px; border: none; cursor: pointer; text-align: left; }
-.em-btn.dark { background: #1E1E1E; color: white; border: 1px solid #333; }
-.em-btn.yellow { background: #FFD60A; color: #1A1A00; }
-.em-btn.green { background: #30D158; color: #001A07; }
-.em-btn-icon { font-size: 24px; margin-bottom: 6px; }
-.em-btn-title { font-size: 13px; font-weight: bold; }
-.em-family { background: #1A1A1A; border-radius: 16px; padding: 16px; border: 1px solid #333; }
-.em-member { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #2A2A2A; }
-.em-member:last-child { border-bottom: none; }
-.em-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; background: #2A2A2A; }
-.em-member-info { flex: 1; }
-.em-member-name { color: white; font-weight: bold; font-size: 14px; }
-.em-member-loc { color: #666; font-size: 12px; }
-.status-safe { color: #30D158; font-size: 12px; font-weight: bold; }
-.status-danger { color: #FF3B30; font-size: 12px; font-weight: bold; animation: blink 1s infinite; }
-.status-unknown { color: #FFD60A; font-size: 12px; font-weight: bold; }
+  /* EMERGENCY */
+  #emergency { background: var(--em-bg); }
+  .em-status-bar { background: var(--red); padding: 48px 16px 14px; display: flex; align-items: center; justify-content: space-between; }
+  .em-active-badge { display: flex; align-items: center; gap: 8px; }
+  .em-pulse { width: 10px; height: 10px; background: white; border-radius: 50%; animation: em-pulse 1s infinite; }
+  @keyframes em-pulse { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)} }
+  .em-active-text { font-size: 14px; font-weight: 800; color: white; letter-spacing: 0.5px; }
+  .em-clock { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); font-variant-numeric: tabular-nums; }
+  .em-content { padding: 14px 16px; }
+  .conn-row { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; }
+  .conn-row::-webkit-scrollbar { display: none; }
+  .conn-badge { display: flex; align-items: center; gap: 5px; background: var(--em-surface); border: 1px solid #2A2A2A; border-radius: 100px; padding: 6px 12px; white-space: nowrap; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; flex-shrink: 0; }
+  .conn-badge.active { color: var(--em-green); border-color: rgba(48,209,88,0.25); background: rgba(48,209,88,0.06); }
+  .conn-badge.satellite { color: var(--yellow); border-color: rgba(255,214,10,0.25); background: rgba(255,214,10,0.06); }
+  .conn-badge.offline-maps { color: #6CC2FF; border-color: rgba(108,194,255,0.25); background: rgba(108,194,255,0.06); }
+  .conn-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .satellite .conn-dot { animation: em-pulse 1.5s infinite; }
+  .event-card { background: var(--em-surface); border: 1px solid #2A2A2A; border-radius: 18px; padding: 18px; margin-bottom: 14px; position: relative; overflow: hidden; }
+  .event-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--red); animation: scan 2.5s linear infinite; }
+  @keyframes scan { 0%{transform:scaleX(0);transform-origin:left}49%{transform:scaleX(1);transform-origin:left}50%{transform:scaleX(1);transform-origin:right}100%{transform:scaleX(0);transform-origin:right} }
+  .event-type { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+  .event-title { font-size: 22px; font-weight: 800; color: white; line-height: 1.15; margin-bottom: 8px; }
+  .event-desc { font-size: 13px; color: #AAAAAA; line-height: 1.5; margin-bottom: 14px; }
+  .severity-row { display: flex; align-items: center; gap: 6px; }
+  .sev-bar { flex: 1; height: 5px; background: #2A2A2A; border-radius: 3px; overflow: hidden; }
+  .sev-bar.filled { background: var(--red); }
+  .sev-bar.half { background: #FF7A32; }
+  .sev-label { font-size: 10px; font-weight: 700; color: var(--red); letter-spacing: 0.5px; }
+  .sos-wrap { margin-bottom: 14px; }
+  .sos-btn { width: 100%; background: linear-gradient(135deg,#CC2020,#FF3B30); border: none; border-radius: 18px; padding: 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; position: relative; overflow: hidden; transition: transform 0.15s; }
+  .sos-btn:active { transform: scale(0.98); }
+  .sos-pulse-ring { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; animation: sos-ring 2s infinite; }
+  @keyframes sos-ring { 0%,100%{transform:scale(1)}50%{transform:scale(1.08)} }
+  .sos-text { flex: 1; text-align: left; }
+  .sos-title { font-size: 20px; font-weight: 800; color: white; letter-spacing: 0.5px; }
+  .sos-sub { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+  .sos-arrow { font-size: 20px; color: rgba(255,255,255,0.5); }
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .action-btn { border-radius: 16px; padding: 16px 14px; border: none; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; transition: transform 0.15s, opacity 0.15s; }
+  .action-btn:active { transform: scale(0.96); opacity: 0.85; }
+  .action-btn.navigate { grid-column: 1/-1; background: var(--red); flex-direction: row; align-items: center; padding: 18px 20px; }
+  .action-btn.dark { background: var(--em-surface); border: 1px solid #2A2A2A; }
+  .action-btn.yellow { background: var(--yellow); }
+  .action-btn.em-green { background: var(--em-green); }
+  .action-icon { font-size: 26px; }
+  .action-btn.navigate .action-icon { font-size: 30px; margin-right: 4px; }
+  .action-title { font-size: 13px; font-weight: 700; }
+  .action-btn.navigate .action-title { font-size: 16px; color: white; }
+  .action-btn.dark .action-title { color: white; }
+  .action-btn.yellow .action-title { color: #1A1A00; }
+  .action-btn.em-green .action-title { color: #001A07; }
+  .action-sub { font-size: 11px; }
+  .action-btn.navigate .action-sub { color: rgba(255,255,255,0.7); margin-left: auto; font-weight: 700; font-size: 13px; }
+  .action-btn.dark .action-sub { color: #666; }
+  .action-btn.yellow .action-sub { color: rgba(26,26,0,0.6); }
+  .action-btn.em-green .action-sub { color: rgba(0,26,7,0.6); }
+  .family-card { background: var(--em-surface); border: 1px solid #2A2A2A; border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+  .em-section-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 12px; }
+  .em-member-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1E1E1E; cursor: pointer; }
+  .em-member-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .em-member-row:first-child { padding-top: 0; }
+  .em-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; position: relative; }
+  .em-status-dot { position: absolute; bottom: 0; right: 0; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--em-surface); }
+  .em-status-dot.safe { background: var(--em-green); }
+  .em-status-dot.unknown { background: var(--yellow); }
+  .em-status-dot.danger { background: var(--red); animation: em-pulse 1s infinite; }
+  .em-member-info { flex: 1; }
+  .em-member-name { font-size: 14px; font-weight: 700; color: white; }
+  .em-member-loc { font-size: 12px; color: #555; margin-top: 2px; }
+  .em-member-status { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
+  .em-member-status.safe { color: var(--em-green); }
+  .em-member-status.unknown { color: var(--yellow); }
+  .em-member-status.danger { color: var(--red); }
 
-/* MODE SWITCHER */
-.mode-switch { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; border-radius: 100px; padding: 6px; display: flex; gap: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 100; }
-.mode-btn { padding: 10px 20px; border-radius: 100px; border: none; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-.mode-btn.daily-btn { background: #2B6052; color: white; }
-.mode-btn.emergency-btn { background: transparent; color: #888; }
-.mode-btn.daily-btn.inactive { background: transparent; color: #888; }
-.mode-btn.emergency-btn.active { background: #FF3B30; color: white; }
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(4px); }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet { background: #141414; border-radius: 28px 28px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 480px; border-top: 1px solid #2A2A2A; }
+  .modal-handle { width: 36px; height: 4px; background: #3A3A3A; border-radius: 2px; margin: 0 auto 20px; }
+  .modal-title { font-size: 22px; font-weight: 800; color: white; text-align: center; margin-bottom: 6px; }
+  .modal-sub { font-size: 14px; color: #666; text-align: center; margin-bottom: 24px; line-height: 1.4; }
+  .modal-country { background: #1E1E1E; border: 1px solid #2A2A2A; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+  .country-flag { font-size: 28px; flex-shrink: 0; }
+  .country-info { flex: 1; }
+  .country-name { font-size: 14px; font-weight: 600; color: white; }
+  .country-number { font-size: 12px; color: #666; margin-top: 2px; }
+  .country-detected { font-size: 11px; color: var(--em-green); font-weight: 700; }
+  .sos-call-btn { width: 100%; background: var(--red); color: white; border: none; border-radius: 16px; padding: 18px; font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 14px; transition: transform 0.15s; }
+  .sos-call-btn:active { transform: scale(0.98); }
+  .sos-location-btn { width: 100%; background: #1E1E1E; color: white; border: 1px solid #2A2A2A; border-radius: 16px; padding: 16px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: transform 0.15s; }
+  .sos-cancel-btn { width: 100%; background: transparent; color: #555; border: none; padding: 16px; font-size: 15px; cursor: pointer; margin-top: 6px; }
+
+  /* NAV */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 72px; display: flex; align-items: center; justify-content: space-around; z-index: 100; transition: background 0.4s; border-top: 1px solid; padding-bottom: env(safe-area-inset-bottom,0); }
+  .bottom-nav.daily-nav { background: rgba(244,240,232,0.95); border-color: var(--border); backdrop-filter: blur(20px); }
+  .bottom-nav.emergency-nav { background: rgba(10,10,10,0.97); border-color: #1E1E1E; backdrop-filter: blur(20px); }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; flex: 1; padding: 8px 0; transition: transform 0.15s; }
+  .nav-item:active { transform: scale(0.9); }
+  .nav-icon { font-size: 22px; }
+  .nav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.3px; }
+  .daily-nav .nav-label { color: var(--muted); }
+  .daily-nav .nav-item.active .nav-label { color: var(--green); }
+  .emergency-nav .nav-label { color: #444; }
+  .emergency-nav .nav-item.active .nav-label { color: var(--red); }
+  .mode-fab { position: fixed; bottom: 86px; right: 16px; z-index: 101; display: none; }
+  .mode-fab-btn { background: var(--green); color: white; border: none; border-radius: 100px; padding: 12px 18px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(43,96,82,0.4); display: flex; align-items: center; gap: 7px; transition: transform 0.15s; }
+  .mode-fab-btn:active { transform: scale(0.95); }
+  .toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #1E1E1E; color: white; padding: 12px 20px; border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 300; opacity: 0; transition: all 0.3s; white-space: nowrap; border: 1px solid #3A3A3A; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
 <!-- DAILY MODE -->
 <div id="daily" class="screen active">
-  <div class="daily-header">
-    <h1>⚓ Anchor</h1>
-    <p>Your family is ready · Auckland, NZ</p>
+  <div class="daily-hero">
+    <div class="daily-greeting" id="dailyGreeting">Good afternoon · Auckland, NZ</div>
+    <div class="daily-title">Your family is <em>ready.</em></div>
+    <div class="alert-pill"><div class="alert-dot"></div>No active alerts · Monitoring 3 zones</div>
   </div>
-
-  <div class="readiness">
-    <div class="section-title">Preparedness Score</div>
-    <h2>75%</h2>
-    <p>Complete 2 tasks to reach Silver status</p>
-  </div>
-
-  <div class="care-circle">
-    <div class="section-title">Care Circle</div>
-    <div class="member">
-      <div class="avatar">👵</div>
-      <div class="member-info">
-        <div class="member-name">Margaret (Neighbour)</div>
-        <div class="member-status">📍 Home · 12 min ago</div>
+  <div class="daily-content">
+    <div class="readiness-card">
+      <div class="ring-container">
+        <svg width="72" height="72" viewBox="0 0 72 72">
+          <circle cx="36" cy="36" r="28" fill="none" stroke="#E0DDD4" stroke-width="6"/>
+          <circle cx="36" cy="36" r="28" fill="none" stroke="#2B6052" stroke-width="6" stroke-dasharray="176" stroke-dashoffset="44" stroke-linecap="round"/>
+        </svg>
+        <div class="ring-text"><div class="ring-pct">75%</div><div class="ring-label">READY</div></div>
       </div>
-      <span class="tag safe">Safe</span>
-    </div>
-    <div class="member">
-      <div class="avatar">👦</div>
-      <div class="member-info">
-        <div class="member-name">Liam (Son)</div>
-        <div class="member-status">🏫 School</div>
+      <div class="readiness-text">
+        <div class="readiness-title">Almost there</div>
+        <div class="readiness-desc">Update your go-bag to reach Silver status.</div>
+        <button class="readiness-btn" onclick="showToast('Opening tasks...')">Complete 2 tasks →</button>
       </div>
-      <span class="tag safe">Safe</span>
     </div>
-    <div class="member">
-      <div class="avatar">🧔</div>
-      <div class="member-info">
-        <div class="member-name">David (Partner)</div>
-        <div class="member-status">🚗 In transit</div>
+    <div class="section-header">Care Circle — 3 Members</div>
+    <div class="care-card">
+      <div class="member-row">
+        <div class="avatar">👵<div class="avatar-dot online"></div></div>
+        <div class="member-info"><div class="member-name">Margaret</div><div class="member-sub">📍 Home · 12 min ago</div></div>
+        <span class="status-tag safe">Safe</span>
       </div>
-      <span class="tag away">Away</span>
+      <div class="member-row">
+        <div class="avatar">👦<div class="avatar-dot online"></div></div>
+        <div class="member-info"><div class="member-name">Liam (Son)</div><div class="member-sub">🏫 Lincoln Elementary</div></div>
+        <span class="status-tag safe">Safe</span>
+      </div>
+      <div class="member-row">
+        <div class="avatar">🧔<div class="avatar-dot away"></div></div>
+        <div class="member-info"><div class="member-name">David (Partner)</div><div class="member-sub">🚗 In transit · 23 min away</div></div>
+        <span class="status-tag away">Away</span>
+      </div>
+    </div>
+    <div class="section-header">Family Missions</div>
+    <div class="missions-grid">
+      <div class="mission-card" onclick="showToast('Opening Go-Bag mission...')">
+        <div class="mission-icon">🎒</div><div class="mission-title">Pack the Go-Bag</div><div class="mission-xp">+150 XP</div>
+        <div class="mission-progress"><div class="mission-bar" style="width:60%"></div></div>
+      </div>
+      <div class="mission-card orange" onclick="showToast('Opening Blackout Drill...')">
+        <div class="mission-icon">🔦</div><div class="mission-title">Blackout Drill</div><div class="mission-xp">+200 XP</div>
+        <div class="mission-progress"><div class="mission-bar" style="width:30%"></div></div>
+      </div>
+      <div class="mission-card completed" onclick="showToast('Mission complete! ✓')">
+        <div class="mission-icon">📋</div><div class="mission-title">Family Plan</div><div class="mission-xp">✓ Complete</div>
+        <div class="mission-progress"><div class="mission-bar" style="width:100%"></div></div>
+      </div>
+      <div class="mission-card orange" onclick="showToast('Opening Evacuation Run...')">
+        <div class="mission-icon">🏃</div><div class="mission-title">Evacuation Run</div><div class="mission-xp">+300 XP</div>
+        <div class="mission-progress"><div class="mission-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="emergency-trigger" onclick="switchToEmergency()">
+      <div class="trigger-icon">🚨</div>
+      <div class="trigger-text"><div class="trigger-title">Emergency Mode</div><div class="trigger-sub">Tap to activate during a crisis</div></div>
+      <div class="trigger-arrow">›</div>
     </div>
   </div>
-
-  <div class="section-title">Family Missions</div>
-  <div class="missions">
-    <div class="mission">
-      <div class="mission-icon">🎒</div>
-      <div class="mission-title">Pack Go-Bag</div>
-      <div class="mission-xp">+150 XP</div>
-    </div>
-    <div class="mission orange">
-      <div class="mission-icon">🔦</div>
-      <div class="mission-title">Blackout Drill</div>
-      <div class="mission-xp">+200 XP</div>
-    </div>
-    <div class="mission">
-      <div class="mission-icon">📋</div>
-      <div class="mission-title">Family Plan</div>
-      <div class="mission-xp">+100 XP ✓</div>
-    </div>
-    <div class="mission orange">
-      <div class="mission-icon">🏃</div>
-      <div class="mission-title">Evacuation Run</div>
-      <div class="mission-xp">+300 XP</div>
-    </div>
+  <div class="bottom-nav daily-nav">
+    <div class="nav-item active"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+    <div class="nav-item" onclick="showToast('Map coming soon...')"><div class="nav-icon">🗺️</div><div class="nav-label">Map</div></div>
+    <div class="nav-item" onclick="showToast('Family sync active...')"><div class="nav-icon">👨‍👩‍👧</div><div class="nav-label">Family</div></div>
+    <div class="nav-item" onclick="showToast('Missions loading...')"><div class="nav-icon">🏅</div><div class="nav-label">Missions</div></div>
+    <div class="nav-item" onclick="showToast('Settings coming soon...')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
   </div>
-
-  <button class="sos-daily" onclick="switchMode('emergency')">🚨 Switch to Emergency Mode</button>
-  <div style="height:80px;"></div>
 </div>
 
 <!-- EMERGENCY MODE -->
 <div id="emergency" class="screen">
-  <div class="em-header">
-    <div class="em-dot"></div>
-    <h1>ACTIVE EMERGENCY</h1>
+  <div class="em-status-bar">
+    <div class="em-active-badge"><div class="em-pulse"></div><div class="em-active-text">ACTIVE EMERGENCY</div></div>
+    <div class="em-clock" id="emClock">--:--:--</div>
   </div>
-
-  <div class="em-event">
-    <div class="em-event-type">⚠ Earthquake · M 6.2</div>
-    <div class="em-event-title">Seismic Activity Detected</div>
-    <div class="em-event-desc">Strong shaking reported. Avoid damaged buildings and downed power lines. Aftershocks likely.</div>
-  </div>
-
-  <button class="sos-btn">🆘 SEND SOS — GPS Attached</button>
-
-  <div class="em-actions">
-    <button class="em-btn dark" style="grid-column: 1/-1; display:flex; align-items:center; gap:12px; background:#FF3B30;">
-      <div>
-        <div class="em-btn-icon">📍</div>
-        <div class="em-btn-title" style="color:white; font-size:15px;">Navigate to Safety</div>
-        <div style="color:rgba(255,255,255,0.7); font-size:12px;">Nearest shelter: 0.4mi</div>
-      </div>
-    </button>
-    <button class="em-btn dark">
-      <div class="em-btn-icon">🏠</div>
-      <div class="em-btn-title">Drop & Cover</div>
-    </button>
-    <button class="em-btn yellow">
-      <div class="em-btn-icon">📻</div>
-      <div class="em-btn-title">Emergency Broadcast</div>
-    </button>
-    <button class="em-btn green">
-      <div class="em-btn-icon">🩺</div>
-      <div class="em-btn-title">First Aid</div>
-    </button>
-    <button class="em-btn dark">
-      <div class="em-btn-icon">📲</div>
-      <div class="em-btn-title">Cast to TV</div>
-    </button>
-  </div>
-
-  <div class="em-family">
-    <div class="section-title" style="color:#666;">Family Status</div>
-    <div class="em-member">
-      <div class="em-avatar">👦</div>
-      <div class="em-member-info">
-        <div class="em-member-name">Liam</div>
-        <div class="em-member-loc">📍 School · Shelter-in-place</div>
-      </div>
-      <span class="status-safe">SAFE</span>
+  <div class="em-content">
+    <div class="conn-row">
+      <div class="conn-badge satellite"><div class="conn-dot"></div>SATELLITE</div>
+      <div class="conn-badge active"><div class="conn-dot"></div>MESH ACTIVE</div>
+      <div class="conn-badge offline-maps"><div class="conn-dot"></div>OFFLINE MAPS</div>
     </div>
-    <div class="em-member">
-      <div class="em-avatar">🧔</div>
-      <div class="em-member-info">
-        <div class="em-member-name">David</div>
-        <div class="em-member-loc">Last seen: Route 7</div>
+    <div class="event-card">
+      <div class="event-type">⚠ Earthquake · M 6.2</div>
+      <div class="event-title">Seismic Activity<br>Detected Nearby</div>
+      <div class="event-desc">Strong shaking reported in your area. Aftershocks likely. Avoid damaged buildings and downed power lines.</div>
+      <div class="severity-row">
+        <div class="sev-bar filled"></div><div class="sev-bar filled"></div><div class="sev-bar filled"></div>
+        <div class="sev-bar half"></div><div class="sev-bar"></div>
+        <div class="sev-label">SEVERE</div>
       </div>
-      <span class="status-unknown">CHECKING</span>
     </div>
-    <div class="em-member">
-      <div class="em-avatar">👵</div>
-      <div class="em-member-info">
-        <div class="em-member-name">Margaret</div>
-        <div class="em-member-loc">📍 Home · Needs help</div>
+    <div class="sos-wrap">
+      <button class="sos-btn" onclick="openSOS()">
+        <div class="sos-pulse-ring">🆘</div>
+        <div class="sos-text"><div class="sos-title">SEND SOS</div><div class="sos-sub">Emergency services + contacts · GPS attached</div></div>
+        <div class="sos-arrow">›</div>
+      </button>
+    </div>
+    <div class="action-grid">
+      <button class="action-btn navigate" onclick="showToast('Opening evacuation route...')">
+        <div class="action-icon">📍</div>
+        <div><div class="action-title">Navigate to Safety</div><div style="color:rgba(255,255,255,0.65);font-size:11px;margin-top:2px;">Nearest shelter: 0.4mi</div></div>
+        <div class="action-sub">GO →</div>
+      </button>
+      <button class="action-btn dark" onclick="showToast('Drop, Cover, Hold On!')"><div class="action-icon">🏠</div><div class="action-title">Drop & Cover</div><div class="action-sub">Indoor protocol</div></button>
+      <button class="action-btn yellow" onclick="showToast('Tuning emergency broadcast...')"><div class="action-icon">📻</div><div class="action-title">Emergency Broadcast</div><div class="action-sub">Live updates</div></button>
+      <button class="action-btn em-green" onclick="showToast('Opening First Aid guide...')"><div class="action-icon">🩺</div><div class="action-title">First Aid</div><div class="action-sub">Step by step</div></button>
+      <button class="action-btn dark" onclick="showToast('Casting to nearby TV...')"><div class="action-icon">📲</div><div class="action-title">Cast to TV</div><div class="action-sub">Family briefing</div></button>
+    </div>
+    <div class="family-card">
+      <div class="em-section-label">— Family & Circle Status —</div>
+      <div class="em-member-row">
+        <div class="em-avatar" style="background:#1A2A1A;">👦<div class="em-status-dot safe"></div></div>
+        <div class="em-member-info"><div class="em-member-name">Liam</div><div class="em-member-loc">📍 Lincoln Elementary · Shelter-in-place</div></div>
+        <div class="em-member-status safe">SAFE</div>
       </div>
-      <span class="status-danger">NEEDS HELP</span>
+      <div class="em-member-row">
+        <div class="em-avatar" style="background:#2A2A1A;">🧔<div class="em-status-dot unknown"></div></div>
+        <div class="em-member-info"><div class="em-member-name">David</div><div class="em-member-loc">Last seen: Route 7 · 18 min ago</div></div>
+        <div class="em-member-status unknown">CHECKING</div>
+      </div>
+      <div class="em-member-row">
+        <div class="em-avatar" style="background:#2A1A1A;">👵<div class="em-status-dot danger"></div></div>
+        <div class="em-member-info"><div class="em-member-name">Margaret</div><div class="em-member-loc">📍 124 Maple St · Needs assistance</div></div>
+        <div class="em-member-status danger">NEEDS HELP</div>
+      </div>
     </div>
   </div>
-  <div style="height:80px;"></div>
+  <div class="bottom-nav emergency-nav">
+    <div class="nav-item active"><div class="nav-icon">🚨</div><div class="nav-label">Alerts</div></div>
+    <div class="nav-item" onclick="showToast('Evacuation map loading...')"><div class="nav-icon">🗺️</div><div class="nav-label">Evacuate</div></div>
+    <div class="nav-item" onclick="showToast('Family sync active...')"><div class="nav-icon">👥</div><div class="nav-label">Family</div></div>
+    <div class="nav-item" onclick="showToast('Satellite comms active...')"><div class="nav-icon">📡</div><div class="nav-label">Comms</div></div>
+    <div class="nav-item" onclick="showToast('Settings loading...')"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+  </div>
+  <div class="mode-fab" id="modeFab">
+    <button class="mode-fab-btn" onclick="switchToDaily()">☀️ Daily Mode</button>
+  </div>
 </div>
 
-<!-- MODE SWITCHER -->
-<div class="mode-switch">
-  <button class="mode-btn daily-btn" id="dailyBtn" onclick="switchMode('daily')">☀️ Daily</button>
-  <button class="mode-btn emergency-btn" id="emergencyBtn" onclick="switchMode('emergency')">🚨 Emergency</button>
+<!-- SOS MODAL -->
+<div class="modal-overlay" id="sosModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🆘 Send SOS</div>
+    <div class="modal-sub">Your location will be shared with emergency services and your contacts.</div>
+    <div class="modal-country">
+      <div class="country-flag" id="countryFlag">🇳🇿</div>
+      <div class="country-info">
+        <div class="country-name" id="countryName">New Zealand</div>
+        <div class="country-number" id="countryNumber">Emergency: 111</div>
+      </div>
+      <div class="country-detected">AUTO-DETECTED</div>
+    </div>
+    <div style="background:#1E1E1E;border:1px solid #2A2A2A;border-radius:14px;padding:14px 16px;">
+      <div style="font-size:13px;color:#666;margin-bottom:8px;">Global Emergency Numbers</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="font-size:12px;color:#888;">🇳🇿 NZ — 111</div>
+        <div style="font-size:12px;color:#888;">🇺🇸 USA — 911</div>
+        <div style="font-size:12px;color:#888;">🇬🇧 UK — 999</div>
+        <div style="font-size:12px;color:#888;">🇦🇺 AUS — 000</div>
+        <div style="font-size:12px;color:#888;">🇫🇷 FR — 18</div>
+        <div style="font-size:12px;color:#888;">🇩🇪 DE — 112</div>
+        <div style="font-size:12px;color:#888;">🇯🇵 JP — 110</div>
+        <div style="font-size:12px;color:#888;">🌍 EU — 112</div>
+      </div>
+    </div>
+    <button class="sos-call-btn" id="sosCallBtn" onclick="callEmergency()">📞 Call 111 — Emergency Services</button>
+    <button class="sos-location-btn" onclick="shareLocation()">📍 Share My Location with Contacts</button>
+    <button class="sos-cancel-btn" onclick="closeSOS()">Cancel</button>
+  </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-function switchMode(mode) {
-  document.getElementById('daily').classList.remove('active');
-  document.getElementById('emergency').classList.remove('active');
-  document.getElementById(mode).classList.add('active');
-  if(mode === 'emergency') {
-    document.getElementById('emergencyBtn').classList.add('active');
-    document.getElementById('dailyBtn').classList.add('inactive');
-  } else {
-    document.getElementById('emergencyBtn').classList.remove('active');
-    document.getElementById('dailyBtn').classList.remove('inactive');
-  }
-}
+  function setGreeting(){const h=new Date().getHours();const g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';document.getElementById('dailyGreeting').textContent=g+' · Auckland, NZ';}
+  setGreeting();
+  function updateClock(){const n=new Date();const p=x=>String(x).padStart(2,'0');document.getElementById('emClock').textContent=p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds());}
+  setInterval(updateClock,1000);updateClock();
+  function switchToEmergency(){document.getElementById('daily').classList.remove('active');document.getElementById('emergency').classList.add('active');document.getElementById('modeFab').style.display='block';window.scrollTo(0,0);}
+  function switchToDaily(){document.getElementById('emergency').classList.remove('active');document.getElementById('daily').classList.add('active');document.getElementById('modeFab').style.display='none';window.scrollTo(0,0);}
+  const emergencyNumbers={'NZ':{flag:'🇳🇿',name:'New Zealand',number:'111'},'US':{flag:'🇺🇸',name:'United States',number:'911'},'GB':{flag:'🇬🇧',name:'United Kingdom',number:'999'},'AU':{flag:'🇦🇺',name:'Australia',number:'000'},'FR':{flag:'🇫🇷',name:'France',number:'18'},'DE':{flag:'🇩🇪',name:'Germany',number:'112'},'JP':{flag:'🇯🇵',name:'Japan',number:'110'},'DEFAULT':{flag:'🌍',name:'International',number:'112'}};
+  let detectedNumber='111';
+  function detectCountry(){const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;let c='DEFAULT';if(tz.includes('Auckland')||tz.includes('Pacific/Auckland'))c='NZ';else if(tz.includes('America'))c='US';else if(tz.includes('London'))c='GB';else if(tz.includes('Sydney')||tz.includes('Melbourne'))c='AU';else if(tz.includes('Paris'))c='FR';else if(tz.includes('Berlin'))c='DE';else if(tz.includes('Tokyo'))c='JP';const info=emergencyNumbers[c];document.getElementById('countryFlag').textContent=info.flag;document.getElementById('countryName').textContent=info.name;document.getElementById('countryNumber').textContent='Emergency: '+info.number;document.getElementById('sosCallBtn').textContent='📞 Call '+info.number+' — Emergency Services';detectedNumber=info.number;}
+  function openSOS(){document.getElementById('sosModal').classList.add('open');detectCountry();}
+  function closeSOS(){document.getElementById('sosModal').classList.remove('open');}
+  function callEmergency(){window.location.href='tel:'+detectedNumber;closeSOS();}
+  function shareLocation(){if(navigator.geolocation){navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude.toFixed(6);const lng=pos.coords.longitude.toFixed(6);const msg=encodeURIComponent('🆘 ANCHOR SOS ALERT\nI need help!\nLocation: https://maps.google.com/?q='+lat+','+lng);window.location.href='sms:+640210755147?body='+msg;closeSOS();showToast('📍 Location shared!');},()=>{showToast('Enable location for GPS sharing');});}else{showToast('Location not available');}}
+  let toastTimeout;
+  function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.classList.remove('show'),2500);}
+  document.getElementById('sosModal').addEventListener('click',e=>{if(e.target===document.getElementById('sosModal'))closeSOS();});
+  setTimeout(()=>{document.querySelectorAll('.mission-bar').forEach(b=>{const w=b.style.width;b.style.width='0';setTimeout(()=>{b.style.transition='width 1s ease';b.style.width=w;},100);});},500);
 </script>
 </body>
-          </html>
+</html>
