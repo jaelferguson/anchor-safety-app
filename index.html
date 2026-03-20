@@ -436,12 +436,689 @@ html, body {
 .leaflet-popup-content-wrapper { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
 .leaflet-popup-tip-container { display: none !important; }
 .leaflet-popup-close-button { color: #888 !important; top: 6px !important; right: 8px !important; font-size: 18px !important; }
+
+/* ── FIRST AID SCREEN ── */
+#firstaid { background: #0A0A0A; }
+.fa-hdr { background: var(--emgreen); padding: 50px 16px 20px; }
+.fa-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+.fa-hdr-sub { font-size: 13px; color: rgba(255,255,255,0.7); }
+.fa-pad { padding: 16px; }
+.fa-search {
+  background: #1A1A1A; border: 1px solid #2A2A2A;
+  border-radius: 14px; padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px;
+}
+.fa-search input {
+  background: transparent; border: none; outline: none;
+  color: white; font-size: 15px; flex: 1;
+  font-family: -apple-system, sans-serif;
+}
+.fa-search input::placeholder { color: #555; }
+.fa-cats { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
+.fa-cats::-webkit-scrollbar { display: none; }
+.fa-cat {
+  padding: 8px 16px; border-radius: 100px; border: none;
+  cursor: pointer; font-size: 12px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0;
+}
+.fa-cat.active { background: var(--emgreen); color: white; }
+.fa-cat.inactive { background: #1A1A1A; color: #666; border: 1px solid #2A2A2A; }
+.fa-grid { display: flex; flex-direction: column; gap: 10px; }
+.fa-card {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; overflow: hidden; cursor: pointer;
+  transition: border-color 0.2s;
+}
+.fa-card:active { border-color: var(--emgreen); }
+.fa-card-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px;
+}
+.fa-card-ico {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; flex-shrink: 0;
+}
+.fa-card-info { flex: 1; }
+.fa-card-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 3px; }
+.fa-card-sub { font-size: 12px; color: #666; }
+.fa-card-arr { font-size: 20px; color: #444; }
+.fa-card-body { display: none; padding: 0 16px 16px; border-top: 1px solid #1E1E1E; }
+.fa-card-body.open { display: block; }
+.fa-step {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid #1E1E1E;
+}
+.fa-step:last-child { border-bottom: none; }
+.fa-step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--emgreen); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; flex-shrink: 0;
+}
+.fa-step-txt { flex: 1; }
+.fa-step-title { font-size: 14px; font-weight: 700; color: white; margin-bottom: 3px; }
+.fa-step-desc { font-size: 12px; color: #888; line-height: 1.5; }
+.fa-warning {
+  background: rgba(255,59,48,0.1); border: 1px solid rgba(255,59,48,0.25);
+  border-radius: 12px; padding: 12px 14px; margin-top: 12px;
+  font-size: 12px; color: #FF7A6A; line-height: 1.5;
+}
+.fa-call-btn {
+  width: 100%; background: var(--red); color: white;
+  border: none; border-radius: 14px; padding: 14px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  margin-top: 12px; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+
+
+/* ── SETTINGS SCREEN ── */
+#settings { background: #0A0A0A; }
+.set-hdr { background: #1A1A1A; padding: 50px 16px 20px; border-bottom: 1px solid #2A2A2A; }
+.set-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+.set-hdr-sub { font-size: 13px; color: #666; }
+.set-pad { padding: 16px; }
+.set-section { margin-bottom: 24px; }
+.set-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: #555;
+  margin-bottom: 10px; padding: 0 4px;
+}
+.set-card {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; overflow: hidden;
+}
+.set-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; border-bottom: 1px solid #1E1E1E;
+}
+.set-row:last-child { border-bottom: none; }
+.set-ico {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.set-row-info { flex: 1; }
+.set-row-label { font-size: 14px; font-weight: 600; color: white; }
+.set-row-val { font-size: 12px; color: #666; margin-top: 2px; }
+.set-row-arr { font-size: 18px; color: #444; }
+.set-input-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px; border-bottom: 1px solid #1E1E1E;
+}
+.set-input-row:last-child { border-bottom: none; }
+.set-input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: white; font-size: 14px; font-family: -apple-system, sans-serif;
+  text-align: right;
+}
+.set-input::placeholder { color: #444; }
+.set-toggle {
+  width: 44px; height: 26px; border-radius: 13px;
+  background: #333; border: none; cursor: pointer;
+  position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.set-toggle.on { background: var(--emgreen); }
+.set-toggle::after {
+  content: ''; position: absolute;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: white; top: 3px; left: 3px;
+  transition: transform 0.2s;
+}
+.set-toggle.on::after { transform: translateX(18px); }
+.set-contact-add {
+  width: 100%; background: transparent; color: var(--emgreen);
+  border: 1px dashed rgba(48,209,88,0.3); border-radius: 14px;
+  padding: 14px; font-size: 14px; font-weight: 600;
+  cursor: pointer; margin-top: 10px; display: flex;
+  align-items: center; justify-content: center; gap: 8px;
+}
+.set-save-btn {
+  width: 100%; background: var(--green); color: white;
+  border: none; border-radius: 16px; padding: 16px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  margin-top: 8px; transition: transform 0.15s;
+}
+.set-save-btn:active { transform: scale(0.98); }
+.set-danger-btn {
+  width: 100%; background: transparent; color: var(--red);
+  border: 1px solid rgba(255,59,48,0.3); border-radius: 16px;
+  padding: 14px; font-size: 14px; font-weight: 600;
+  cursor: pointer; margin-top: 10px;
+}
+.profile-avatar {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--green); display: flex; align-items: center;
+  justify-content: center; font-size: 32px; margin: 0 auto 16px;
+  border: 3px solid rgba(43,96,82,0.5);
+}
+.profile-name { font-size: 20px; font-weight: 800; color: white; text-align: center; margin-bottom: 4px; }
+.profile-sub { font-size: 13px; color: #666; text-align: center; margin-bottom: 20px; }
+.lang-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.lang-btn {
+  background: #1A1A1A; border: 1px solid #2A2A2A;
+  border-radius: 12px; padding: 12px 8px;
+  font-size: 12px; font-weight: 600; color: #888;
+  cursor: pointer; text-align: center; transition: all 0.2s;
+}
+.lang-btn.selected { background: var(--green); color: white; border-color: var(--green); }
+
+
+/* ── MISSIONS SCREEN ── */
+#missions { background: #0A0A0A; }
+.mis-hdr { background: linear-gradient(135deg, #1A3D30, #2B6052); padding: 50px 16px 20px; }
+.mis-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+.mis-hdr-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+.xp-bar-wrap { background: rgba(0,0,0,0.2); border-radius: 100px; height: 8px; overflow: hidden; margin-bottom: 6px; }
+.xp-bar-fill { height: 100%; background: var(--emgreen); border-radius: 100px; transition: width 1s ease; }
+.xp-label { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.6); font-weight: 600; }
+.mis-pad { padding: 16px; }
+.badge-shelf {
+  display: flex; gap: 12px; overflow-x: auto;
+  scrollbar-width: none; margin-bottom: 20px; padding-bottom: 4px;
+}
+.badge-shelf::-webkit-scrollbar { display: none; }
+.badge-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; flex-shrink: 0; width: 72px;
+}
+.badge-ico {
+  width: 60px; height: 60px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; border: 3px solid;
+}
+.badge-ico.earned { border-color: var(--yellow); background: rgba(255,214,10,0.12); }
+.badge-ico.locked { border-color: #2A2A2A; background: #1A1A1A; filter: grayscale(1); opacity: 0.4; }
+.badge-name { font-size: 10px; font-weight: 700; color: #888; text-align: center; line-height: 1.3; }
+.badge-name.earned { color: var(--yellow); }
+.mis-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: #555; margin-bottom: 10px;
+}
+.mis-card {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; padding: 16px; margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+.mis-card.active-mis { border-color: var(--emgreen); }
+.mis-card.done-mis { border-color: var(--yellow); opacity: 0.7; }
+.mis-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.mis-card-ico {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; flex-shrink: 0;
+}
+.mis-card-info { flex: 1; }
+.mis-card-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 3px; }
+.mis-card-sub { font-size: 12px; color: #666; }
+.mis-xp-badge {
+  background: rgba(48,209,88,0.12); color: var(--emgreen);
+  border: 1px solid rgba(48,209,88,0.25);
+  border-radius: 100px; padding: 4px 10px;
+  font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.mis-xp-badge.done { background: rgba(255,214,10,0.12); color: var(--yellow); border-color: rgba(255,214,10,0.25); }
+.mis-prog-wrap { margin-bottom: 10px; }
+.mis-prog-bar { height: 6px; background: #2A2A2A; border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
+.mis-prog-fill { height: 100%; background: var(--emgreen); border-radius: 3px; transition: width 0.8s ease; }
+.mis-card.done-mis .mis-prog-fill { background: var(--yellow); }
+.mis-prog-label { font-size: 11px; color: #555; display: flex; justify-content: space-between; }
+.mis-steps { display: flex; flex-direction: column; gap: 8px; }
+.mis-step {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 12px;
+  background: #1A1A1A; cursor: pointer;
+  transition: background 0.2s;
+}
+.mis-step:active { background: #222; }
+.mis-step-check {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid #333; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; font-size: 12px;
+  transition: all 0.2s;
+}
+.mis-step-check.checked { background: var(--emgreen); border-color: var(--emgreen); color: white; }
+.mis-step-txt { flex: 1; font-size: 13px; color: #AAA; }
+.mis-step-txt.checked { color: #555; text-decoration: line-through; }
+.mis-complete-btn {
+  width: 100%; background: var(--emgreen); color: white;
+  border: none; border-radius: 14px; padding: 14px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  margin-top: 12px; transition: transform 0.15s;
+}
+.mis-complete-btn:active { transform: scale(0.98); }
+.mis-complete-btn:disabled { background: #2A2A2A; color: #555; cursor: not-allowed; }
+.level-card {
+  background: linear-gradient(135deg, #1A3D30, #2B6052);
+  border-radius: 18px; padding: 20px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 16px;
+}
+.level-ico { font-size: 40px; flex-shrink: 0; }
+.level-info { flex: 1; }
+.level-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 4px; }
+.level-sub { font-size: 12px; color: rgba(255,255,255,0.6); }
+.level-badge {
+  background: rgba(255,214,10,0.2); color: var(--yellow);
+  border: 1px solid rgba(255,214,10,0.3);
+  border-radius: 100px; padding: 6px 14px;
+  font-size: 13px; font-weight: 800;
+}
+
+
+/* ── CARE CIRCLE SCREEN ── */
+#carecircle { background: #0A0A0A; }
+.cc-hdr {
+  background: linear-gradient(135deg, #1A2A3A, #2A4A6A);
+  padding: 50px 16px 20px;
+}
+.cc-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+.cc-hdr-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+.cc-stats { display: flex; gap: 10px; }
+.cc-stat {
+  flex: 1; background: rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 12px;
+  text-align: center;
+}
+.cc-stat-num { font-size: 22px; font-weight: 800; color: white; }
+.cc-stat-lbl { font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 2px; font-weight: 600; }
+.cc-pad { padding: 16px; }
+.cc-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: #555;
+  margin-bottom: 10px; margin-top: 4px;
+}
+.cc-member {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; padding: 16px;
+  margin-bottom: 10px; display: flex;
+  align-items: center; gap: 14px;
+  transition: border-color 0.2s;
+}
+.cc-member.needs-help { border-color: rgba(255,59,48,0.4); }
+.cc-member.checked-in { border-color: rgba(48,209,88,0.3); }
+.cc-member.checking { border-color: rgba(255,214,10,0.3); }
+.cc-avi {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0; position: relative;
+}
+.cc-dot {
+  position: absolute; bottom: 0; right: 0;
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid #141414;
+}
+.cc-dot.safe { background: var(--emgreen); }
+.cc-dot.danger { background: var(--red); animation: pulse 1s infinite; }
+.cc-dot.unknown { background: var(--yellow); }
+.cc-dot.offline { background: #555; }
+.cc-info { flex: 1; }
+.cc-name { font-size: 15px; font-weight: 700; color: white; margin-bottom: 3px; }
+.cc-detail { font-size: 12px; color: #666; margin-bottom: 6px; line-height: 1.4; }
+.cc-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.cc-tag {
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: 100px;
+}
+.cc-tag.elderly { background: rgba(108,194,255,0.15); color: #6CC2FF; }
+.cc-tag.disabled { background: rgba(255,214,10,0.15); color: var(--yellow); }
+.cc-tag.child { background: rgba(48,209,88,0.15); color: var(--emgreen); }
+.cc-tag.medical { background: rgba(255,59,48,0.15); color: #FF7A6A; }
+.cc-tag.alone { background: rgba(232,132,90,0.15); color: var(--orange); }
+.cc-tag.pet { background: rgba(43,96,82,0.3); color: #A8D5C2; }
+.cc-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.cc-action-btn {
+  padding: 8px 12px; border-radius: 10px; border: none;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  white-space: nowrap; transition: transform 0.15s;
+}
+.cc-action-btn:active { transform: scale(0.95); }
+.cc-action-btn.call { background: var(--emgreen); color: white; }
+.cc-action-btn.check { background: #1E1E1E; color: #888; border: 1px solid #2A2A2A; }
+.cc-action-btn.help { background: var(--red); color: white; }
+.cc-add-btn {
+  width: 100%; background: transparent;
+  color: #6CC2FF; border: 1px dashed rgba(108,194,255,0.3);
+  border-radius: 16px; padding: 16px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.cc-alert-card {
+  background: rgba(255,59,48,0.08);
+  border: 1px solid rgba(255,59,48,0.25);
+  border-radius: 18px; padding: 16px; margin-bottom: 14px;
+}
+.cc-alert-title { font-size: 14px; font-weight: 800; color: var(--red); margin-bottom: 8px; }
+.cc-alert-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,59,48,0.1);
+  font-size: 13px; color: #CCC;
+}
+.cc-alert-item:last-child { border-bottom: none; }
+.cc-alert-ico { font-size: 20px; flex-shrink: 0; }
+.cc-how {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; padding: 16px; margin-bottom: 14px;
+}
+.cc-how-title { font-size: 14px; font-weight: 700; color: white; margin-bottom: 12px; }
+.cc-how-step {
+  display: flex; gap: 10px; padding: 8px 0;
+  border-bottom: 1px solid #1E1E1E; font-size: 13px; color: #888;
+  line-height: 1.5;
+}
+.cc-how-step:last-child { border-bottom: none; }
+.cc-how-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #6CC2FF; color: #0A0A1A;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0;
+}
+
+
+/* ── PRIVACY & CONSENT ── */
+#consent {
+  background: #0A0A0A;
+  display: flex; flex-direction: column;
+  justify-content: center; padding: 30px 20px;
+  min-height: 100%;
+}
+.consent-logo { text-align: center; margin-bottom: 24px; }
+.consent-anchor { font-size: 52px; }
+.consent-brand { font-size: 24px; font-weight: 800; color: white; margin-top: 8px; }
+.consent-tagline { font-size: 13px; color: #666; margin-top: 4px; }
+.consent-card {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 20px; padding: 20px; margin-bottom: 16px;
+}
+.consent-card-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 14px; }
+.consent-item {
+  display: flex; gap: 12px; padding: 10px 0;
+  border-bottom: 1px solid #1E1E1E; align-items: flex-start;
+}
+.consent-item:last-child { border-bottom: none; padding-bottom: 0; }
+.consent-item-ico { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.consent-item-txt { flex: 1; font-size: 13px; color: #AAA; line-height: 1.5; }
+.consent-item-txt strong { color: white; }
+.consent-agree-btn {
+  width: 100%; background: var(--green); color: white;
+  border: none; border-radius: 16px; padding: 18px;
+  font-size: 16px; font-weight: 800; cursor: pointer;
+  margin-bottom: 12px; transition: transform 0.15s;
+}
+.consent-agree-btn:active { transform: scale(0.98); }
+.consent-privacy-btn {
+  width: 100%; background: transparent; color: #666;
+  border: none; padding: 12px;
+  font-size: 13px; cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ── PRIVACY POLICY SCREEN ── */
+#privacy { background: #0A0A0A; }
+.priv-hdr {
+  background: #141414; padding: 50px 16px 20px;
+  border-bottom: 1px solid #2A2A2A;
+}
+.priv-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+.priv-hdr-sub { font-size: 13px; color: #666; }
+.priv-pad { padding: 16px; }
+.priv-section { margin-bottom: 24px; }
+.priv-section-title {
+  font-size: 14px; font-weight: 800; color: white;
+  margin-bottom: 10px; padding-bottom: 8px;
+  border-bottom: 1px solid #2A2A2A;
+}
+.priv-text { font-size: 13px; color: #888; line-height: 1.7; margin-bottom: 10px; }
+.priv-highlight {
+  background: rgba(43,96,82,0.15); border: 1px solid rgba(43,96,82,0.3);
+  border-radius: 14px; padding: 14px 16px; margin-bottom: 12px;
+}
+.priv-highlight p { font-size: 13px; color: #A8D5C2; line-height: 1.6; }
+.priv-highlight strong { color: white; }
+.priv-table { width: 100%; margin-bottom: 12px; }
+.priv-row {
+  display: flex; gap: 10px; padding: 10px 0;
+  border-bottom: 1px solid #1E1E1E; font-size: 12px;
+}
+.priv-row:last-child { border-bottom: none; }
+.priv-row-type { color: white; font-weight: 600; flex: 1; }
+.priv-row-how { color: #888; flex: 1; }
+.priv-row-where { color: var(--emgreen); font-weight: 600; flex: 1; }
+.priv-back-btn {
+  width: 100%; background: var(--green); color: white;
+  border: none; border-radius: 16px; padding: 16px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  margin-bottom: 30px;
+}
+
+
+/* ── SURVIVAL BOOK ── */
+#survival { background: #0A0A0A; }
+.surv-hdr {
+  background: linear-gradient(135deg, #1A0A00, #3A1A00);
+  padding: 50px 16px 20px;
+}
+.surv-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+.surv-hdr-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 14px; }
+.surv-lang-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+.surv-lang-row::-webkit-scrollbar { display: none; }
+.surv-lang-btn {
+  padding: 6px 12px; border-radius: 100px; border: none;
+  cursor: pointer; font-size: 11px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0;
+  background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+}
+.surv-lang-btn.active { background: var(--orange); color: white; }
+.surv-pad { padding: 16px; }
+.surv-cats { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
+.surv-cats::-webkit-scrollbar { display: none; }
+.surv-cat {
+  padding: 8px 16px; border-radius: 100px; border: none;
+  cursor: pointer; font-size: 12px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0;
+}
+.surv-cat.active { background: var(--orange); color: white; }
+.surv-cat.inactive { background: #1A1A1A; color: #666; border: 1px solid #2A2A2A; }
+.surv-card {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; overflow: hidden; margin-bottom: 12px; cursor: pointer;
+}
+.surv-card-head { display: flex; align-items: center; gap: 14px; padding: 16px; }
+.surv-card-ico {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; flex-shrink: 0;
+}
+.surv-card-info { flex: 1; }
+.surv-card-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 3px; }
+.surv-card-sub { font-size: 12px; color: #666; }
+.surv-card-arr { font-size: 20px; color: #444; }
+.surv-body { display: none; border-top: 1px solid #1E1E1E; }
+.surv-body.open { display: block; }
+.surv-rule { display: flex; gap: 14px; padding: 14px 16px; border-bottom: 1px solid #1E1E1E; align-items: flex-start; }
+.surv-rule:last-child { border-bottom: none; }
+.surv-rule-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; flex-shrink: 0; color: white;
+}
+.surv-rule-txt { flex: 1; }
+.surv-rule-cmd { font-size: 15px; font-weight: 800; color: white; margin-bottom: 4px; }
+.surv-rule-desc { font-size: 12px; color: #888; line-height: 1.5; }
+.surv-warning {
+  background: rgba(255,59,48,0.08); border-left: 3px solid var(--red);
+  padding: 12px 14px; margin: 0 16px 14px;
+  border-radius: 0 10px 10px 0;
+  font-size: 12px; color: #FF7A6A; line-height: 1.5;
+}
+.surv-tip {
+  background: rgba(43,96,82,0.1); border-left: 3px solid var(--green);
+  padding: 12px 14px; margin: 0 16px 14px;
+  border-radius: 0 10px 10px 0;
+  font-size: 12px; color: #A8D5C2; line-height: 1.5;
+}
+
 </style>
 </head>
 <body>
 
+
+<!-- ══════════════ CONSENT SCREEN ══════════════ -->
+<div id="consent" class="screen active">
+  <div class="consent-logo">
+    <div class="consent-anchor">⚓</div>
+    <div class="consent-brand">Anchor Safety</div>
+    <div class="consent-tagline">A digital survival companion for every human being on earth</div>
+    <div style="font-size:11px;color:#444;margin-top:12px;line-height:1.8;text-align:center;">
+      English · العربية · 中文 · हिन्दी · Español · Français · বাংলা · Tagalog · Kiswahili · Português · Bahasa · Русский · 日本語 · Deutsch · Italiano · Türkçe · Tiếng Việt · Polski · Nederlands · isiZulu · Hausa · Yorùbá · Amharic · Burmese · Khmer · Lao · Sinhala · Nepali · Pashto · Urdu · Somali · Malagasy · Malay · Tamil · Telugu · Kannada · Malayalam · Gujarati · Punjabi · Odia · + all languages of earth
+    </div>
+    <div style="font-size:11px;color:#444;margin-top:8px;text-align:center;">
+      🤟 International Sign Language supported · Icon-based interface for all
+    </div>
+  </div>
+
+  <div class="consent-card">
+    <div class="consent-card-title">🔒 Your Privacy — Our Promise</div>
+    <div class="consent-item">
+      <div class="consent-item-ico">📱</div>
+      <div class="consent-item-txt"><strong>All data stays on YOUR device.</strong> Your name, contacts, and settings are stored only on your phone. Anchor never sees them.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-item-ico">🚫</div>
+      <div class="consent-item-txt"><strong>We collect nothing.</strong> No personal data is ever sent to Anchor servers. We have no servers that store your information.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-item-ico">📍</div>
+      <div class="consent-item-txt"><strong>Location is optional.</strong> Your GPS is only used when YOU tap the map or SOS button. It is never tracked in the background.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-item-ico">🗑️</div>
+      <div class="consent-item-txt"><strong>Delete everything anytime.</strong> Go to Settings and tap "Clear All Data" to permanently remove everything from your device instantly.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-item-ico">🆓</div>
+      <div class="consent-item-txt"><strong>Free forever.</strong> Anchor is and always will be free for individuals. No ads. No data selling. Ever.</div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-item-ico">✅</div>
+      <div class="consent-item-txt"><strong>Voluntary use only.</strong> All information you enter is given freely by you. You are never required to enter any personal information to use Anchor.</div>
+    </div>
+  </div>
+
+  <button class="consent-agree-btn" onclick="agreeToTerms()">
+    ✓ I Understand — Open Anchor
+  </button>
+  <button class="consent-privacy-btn" onclick="go('privacy')">
+    Read Full Privacy Policy
+  </button>
+</div>
+
+<!-- ══════════════ PRIVACY POLICY SCREEN ══════════════ -->
+<div id="privacy" class="screen">
+  <div class="priv-hdr">
+    <div class="priv-hdr-title">🔒 Privacy Policy</div>
+    <div class="priv-hdr-sub">Last updated: March 2026 · Plain English. No legal jargon.</div>
+  </div>
+  <div class="priv-pad">
+
+    <div class="priv-highlight">
+      <p><strong>The short version:</strong> Anchor collects nothing. All data you enter stays on your device only. We never see it, never store it, never share it. You are in complete control at all times.</p>
+    </div>
+
+    <div class="priv-section">
+      <div class="priv-section-title">1. Who We Are</div>
+      <div class="priv-text">Anchor Safety is a free emergency safety application designed to help individuals and families prepare for and respond to emergencies. Anchor Safety is provided free of charge to individuals worldwide. Our mission is to make emergency safety accessible to every human being on earth regardless of language, ability, or location.</div>
+      <div class="priv-text">Contact: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7b131e1717143b1a1518131409081a1d1e0f025514091c">[email&#160;protected]</a> · anchorsafety.org · Auckland, New Zealand</div>
+    </div>
+
+    <div class="priv-section">
+      <div class="priv-section-title">2. What Data We Collect</div>
+      <div class="priv-highlight">
+        <p><strong>We collect NO personal data.</strong> Anchor does not operate any servers that receive or store your personal information.</p>
+      </div>
+      <div class="priv-text">All information you choose to enter into Anchor — including your name, phone number, emergency contacts, family member details, and location — is stored exclusively on your own device using your device's local storage. This data never leaves your device and is never transmitted to Anchor or any third party.</div>
+      <div class="priv-table">
+        <div class="priv-row" style="background:#1A1A1A;border-radius:8px;padding:8px 10px;margin-bottom:4px;">
+          <div class="priv-row-type" style="color:#666;font-size:11px;">DATA TYPE</div>
+          <div class="priv-row-how" style="color:#666;font-size:11px;">HOW USED</div>
+          <div class="priv-row-where" style="color:#666;font-size:11px;">WHERE STORED</div>
+        </div>
+        <div class="priv-row">
+          <div class="priv-row-type">Your name</div>
+          <div class="priv-row-how">Display in app only</div>
+          <div class="priv-row-where">Your device only</div>
+        </div>
+        <div class="priv-row">
+          <div class="priv-row-type">Emergency contacts</div>
+          <div class="priv-row-how">SOS SMS sending</div>
+          <div class="priv-row-where">Your device only</div>
+        </div>
+        <div class="priv-row">
+          <div class="priv-row-type">GPS location</div>
+          <div class="priv-row-how">Map + SOS only when tapped</div>
+          <div class="priv-row-where">Never stored anywhere</div>
+        </div>
+        <div class="priv-row">
+          <div class="priv-row-type">Care Circle members</div>
+          <div class="priv-row-how">Display in app only</div>
+          <div class="priv-row-where">Your device only</div>
+        </div>
+        <div class="priv-row">
+          <div class="priv-row-type">Settings preferences</div>
+          <div class="priv-row-how">App personalisation</div>
+          <div class="priv-row-where">Your device only</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="priv-section">
+      <div class="priv-section-title">3. Location Data</div>
+      <div class="priv-text">Anchor only accesses your GPS location when you explicitly take one of the following actions: opening the Safety Map, tapping the SOS button, or tapping the Share Location button. Your location is never accessed in the background, never tracked continuously, and never stored or transmitted to Anchor.</div>
+      <div class="priv-text">When you share your location via SOS, the coordinates are sent directly from your device to your chosen emergency contacts via SMS. Anchor does not receive or log this information.</div>
+    </div>
+
+    <div class="priv-section">
+      <div class="priv-section-title">4. Third Party Services</div>
+      <div class="priv-text">Anchor uses the following third party services to display maps and locate hospitals. These services have their own privacy policies:</div>
+      <div class="priv-text">• <strong>OpenStreetMap / Overpass API</strong> — used to display maps and find nearby hospitals. Your approximate location is sent to this service only when you open the map. No personal data is included.</div>
+      <div class="priv-text">• <strong>CartoDB</strong> — provides the map tile images you see on screen. No personal data is shared.</div>
+      <div class="priv-text">Anchor does not use Google Analytics, Facebook Pixel, advertising networks, or any other tracking or analytics services.</div>
+    </div>
+
+    <div class="priv-section">
+      <div class="priv-section-title">5. Your Rights</div>
+      <div class="priv-text">Under the New Zealand Privacy Act 2020, GDPR (Europe), and equivalent laws worldwide, you have the right to access, correct, and delete your personal data at any time.</div>
+      <div class="priv-text">Since all data is stored only on your device, you have complete control at all times. To delete all data: open Settings and tap "Clear All Data." This permanently removes everything instantly.</div>
+    </div>
+
+    <div class="priv-section">
+      <div class="priv-section-title">6. Children</div>
+      <div class="priv-text">Anchor is designed to help protect children in emergencies. We do not knowingly collect any personal information from children. All information relating to children entered into Anchor is entered by a parent or guardian on their own device and is never transmitted to Anchor.</div>
+    </div>
+
+    <div class="priv-section">
+      <div class="priv-section-title">7. Changes to This Policy</div>
+      <div class="priv-text">If we ever change this privacy policy we will notify users through the app. We will never reduce your privacy protections without your explicit consent. Our core promise — that we collect nothing and your data stays on your device — will never change.</div>
+    </div>
+
+    <div class="priv-section">
+      <div class="priv-section-title">8. Contact</div>
+      <div class="priv-text">If you have any questions about this privacy policy please contact us at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3d55585151527d5c535e55524f4e5c5b58494413524f5a">[email&#160;protected]</a>. We are committed to responding to all privacy inquiries within 5 business days.</div>
+    </div>
+
+    <div class="priv-highlight">
+      <p><strong>Our final promise to you:</strong> Anchor was built to save lives — not to profit from your data. We will never sell, share, or monetise your personal information. Ever. Your trust is worth more than any amount of money.</p>
+    </div>
+
+    <button class="priv-back-btn" onclick="go('consent')">← Back to Anchor</button>
+
+  </div>
+</div>
+
 <!-- ══════════════ DAILY MODE ══════════════ -->
-<div id="daily" class="screen active">
+<div id="daily" class="screen">
   <div class="hero">
     <div class="hero-greet" id="greet">Good afternoon · Auckland, NZ</div>
     <div class="hero-title">Your family is <em>ready.</em></div>
@@ -514,6 +1191,18 @@ html, body {
     </div>
 
     <!-- Emergency trigger -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <button onclick="go('survival')" style="background:linear-gradient(135deg,#1A0A00,#3A1A00);border:1px solid rgba(255,100,20,0.2);border-radius:16px;padding:14px;cursor:pointer;text-align:left;">
+        <div style="font-size:24px;margin-bottom:6px;">📖</div>
+        <div style="font-size:13px;font-weight:700;color:white;">Survival Book</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">Skills for any crisis</div>
+      </button>
+      <button onclick="go('carecircle')" style="background:linear-gradient(135deg,#1A2A3A,#1A3A5A);border:1px solid rgba(108,194,255,0.2);border-radius:16px;padding:14px;cursor:pointer;text-align:left;">
+        <div style="font-size:24px;margin-bottom:6px;">👥</div>
+        <div style="font-size:13px;font-weight:700;color:white;">Care Circle</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">No one left behind</div>
+      </button>
+    </div>
     <div class="em-trig" onclick="go('emergency')">
       <div class="em-trig-ico">🚨</div>
       <div class="em-trig-txt">
@@ -527,9 +1216,9 @@ html, body {
   <div class="bnav light">
     <button class="ntab act" onclick="go('daily')"><div class="nico">🏠</div><div class="nlbl">Home</div></button>
     <button class="ntab" onclick="go('mapscreen')"><div class="nico">🗺️</div><div class="nlbl">Map</div></button>
-    <button class="ntab" onclick="toast('Family sync active...')"><div class="nico">👨‍👩‍👧</div><div class="nlbl">Family</div></button>
-    <button class="ntab" onclick="toast('Missions loading...')"><div class="nico">🏅</div><div class="nlbl">Missions</div></button>
-    <button class="ntab" onclick="toast('Settings coming soon...')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
+    <button class="ntab" onclick="go('carecircle')"><div class="nico">👨‍👩‍👧</div><div class="nlbl">Family</div></button>
+    <button class="ntab" onclick="go('missions')"><div class="nico">🏅</div><div class="nlbl">Missions</div></button>
+    <button class="ntab" onclick="go('settings')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
   </div>
 </div>
 
@@ -560,9 +1249,9 @@ html, body {
   <div class="bnav map dark">
     <button class="ntab" onclick="go('daily')"><div class="nico">🏠</div><div class="nlbl">Home</div></button>
     <button class="ntab act" onclick="go('mapscreen')"><div class="nico">🗺️</div><div class="nlbl">Map</div></button>
-    <button class="ntab" onclick="toast('Family sync active...')"><div class="nico">👨‍👩‍👧</div><div class="nlbl">Family</div></button>
-    <button class="ntab" onclick="toast('Missions loading...')"><div class="nico">🏅</div><div class="nlbl">Missions</div></button>
-    <button class="ntab" onclick="toast('Settings coming soon...')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
+    <button class="ntab" onclick="go('carecircle')"><div class="nico">👨‍👩‍👧</div><div class="nlbl">Family</div></button>
+    <button class="ntab" onclick="go('missions')"><div class="nico">🏅</div><div class="nlbl">Missions</div></button>
+    <button class="ntab" onclick="go('settings')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
   </div>
 </div>
 
@@ -625,7 +1314,7 @@ html, body {
       <button class="abtn yw" onclick="toast('Tuning emergency broadcast...')">
         <div class="aico">📻</div><div class="atxt">Emergency Broadcast</div><div class="asub">Live updates</div>
       </button>
-      <button class="abtn eg" onclick="toast('Opening First Aid guide...')">
+      <button class="abtn eg" onclick="go('firstaid')">
         <div class="aico">🩺</div><div class="atxt">First Aid</div><div class="asub">Step by step</div>
       </button>
       <button class="abtn dk" onclick="toast('Casting to nearby TV...')">
@@ -657,12 +1346,1359 @@ html, body {
   <div class="bnav dark">
     <button class="ntab act" onclick="go('emergency')"><div class="nico">🚨</div><div class="nlbl">Alerts</div></button>
     <button class="ntab" onclick="go('mapscreen')"><div class="nico">🗺️</div><div class="nlbl">Evacuate</div></button>
-    <button class="ntab" onclick="toast('Family sync active...')"><div class="nico">👥</div><div class="nlbl">Family</div></button>
+    <button class="ntab" onclick="go('carecircle')"><div class="nico">👥</div><div class="nlbl">Family</div></button>
     <button class="ntab" onclick="toast('Satellite comms active...')"><div class="nico">📡</div><div class="nlbl">Comms</div></button>
     <button class="ntab" onclick="toast('Settings loading...')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
   </div>
   <div class="fab" id="fab">
     <button class="fab-btn" onclick="go('daily')">☀️ Daily Mode</button>
+  </div>
+</div>
+
+
+<!-- ══════════════ FIRST AID SCREEN ══════════════ -->
+<div id="firstaid" class="screen">
+  <div class="fa-hdr">
+    <div class="fa-hdr-title">🩺 First Aid Guide</div>
+    <div class="fa-hdr-sub">Step-by-step emergency instructions · Works offline</div>
+  </div>
+  <div class="fa-pad">
+    <div class="fa-search">
+      <span style="font-size:18px;">🔍</span>
+      <input type="text" placeholder="Search emergency..." oninput="filterFA(this.value)" id="fasearch">
+    </div>
+    <div class="fa-cats">
+      <button class="fa-cat active" onclick="filterCat('all',this)">All</button>
+      <button class="fa-cat inactive" onclick="filterCat('injury',this)">🩸 Injury</button>
+      <button class="fa-cat inactive" onclick="filterCat('disaster',this)">🌊 Disaster</button>
+      <button class="fa-cat inactive" onclick="filterCat('medical',this)">❤️ Medical</button>
+      <button class="fa-cat inactive" onclick="filterCat('child',this)">👶 Children</button>
+    </div>
+    <div class="fa-grid" id="fagrid">
+
+      <!-- CPR -->
+      <div class="fa-card" data-cat="medical" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(255,59,48,0.15);">❤️</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">CPR — Adult</div>
+            <div class="fa-card-sub">Cardiac arrest · Not breathing</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Call emergency services NOW</div><div class="fa-step-desc">Call 111 (NZ) or your local emergency number before starting CPR if someone else is present.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Check the scene is safe</div><div class="fa-step-desc">Make sure you and the person are not in danger before approaching.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Check for response</div><div class="fa-step-desc">Tap shoulders firmly and shout "Are you okay?" If no response, begin CPR.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">30 chest compressions</div><div class="fa-step-desc">Place heel of hand on centre of chest. Push down hard and fast — 5–6 cm deep. Rate: 100–120 per minute (Stayin' Alive beat).</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">5</div><div class="fa-step-txt"><div class="fa-step-title">2 rescue breaths</div><div class="fa-step-desc">Tilt head back, lift chin. Pinch nose, seal mouth, blow for 1 second. Watch chest rise. Repeat twice.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">6</div><div class="fa-step-txt"><div class="fa-step-title">Continue 30:2 ratio</div><div class="fa-step-desc">Keep going — 30 compressions, 2 breaths — until help arrives or person recovers.</div></div></div>
+          <div class="fa-warning">⚠️ If not trained in rescue breaths, do hands-only CPR — continuous compressions only, no breaths.</div>
+          <button class="fa-call-btn" onclick="openSOS()">📞 Call Emergency Services Now</button>
+        </div>
+      </div>
+
+      <!-- CHOKING -->
+      <div class="fa-card" data-cat="medical" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(255,214,10,0.15);">😮</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">Choking — Adult</div>
+            <div class="fa-card-sub">Cannot breathe · Coughing · Turning blue</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Encourage coughing</div><div class="fa-step-desc">If they can cough, encourage them to keep coughing forcefully. Do not interfere.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">5 back blows</div><div class="fa-step-desc">Lean them forward. Give 5 firm blows between shoulder blades with heel of your hand.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">5 abdominal thrusts</div><div class="fa-step-desc">Stand behind them. Make a fist above navel. Pull sharply inward and upward 5 times.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">Repeat until clear</div><div class="fa-step-desc">Alternate 5 back blows and 5 abdominal thrusts until object is dislodged or they become unconscious.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">5</div><div class="fa-step-txt"><div class="fa-step-title">If unconscious — start CPR</div><div class="fa-step-desc">Lower them carefully to the ground and begin CPR immediately. Call emergency services.</div></div></div>
+          <button class="fa-call-btn" onclick="openSOS()">📞 Call Emergency Services Now</button>
+        </div>
+      </div>
+
+      <!-- EARTHQUAKE -->
+      <div class="fa-card" data-cat="disaster" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(232,132,90,0.15);">🏚️</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">Earthquake</div>
+            <div class="fa-card-sub">During and after shaking</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">DROP, COVER, HOLD ON</div><div class="fa-step-desc">Drop to hands and knees. Take cover under a sturdy table or desk. Hold on and protect your head and neck.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Stay inside until shaking stops</div><div class="fa-step-desc">Do NOT run outside. Most injuries happen when people try to move during shaking.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">After shaking — check for injuries</div><div class="fa-step-desc">Check yourself and others for injuries. Apply first aid. Do not move seriously injured people unless in immediate danger.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">Check for hazards</div><div class="fa-step-desc">Gas leaks (smell), damaged wiring, structural damage. If gas leak — open windows, leave immediately, do not use electrical switches.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">5</div><div class="fa-step-txt"><div class="fa-step-title">Expect aftershocks</div><div class="fa-step-desc">Move to open ground away from buildings, trees, and power lines. Be prepared for aftershocks.</div></div></div>
+          <div class="fa-warning">⚠️ If near coast — move to high ground immediately after shaking stops. Tsunami risk is real.</div>
+        </div>
+      </div>
+
+      <!-- FLOODING -->
+      <div class="fa-card" data-cat="disaster" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(108,194,255,0.15);">🌊</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">Flooding</div>
+            <div class="fa-card-sub">Flash floods · Rising water</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Move to higher ground immediately</div><div class="fa-step-desc">Do not wait. Take essential items only. Move children and elderly first.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Never walk in moving water</div><div class="fa-step-desc">Just 15cm of moving water can knock you down. 30cm of water can sweep a car away.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Turn off utilities</div><div class="fa-step-desc">Turn off electricity at the main switch if it is safe to do so. Do not touch electrical equipment in wet areas.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">If trapped indoors</div><div class="fa-step-desc">Move to the highest floor. Signal for help from windows. Do not go to the roof unless water is rising to your level.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">5</div><div class="fa-step-txt"><div class="fa-step-title">After flooding</div><div class="fa-step-desc">Do not return until authorities say it is safe. Avoid floodwater — it may be contaminated. Document damage for insurance.</div></div></div>
+        </div>
+      </div>
+
+      <!-- SEVERE BLEEDING -->
+      <div class="fa-card" data-cat="injury" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(255,59,48,0.15);">🩸</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">Severe Bleeding</div>
+            <div class="fa-card-sub">Deep cuts · Wounds · Heavy blood loss</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Apply direct pressure</div><div class="fa-step-desc">Press firmly on the wound with a clean cloth, bandage, or clothing. Do not remove — add more material on top if soaked through.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Elevate the injured area</div><div class="fa-step-desc">Raise the injured limb above the level of the heart if possible. This slows blood flow.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Keep pressing for 10 minutes</div><div class="fa-step-desc">Do not lift the cloth to check. Maintain constant firm pressure for at least 10 minutes without releasing.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">If bleeding doesn't stop</div><div class="fa-step-desc">For limb wounds: apply a tourniquet 5–7 cm above the wound. Tighten until bleeding stops. Note the time applied.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">5</div><div class="fa-step-txt"><div class="fa-step-title">Treat for shock</div><div class="fa-step-desc">Lay person down, elevate legs, keep warm. Do not give food or water. Call emergency services immediately.</div></div></div>
+          <button class="fa-call-btn" onclick="openSOS()">📞 Call Emergency Services Now</button>
+        </div>
+      </div>
+
+      <!-- FIRE -->
+      <div class="fa-card" data-cat="disaster" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(255,150,20,0.15);">🔥</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">Fire — Escape Plan</div>
+            <div class="fa-card-sub">Building fire · Smoke · Escape</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Get out immediately</div><div class="fa-step-desc">Do not stop to collect belongings. Every second counts. Alert others as you leave.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Stay low in smoke</div><div class="fa-step-desc">Smoke rises. Crawl low where air is cleaner. Cover nose and mouth with wet cloth if possible.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Test doors before opening</div><div class="fa-step-desc">Touch door with back of hand. If hot — do not open. Use another exit. If cool — open slowly and check for smoke.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">If trapped — signal for help</div><div class="fa-step-desc">Close doors between you and fire. Seal gaps with clothing. Signal from window. Call emergency services with your location.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">5</div><div class="fa-step-txt"><div class="fa-step-title">Meet at your family meeting point</div><div class="fa-step-desc">Go to your pre-agreed meeting point. Never re-enter a burning building for any reason.</div></div></div>
+          <button class="fa-call-btn" onclick="openSOS()">📞 Call Emergency Services Now</button>
+        </div>
+      </div>
+
+      <!-- CHOKING CHILD -->
+      <div class="fa-card" data-cat="child" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(48,209,88,0.15);">👶</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">Choking — Infant under 1</div>
+            <div class="fa-card-sub">Baby cannot breathe · Turning blue</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Face-down back blows</div><div class="fa-step-desc">Hold baby face-down along your forearm, head lower than chest. Give 5 gentle but firm back blows between shoulder blades with 2 fingers.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Face-up chest thrusts</div><div class="fa-step-desc">Turn baby face-up on your forearm. Give 5 chest thrusts using 2 fingers on centre of chest, just below nipple line.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Check mouth</div><div class="fa-step-desc">Look in mouth — only remove object if you can clearly see it. Never do a blind finger sweep.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">Repeat until clear</div><div class="fa-step-desc">Alternate back blows and chest thrusts. If baby becomes unconscious, begin infant CPR and call emergency services.</div></div></div>
+          <div class="fa-warning">⚠️ Never use abdominal thrusts on an infant under 1 year old — use chest thrusts only.</div>
+          <button class="fa-call-btn" onclick="openSOS()">📞 Call Emergency Services Now</button>
+        </div>
+      </div>
+
+      <!-- BURNS -->
+      <div class="fa-card" data-cat="injury" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(255,150,20,0.15);">🔥</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">Burns</div>
+            <div class="fa-card-sub">Heat · Chemical · Electrical burns</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Cool the burn immediately</div><div class="fa-step-desc">Run cool (not cold or iced) water over the burn for at least 20 minutes. Do not use ice, butter, or toothpaste.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Remove clothing and jewellery</div><div class="fa-step-desc">Remove from the burned area only if not stuck to the skin. Do not pull off stuck material.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Cover the burn loosely</div><div class="fa-step-desc">Use a clean non-fluffy material — cling film or a clean plastic bag is ideal. Do not wrap tightly.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">Seek medical help</div><div class="fa-step-desc">Get medical help for any burn larger than a postage stamp, on face/hands/joints, or in children and elderly.</div></div></div>
+          <div class="fa-warning">⚠️ For chemical burns — remove contaminated clothing, flush with large amounts of water for 20+ minutes. Call emergency services.</div>
+        </div>
+      </div>
+
+
+      <!-- VOLCANIC ERUPTION -->
+      <div class="fa-card" data-cat="disaster" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(255,100,20,0.15);">🌋</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">Volcanic Eruption</div>
+            <div class="fa-card-sub">Ash fall · Lava · Toxic gases</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Evacuate immediately if ordered</div><div class="fa-step-desc">Follow official evacuation orders without delay. Take your go-bag. Do not wait to see what happens.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Protect from ash fall</div><div class="fa-step-desc">Wear a P2/N95 mask or fold a damp cloth over nose and mouth. Wear goggles to protect eyes. Cover all skin — long sleeves, gloves.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Stay indoors if ash is falling</div><div class="fa-step-desc">Close all windows and doors. Seal gaps with wet towels. Turn off air conditioning and fans. Bring animals inside.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">Protect your water supply</div><div class="fa-step-desc">Cover water tanks and rainwater collection. Do not drink tap water until authorities say it is safe. Ash contaminates water supplies.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">5</div><div class="fa-step-txt"><div class="fa-step-title">Clear ash from roofs carefully</div><div class="fa-step-desc">Wet ash is extremely heavy and can collapse roofs. Clear carefully using a brush — not a hose. Wear full protection.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">6</div><div class="fa-step-txt"><div class="fa-step-title">Watch for lahars</div><div class="fa-step-desc">Lahars are fast-moving volcanic mudflows triggered by rain or melting snow. Move to high ground if near rivers or valleys after eruption.</div></div></div>
+          <div class="fa-warning">⚠️ Volcanic ash is razor sharp glass particles — it damages lungs permanently. Always wear a mask. Even light ash fall is dangerous.</div>
+          <button class="fa-call-btn" onclick="openSOS()">📞 Call Emergency Services Now</button>
+        </div>
+      </div>
+
+      <!-- GAS LEAK -->
+      <div class="fa-card" data-cat="disaster" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(255,214,10,0.15);">⚠️</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">Gas Leak</div>
+            <div class="fa-card-sub">Natural gas · LPG · Carbon monoxide</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Do NOT switch anything on or off</div><div class="fa-step-desc">Do not touch light switches, appliances, doorbells or phones. Any spark can ignite gas. Leave immediately.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Open windows and doors as you leave</div><div class="fa-step-desc">If safe to do so, open windows and doors to ventilate as you exit. Do not stop to collect belongings.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Turn off gas at the meter if safe</div><div class="fa-step-desc">Only if the meter is outside and you can reach it without going back inside. Turn the valve 90 degrees to close.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">Move far away and call for help</div><div class="fa-step-desc">Move at least 100 metres away. Call emergency services and your gas provider from outside. Do not re-enter until cleared.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">5</div><div class="fa-step-txt"><div class="fa-step-title">Carbon monoxide — silent killer</div><div class="fa-step-desc">You cannot smell or see CO. Symptoms: headache, dizziness, nausea. Get fresh air immediately. Call 111. Install a CO detector in your home.</div></div></div>
+          <div class="fa-warning">⚠️ Never use generators, BBQs, or gas appliances indoors — even in the garage. Carbon monoxide kills silently within minutes.</div>
+          <button class="fa-call-btn" onclick="openSOS()">📞 Call Emergency Services Now</button>
+        </div>
+      </div>
+
+      <!-- EPIDEMIC / DISEASE OUTBREAK -->
+      <div class="fa-card" data-cat="medical" onclick="toggleFA(this)">
+        <div class="fa-card-head">
+          <div class="fa-card-ico" style="background:rgba(108,194,255,0.15);">🦠</div>
+          <div class="fa-card-info">
+            <div class="fa-card-title">Epidemic / Disease Outbreak</div>
+            <div class="fa-card-sub">Infectious disease · Pandemic · Quarantine</div>
+          </div>
+          <div class="fa-card-arr">›</div>
+        </div>
+        <div class="fa-card-body">
+          <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Follow official health guidance</div><div class="fa-step-desc">Listen only to official government and health authority sources. Avoid misinformation. Follow quarantine and isolation instructions.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Wear a mask correctly</div><div class="fa-step-desc">Use a surgical mask or P2/N95 in public. Pinch the nose wire, cover nose and mouth fully. Change every 4 hours or when damp.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Hand hygiene — most important step</div><div class="fa-step-desc">Wash hands with soap for 20 seconds frequently. Use hand sanitiser when soap unavailable. Do not touch your face.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">Isolate the sick</div><div class="fa-step-desc">Keep sick family members in a separate room if possible. Dedicated bathroom if available. Wear mask when caring for them. Open windows for ventilation.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">5</div><div class="fa-step-txt"><div class="fa-step-title">Stock up carefully</div><div class="fa-step-desc">Keep 2 weeks of food, water, and essential medications. Include oral rehydration salts, fever medication, and extra masks and gloves.</div></div></div>
+          <div class="fa-step"><div class="fa-step-num">6</div><div class="fa-step-txt"><div class="fa-step-title">Protect the most vulnerable</div><div class="fa-step-desc">Elderly, disabled, and immunocompromised people need extra protection. Check on neighbours. Use your Care Circle to coordinate support.</div></div></div>
+          <div class="fa-warning">⚠️ Seek medical help immediately if someone shows severe symptoms — difficulty breathing, persistent chest pain, confusion, or cannot stay awake.</div>
+          <button class="fa-call-btn" onclick="openSOS()">📞 Call Emergency Services Now</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="bnav dark">
+    <button class="ntab" onclick="go('daily')"><div class="nico">🏠</div><div class="nlbl">Home</div></button>
+    <button class="ntab" onclick="go('mapscreen')"><div class="nico">🗺️</div><div class="nlbl">Map</div></button>
+    <button class="ntab" onclick="go('emergency')"><div class="nico">🚨</div><div class="nlbl">Emergency</div></button>
+    <button class="ntab act" onclick="go('firstaid')"><div class="nico">🩺</div><div class="nlbl">First Aid</div></button>
+    <button class="ntab" onclick="go('settings')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
+  </div>
+</div>
+
+
+<!-- ══════════════ SETTINGS SCREEN ══════════════ -->
+<div id="settings" class="screen">
+  <div class="set-hdr">
+    <div class="set-hdr-title">⚙️ Settings</div>
+    <div class="set-hdr-sub">Personalise Anchor for your family</div>
+  </div>
+  <div class="set-pad">
+
+    <!-- Profile -->
+    <div class="set-section">
+      <div class="profile-avatar">👤</div>
+      <div class="profile-name" id="profileName">Your Name</div>
+      <div class="profile-sub">Anchor Safety Member</div>
+      <div class="set-section-title">Your Profile</div>
+      <div class="set-card">
+        <div class="set-input-row">
+          <div class="set-ico" style="background:rgba(43,96,82,0.2);">👤</div>
+          <div class="set-row-label" style="flex:0;white-space:nowrap;">Full Name</div>
+          <input class="set-input" id="inputName" placeholder="Enter your name" onchange="updateProfile()">
+        </div>
+        <div class="set-input-row">
+          <div class="set-ico" style="background:rgba(43,96,82,0.2);">📞</div>
+          <div class="set-row-label" style="flex:0;white-space:nowrap;">My Number</div>
+          <input class="set-input" id="inputPhone" placeholder="+64 210 755 147" type="tel">
+        </div>
+        <div class="set-input-row">
+          <div class="set-ico" style="background:rgba(43,96,82,0.2);">📍</div>
+          <div class="set-row-label" style="flex:0;white-space:nowrap;">Location</div>
+          <input class="set-input" id="inputLocation" placeholder="Auckland, NZ">
+        </div>
+      </div>
+    </div>
+
+    <!-- Emergency Contacts -->
+    <div class="set-section">
+      <div class="set-section-title">Emergency Contacts</div>
+      <div class="set-card" id="contactsList">
+        <div class="set-input-row">
+          <div class="set-ico" style="background:rgba(255,59,48,0.15);">🚨</div>
+          <div class="set-row-label" style="flex:0;white-space:nowrap;">Contact 1</div>
+          <input class="set-input" id="contact1name" placeholder="Name">
+        </div>
+        <div class="set-input-row">
+          <div class="set-ico" style="background:rgba(255,59,48,0.1);">📞</div>
+          <div class="set-row-label" style="flex:0;white-space:nowrap;">Number</div>
+          <input class="set-input" id="contact1phone" placeholder="+64..." type="tel">
+        </div>
+        <div class="set-input-row">
+          <div class="set-ico" style="background:rgba(255,59,48,0.15);">🚨</div>
+          <div class="set-row-label" style="flex:0;white-space:nowrap;">Contact 2</div>
+          <input class="set-input" id="contact2name" placeholder="Name">
+        </div>
+        <div class="set-input-row">
+          <div class="set-ico" style="background:rgba(255,59,48,0.1);">📞</div>
+          <div class="set-row-label" style="flex:0;white-space:nowrap;">Number</div>
+          <input class="set-input" id="contact2phone" placeholder="+64..." type="tel">
+        </div>
+        <div class="set-input-row">
+          <div class="set-ico" style="background:rgba(255,59,48,0.15);">🚨</div>
+          <div class="set-row-label" style="flex:0;white-space:nowrap;">Contact 3</div>
+          <input class="set-input" id="contact3name" placeholder="Name">
+        </div>
+        <div class="set-input-row">
+          <div class="set-ico" style="background:rgba(255,59,48,0.1);">📞</div>
+          <div class="set-row-label" style="flex:0;white-space:nowrap;">Number</div>
+          <input class="set-input" id="contact3phone" placeholder="+64..." type="tel">
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="set-section">
+      <div class="set-section-title">Alerts & Notifications</div>
+      <div class="set-card">
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(255,59,48,0.15);">🚨</div>
+          <div class="set-row-info"><div class="set-row-label">Emergency Alerts</div><div class="set-row-val">Government emergency broadcasts</div></div>
+          <button class="set-toggle on" onclick="toggleSetting(this)"></button>
+        </div>
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(48,209,88,0.15);">👨‍👩‍👧</div>
+          <div class="set-row-info"><div class="set-row-label">Family Check-ins</div><div class="set-row-val">Daily safety confirmations</div></div>
+          <button class="set-toggle on" onclick="toggleSetting(this)"></button>
+        </div>
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(255,214,10,0.15);">🌤️</div>
+          <div class="set-row-info"><div class="set-row-label">Weather Warnings</div><div class="set-row-val">Severe weather alerts</div></div>
+          <button class="set-toggle on" onclick="toggleSetting(this)"></button>
+        </div>
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(108,194,255,0.15);">📡</div>
+          <div class="set-row-info"><div class="set-row-label">Satellite Mode</div><div class="set-row-val">Auto-switch when cell towers fail</div></div>
+          <button class="set-toggle on" onclick="toggleSetting(this)"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Language -->
+    <div class="set-section">
+      <div class="set-section-title">Language</div>
+      <div class="set-card" style="padding:14px 16px;">
+        <div style="font-size:12px;color:#555;margin-bottom:10px;">Most vulnerable populations first</div>
+        <div class="lang-grid">
+          <button class="lang-btn selected" onclick="selectLang(this)">🌍 Icons Only</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇬🇧 English</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇸🇦 العربية</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇨🇳 中文</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇮🇳 हिन्दी</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇪🇸 Español</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇫🇷 Français</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇧🇩 বাংলা</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇵🇭 Tagalog</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇰🇪 Kiswahili</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇧🇷 Português</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇮🇩 Bahasa</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇷🇺 Русский</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇯🇵 日本語</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇩🇪 Deutsch</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇹🇷 Türkçe</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇻🇳 Tiếng Việt</button>
+          <button class="lang-btn" onclick="selectLang(this)">🇳🇬 Hausa</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accessibility -->
+    <div class="set-section">
+      <div class="set-section-title">Accessibility</div>
+      <div class="set-card">
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(108,194,255,0.15);">🔊</div>
+          <div class="set-row-info"><div class="set-row-label">Audio Guidance</div><div class="set-row-val">Voice instructions during emergencies</div></div>
+          <button class="set-toggle" onclick="toggleSetting(this)"></button>
+        </div>
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(255,214,10,0.15);">📳</div>
+          <div class="set-row-info"><div class="set-row-label">Haptic Patterns</div><div class="set-row-val">Vibration alerts for deaf users</div></div>
+          <button class="set-toggle on" onclick="toggleSetting(this)"></button>
+        </div>
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(43,96,82,0.2);">🔡</div>
+          <div class="set-row-info"><div class="set-row-label">Large Text</div><div class="set-row-val">Increase text size throughout app</div></div>
+          <button class="set-toggle" onclick="toggleSetting(this)"></button>
+        </div>
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(255,255,255,0.08);">🌗</div>
+          <div class="set-row-info"><div class="set-row-label">High Contrast</div><div class="set-row-val">Maximum contrast for visibility</div></div>
+          <button class="set-toggle" onclick="toggleSetting(this)"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="set-section">
+      <div class="set-section-title">About Anchor</div>
+      <div class="set-card">
+        <div class="set-row" onclick="toast('anchorsafety.org')">
+          <div class="set-ico" style="background:rgba(43,96,82,0.2);">⚓</div>
+          <div class="set-row-info"><div class="set-row-label">Anchor Safety</div><div class="set-row-val">anchorsafety.org · Version 1.0</div></div>
+          <div class="set-row-arr">›</div>
+        </div>
+        <div class="set-row" onclick="toast('Safety for every human being on earth 🌏')">
+          <div class="set-ico" style="background:rgba(43,96,82,0.2);">🌏</div>
+          <div class="set-row-info"><div class="set-row-label">Our Mission</div><div class="set-row-val">Free for every human being on earth</div></div>
+          <div class="set-row-arr">›</div>
+        </div>
+        <div class="set-row" onclick="toast('hello@anchorsafety.org')">
+          <div class="set-ico" style="background:rgba(43,96,82,0.2);">✉️</div>
+          <div class="set-row-info"><div class="set-row-label">Contact Us</div><div class="set-row-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d6beb3babab996b7b8b5beb9a4a5b7b0b3a2aff8b9a4b1">[email&#160;protected]</a></div></div>
+          <div class="set-row-arr">›</div>
+        </div>
+        <div class="set-row" onclick="toast('Coming soon — Anchor branded gear! 🎒🐾📡')">
+          <div class="set-ico" style="background:rgba(43,96,82,0.2);">🛍️</div>
+          <div class="set-row-info">
+            <div class="set-row-label">Anchor Gear — Coming Soon</div>
+            <div class="set-row-val">🎒 Emergency Bag · 🐾 Dog Saddlebag · 📡 GPS Tracker · 🔦 Head Torch</div>
+          </div>
+          <div class="set-row-arr">›</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Family Communication -->
+    <div class="set-section">
+      <div class="set-section-title">Family Communication Group</div>
+      <div class="set-card" style="padding:16px;">
+        <div style="font-size:13px;color:#888;line-height:1.6;margin-bottom:14px;">
+          Set up a group chat with your family and Care Circle on any app you already use. In an emergency this is your first line of communication. <strong style="color:white;">You set it up — you stay in control.</strong>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <button onclick="openCommsApp('whatsapp')" style="background:#25D366;color:white;border:none;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+            💬 WhatsApp
+          </button>
+          <button onclick="openCommsApp('telegram')" style="background:#2AABEE;color:white;border:none;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+            ✈️ Telegram
+          </button>
+          <button onclick="openCommsApp('signal')" style="background:#3A76F0;color:white;border:none;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+            🔒 Signal
+          </button>
+          <button onclick="openCommsApp('viber')" style="background:#7360F2;color:white;border:none;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+            📳 Viber
+          </button>
+          <button onclick="openCommsApp('wechat')" style="background:#07C160;color:white;border:none;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+            💚 WeChat
+          </button>
+          <button onclick="openCommsApp('line')" style="background:#00B900;color:white;border:none;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+            💚 Line
+          </button>
+        </div>
+        <div style="background:#1A1A1A;border-radius:12px;padding:12px;font-size:11px;color:#555;line-height:1.6;">
+          💡 <strong style="color:#888;">How to set up:</strong> Open your chosen app → Create a new group → Add all family members and Care Circle neighbours → Name it "Anchor Family Emergency" → Pin it to the top of your chats so you find it instantly in a crisis.
+        </div>
+      </div>
+    </div>
+
+    <!-- Bluetooth & Hands-Free -->
+    <div class="set-section">
+      <div class="set-section-title">🚗 Driving & Hands-Free</div>
+      <div class="set-card">
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(108,194,255,0.15);">🔵</div>
+          <div class="set-row-info">
+            <div class="set-row-label">Bluetooth Audio</div>
+            <div class="set-row-val">Emergency alerts read aloud via car speakers</div>
+          </div>
+          <button class="set-toggle on" onclick="toggleSetting(this)"></button>
+        </div>
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(108,194,255,0.15);">🎙️</div>
+          <div class="set-row-info">
+            <div class="set-row-label">Voice Commands</div>
+            <div class="set-row-val">Say "Anchor SOS" to trigger emergency</div>
+          </div>
+          <button class="set-toggle on" onclick="toggleSetting(this)"></button>
+        </div>
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(48,209,88,0.15);">🚗</div>
+          <div class="set-row-info">
+            <div class="set-row-label">Driving Mode</div>
+            <div class="set-row-val">Large buttons, voice alerts, no distractions</div>
+          </div>
+          <button class="set-toggle" onclick="toggleSetting(this);toast('Driving mode activated — stay safe! 🚗')"></button>
+        </div>
+        <div class="set-row">
+          <div class="set-ico" style="background:rgba(255,214,10,0.15);">📳</div>
+          <div class="set-row-info">
+            <div class="set-row-label">Vibration Alerts</div>
+            <div class="set-row-val">Feel emergency alerts through steering wheel mount</div>
+          </div>
+          <button class="set-toggle on" onclick="toggleSetting(this)"></button>
+        </div>
+        <div style="background:#1A1A1A;border-radius:12px;padding:12px 14px;margin:8px 0 4px;">
+          <div style="font-size:12px;color:#555;line-height:1.7;">
+            🔵 <strong style="color:#888;">How to connect:</strong> Pair your phone to your car Bluetooth as normal. Anchor will automatically use your car speakers for emergency alerts and voice guidance. Works with all Bluetooth car systems, earphones, and hearing aids.
+          </div>
+        </div>
+        <button onclick="toast('Opening Bluetooth settings...');window.location.href='app-settings:bluetooth'" style="width:100%;background:#1E3A5F;color:#6CC2FF;border:1px solid rgba(108,194,255,0.25);border-radius:12px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;margin-top:4px;">
+          🔵 Open Bluetooth Settings
+        </button>
+      </div>
+    </div>
+
+    <button class="set-save-btn" onclick="saveSettings()">💾 Save Settings</button>
+    <button class="set-danger-btn" onclick="clearAllData()">🗑️ Clear All Data</button>
+    <div style="height:20px;"></div>
+
+  </div>
+  <div class="bnav dark">
+    <button class="ntab" onclick="go('daily')"><div class="nico">🏠</div><div class="nlbl">Home</div></button>
+    <button class="ntab" onclick="go('mapscreen')"><div class="nico">🗺️</div><div class="nlbl">Map</div></button>
+    <button class="ntab" onclick="go('emergency')"><div class="nico">🚨</div><div class="nlbl">Emergency</div></button>
+    <button class="ntab" onclick="go('firstaid')"><div class="nico">🩺</div><div class="nlbl">First Aid</div></button>
+    <button class="ntab act" onclick="go('settings')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
+  </div>
+</div>
+
+
+<!-- ══════════════ MISSIONS SCREEN ══════════════ -->
+<div id="missions" class="screen">
+  <div class="mis-hdr">
+    <div class="mis-hdr-title">🏅 Family Missions</div>
+    <div class="mis-hdr-sub">Complete missions to keep your family safe</div>
+    <div class="xp-bar-wrap">
+      <div class="xp-bar-fill" id="xpBarFill" style="width:35%"></div>
+    </div>
+    <div class="xp-label">
+      <span id="xpLabel">350 XP</span>
+      <span>Level 2 — Silver · Next: 500 XP</span>
+    </div>
+  </div>
+  <div class="mis-pad">
+
+    <!-- Level card -->
+    <div class="level-card">
+      <div class="level-ico">🥈</div>
+      <div class="level-info">
+        <div class="level-title">Silver Preparer</div>
+        <div class="level-sub">Your family is 35% ready · Keep going!</div>
+      </div>
+      <div class="level-badge">Lv 2</div>
+    </div>
+
+    <!-- Badges earned -->
+    <div class="mis-section-title">Badges Earned</div>
+    <div class="badge-shelf" id="badgeShelf">
+      <div class="badge-item">
+        <div class="badge-ico earned">📋</div>
+        <div class="badge-name earned">Family Plan</div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-ico locked">🎒</div>
+        <div class="badge-name">Go-Bag</div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-ico locked">🔦</div>
+        <div class="badge-name">Blackout</div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-ico locked">🏃</div>
+        <div class="badge-name">Evacuator</div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-ico locked">🩺</div>
+        <div class="badge-name">First Aider</div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-ico locked">💧</div>
+        <div class="badge-name">Water Safe</div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-ico locked">⭐</div>
+        <div class="badge-name">Gold Star</div>
+      </div>
+    </div>
+
+    <!-- Active missions -->
+    <div class="mis-section-title">Active Missions</div>
+
+    <!-- Go-Bag mission -->
+    <div class="mis-card active-mis" id="mission-gobag">
+      <div class="mis-card-head">
+        <div class="mis-card-ico" style="background:rgba(43,96,82,0.2);">🎒</div>
+        <div class="mis-card-info">
+          <div class="mis-card-title">Pack the Go-Bag</div>
+          <div class="mis-card-sub">Essential items for 72-hour emergency</div>
+        </div>
+        <div class="mis-xp-badge" id="gobag-xp">+150 XP</div>
+      </div>
+      <div class="mis-prog-wrap">
+        <div class="mis-prog-bar"><div class="mis-prog-fill" id="gobag-bar" style="width:0%"></div></div>
+        <div class="mis-prog-label"><span id="gobag-prog-txt">0 of 53 complete</span><span id="gobag-pct">0%</span></div>
+      </div>
+      <div class="mis-steps">
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Water — 3 litres per person per day</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Food — 3 day supply of non-perishables</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">First aid kit with medications</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Torch and spare batteries</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Important documents (copies)</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Phone charger and power bank</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">😷 P2/N95 masks — volcanic ash, smoke, disease outbreak</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🥽 Eye protection — goggles or safety glasses</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🧤 Gloves — heavy duty work gloves</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🌧️ Rain poncho or waterproof jacket</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🪢 Rope — at least 10 metres, strong</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🔪 Pocket knife or multi-tool</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🛒 Wheeled trolley with pull handle — to move supplies AND transport babies, toddlers and young children safely. Also essential for elderly who cannot carry heavy loads. Choose a strong 4-wheel trolley with a secure harness or seat attachment for children. Large enough to carry both supplies and a small child at the same time.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">⛺ Emergency tent — sized for your whole family</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🔥 Waterproof matches AND lighter AND flint fire starter — flint never runs out, works when wet, works in any weather. Essential backup when matches and lighter fail.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">👟 Comfortable walking shoes — sturdy, ready to go at all times</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">⛽ Car fuel — always keep at least ⅔ full. Never let it drop below half. Petrol stations close in emergencies.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🧻 Toilet paper — large supply. Sanitation is critical in emergencies.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🛍️ Heavy duty plastic bags — for waste, waterproofing, and emergency sanitation.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🩸 Female sanitary pads — enough supply for all women and girls in your family.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">👴 Adult nappies/incontinence pads — essential for elderly family members. Stock generously.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">👶 Baby nappies and wipes — enough for at least 2 weeks for any infants in your family.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🦯 Crutches or a foldable walking stick — essential if anyone is injured during evacuation. Store near the go-bag.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">💪 Age-appropriate bags — strongest adults carry heaviest loads. Teens carry medium bags. Children carry only their own essentials (water bottle, snack, comfort item). Elderly carry nothing — use the trolley for their supplies.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🧒 Children's bag — light backpack with: water bottle, snack, small toy or comfort item, whistle to signal for help if separated.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">👴 Elderly bag — nothing heavy. Use trolley. Include their medications, glasses, hearing aids, and any mobility aids.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🗺️ Map of your local area — printed on waterproof plastic paper (Tyvek or synthetic paper). Cannot be destroyed by rain, mud or heat. Never tears. Do not rely on phone GPS only. Phones die. Waterproof maps don't.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🗺️ Evacuation route map — printed on waterproof plastic paper. Mark shelters, hospitals and family meeting point in permanent waterproof pen BEFORE an emergency. Cannot be damaged by rain, flooding or heat.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">✏️ Waterproof permanent markers and pencils — to leave messages for family coming behind you. Waterproof ink survives rain and flooding. Write direction, time and destination clearly. Works on any surface — paper, wood, walls, rocks.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">📝 Waterproof plastic notepad and permanent waterproof pen — pages cannot be damaged by rain, flooding or mud. Write messages that last. Brands: Rite in the Rain, Aqua Notes. Works underwater.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🔧 Tent repair patches and tape — a damaged tent in rain or cold can be life threatening. Keep repair kit inside the tent bag at all times.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">👒 Wide brim hat with neck flap — protects face, ears and neck from sun. Essential in hot climates and during long evacuations. One per person.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">👕 Lightweight long sleeve clothing — counterintuitive but long sleeves protect from sunburn, insect bites, cuts and ash in hot weather. Pack one set per person.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🧴 Sunscreen SPF 50+ — sun exposure during evacuation causes exhaustion and burns fast. Apply before leaving. Keep a tube in every bag.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🥾 Tramping/walking poles for everyone — one pair per person. Improves balance on rough terrain, reduces knee strain on long walks, helps elderly and children stay steady. Doubles as a support splint if someone is injured. Choose foldable adjustable poles for easy packing.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🐾 Dog paw shoes/boots — protect paws from broken glass, hot asphalt, volcanic ash, ice and sharp debris during evacuation. Size appropriately for your dog.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🎒 Dog saddlebag — double sided reflective waterproof bags that sit on dog's left and right sides. Weight must be no more than 25% of dog's body weight. Include dog food, treats, and a small first aid kit. Look out for the official Anchor Dog Saddlebag — coming soon with built-in reflectors and Anchor logo.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">💊 Dog medications — pack all regular medications, flea and tick treatment, and any prescription medicines. Keep in a waterproof bag inside dog saddlebag.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🥣 Collapsible dog bowl — lightweight foldable bowl for water and food. One for water, one for food. Pack inside dog saddlebag.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">💧 Extra water for dog — dogs need approximately 50ml of water per kg of body weight per day. Pack accordingly.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">📡 GPS tracking tag for dog — attach to collar. Connects to family phones via Bluetooth or satellite. Brands: Apple AirTag, Garmin GPS dog tracker, Tile. Make dog bag and collar reflective so dog is visible at night.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">📡 GPS tracking for all family members — personal GPS tracker for each person connects to all family phones. In emergencies use: Garmin inReach (satellite — works with no cell coverage), Apple AirTag for short range, or Spot Gen4 satellite tracker. Satellite trackers work anywhere on earth with no phone signal needed.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🐶 Doggy raincoat — waterproof, reflective. Keeps dog dry and warm during evacuation in rain. A wet cold dog becomes sick quickly. Size appropriately and pack with dog saddlebag. Reflective strips so dog is visible at night.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">💧 LifeStraw personal water filter — one per person in every bag including children. Filters dirty river water, flood water, puddles — removes 99.9999% of bacteria and parasites. No batteries, no pumping, just drink directly. Lasts 4,000 litres. Could save your life when clean water is unavailable. Also available in a pet version for dogs.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">☀️ Rollable flexible solar panel — the latest technology. Rolls up compact into your bag. Unroll during the day to charge phones, torches, GPS trackers and power banks. Works in cloudy conditions. Look for a 20–40 watt rollable panel with USB-A and USB-C outputs. Can charge multiple devices simultaneously. Essential when power grid is down for days or weeks.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🔋 High capacity power bank 20,000–30,000mAh — charge from solar panel during day, charge phones and devices at night. One large power bank can charge a phone 6–8 times. Keep fully charged before any emergency.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🔌 Universal travel powerboard with surge protection — fits ALL country plug types. When you find a working power source in an emergency — a generator, a shelter, a vehicle — you can plug in immediately regardless of country. Charge multiple devices at once. Includes USB-A, USB-C and standard power sockets. Essential for international travellers and refugees crossing borders. Power plug types by region: 🇳🇿🇦🇺 Type I · 🇬🇧 Type G · 🇺🇸🇯🇵 Type A · 🇪🇺 Type C/E · 🇮🇳 Type D · 🇧🇷 Type N · 🌍 Universal adaptor covers all.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🔦 Anchor head torch — hands-free lighting for evacuation. Elastic headband with Anchor ⚓ logo and self-reflective band visible 200 metres in the dark. Rechargeable via USB. One per person including children. Essential for night evacuations and signalling rescue teams.</div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🪨 Flint and steel fire starter — never runs out. Works in rain, wind, cold. Sparks at 3000°C. One flint lasts 12,000 strikes. Every bag must have one.</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'gobag')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">🪞 Hand signal mirror — for SOS signalling to aircraft and rescue teams. A mirror flash is visible up to 50km on a clear day. Tap SOS pattern — 3 short 3 long 3 short flashes. One per adult bag.</div>
+        </div>
+      </div>
+      <button class="mis-complete-btn" id="gobag-btn" onclick="completeMission('gobag','🎒','Go-Bag',150)" disabled>Complete Mission</button>
+    </div>
+
+    <!-- Blackout Drill -->
+    <div class="mis-card active-mis" id="mission-blackout">
+      <div class="mis-card-head">
+        <div class="mis-card-ico" style="background:rgba(232,132,90,0.2);">🔦</div>
+        <div class="mis-card-info">
+          <div class="mis-card-title">Blackout Drill</div>
+          <div class="mis-card-sub">Practice operating without power</div>
+        </div>
+        <div class="mis-xp-badge" id="blackout-xp">+200 XP</div>
+      </div>
+      <div class="mis-prog-wrap">
+        <div class="mis-prog-bar"><div class="mis-prog-fill" id="blackout-bar" style="width:0%"></div></div>
+        <div class="mis-prog-label"><span id="blackout-prog-txt">0 of 5 complete</span><span id="blackout-pct">0%</span></div>
+      </div>
+      <div class="mis-steps">
+        <div class="mis-step" onclick="checkStep(this,'blackout')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Locate all torches in the house</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'blackout')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Test batteries — replace if needed</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'blackout')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Know where your fuse box is</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'blackout')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Have candles and matches stored safely</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'blackout')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Practice finding exits in the dark</div>
+        </div>
+      </div>
+      <button class="mis-complete-btn" id="blackout-btn" onclick="completeMission('blackout','🔦','Blackout',200)" disabled>Complete Mission</button>
+    </div>
+
+    <!-- Evacuation Run -->
+    <div class="mis-card active-mis" id="mission-evac">
+      <div class="mis-card-head">
+        <div class="mis-card-ico" style="background:rgba(255,59,48,0.15);">🏃</div>
+        <div class="mis-card-info">
+          <div class="mis-card-title">Evacuation Run</div>
+          <div class="mis-card-sub">Know your escape routes</div>
+        </div>
+        <div class="mis-xp-badge" id="evac-xp">+300 XP</div>
+      </div>
+      <div class="mis-prog-wrap">
+        <div class="mis-prog-bar"><div class="mis-prog-fill" id="evac-bar" style="width:0%"></div></div>
+        <div class="mis-prog-label"><span id="evac-prog-txt">0 of 4 complete</span><span id="evac-pct">0%</span></div>
+      </div>
+      <div class="mis-steps">
+        <div class="mis-step" onclick="checkStep(this,'evac')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Identify 2 exit routes from your home</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'evac')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Agree on a family meeting point</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'evac')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Find your nearest emergency shelter</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'evac')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Walk the evacuation route as a family</div>
+        </div>
+      </div>
+      <button class="mis-complete-btn" id="evac-btn" onclick="completeMission('evac','🏃','Evacuator',300)" disabled>Complete Mission</button>
+    </div>
+
+    <!-- First Aid mission -->
+    <div class="mis-card active-mis" id="mission-firstaid">
+      <div class="mis-card-head">
+        <div class="mis-card-ico" style="background:rgba(48,209,88,0.15);">🩺</div>
+        <div class="mis-card-info">
+          <div class="mis-card-title">Learn First Aid</div>
+          <div class="mis-card-sub">Read the essential emergency guides</div>
+        </div>
+        <div class="mis-xp-badge" id="firstaid-xp">+250 XP</div>
+      </div>
+      <div class="mis-prog-wrap">
+        <div class="mis-prog-bar"><div class="mis-prog-fill" id="firstaid-bar" style="width:0%"></div></div>
+        <div class="mis-prog-label"><span id="firstaid-prog-txt">0 of 4 complete</span><span id="firstaid-pct">0%</span></div>
+      </div>
+      <div class="mis-steps">
+        <div class="mis-step" onclick="checkStep(this,'firstaid')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Read the CPR guide in First Aid</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'firstaid')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Read the Choking guide</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'firstaid')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Read the Earthquake guide</div>
+        </div>
+        <div class="mis-step" onclick="checkStep(this,'firstaid')">
+          <div class="mis-step-check">✓</div>
+          <div class="mis-step-txt">Read the Severe Bleeding guide</div>
+        </div>
+      </div>
+      <button class="mis-complete-btn" id="firstaid-btn" onclick="completeMission('firstaid','🩺','First Aider',250)" disabled>Complete Mission</button>
+    </div>
+
+  </div>
+  <div class="bnav dark">
+    <button class="ntab" onclick="go('daily')"><div class="nico">🏠</div><div class="nlbl">Home</div></button>
+    <button class="ntab" onclick="go('mapscreen')"><div class="nico">🗺️</div><div class="nlbl">Map</div></button>
+    <button class="ntab" onclick="go('emergency')"><div class="nico">🚨</div><div class="nlbl">Emergency</div></button>
+    <button class="ntab act"><div class="nico">🏅</div><div class="nlbl">Missions</div></button>
+    <button class="ntab" onclick="go('settings')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
+  </div>
+</div>
+
+
+<!-- ══════════════ CARE CIRCLE SCREEN ══════════════ -->
+<div id="carecircle" class="screen">
+  <div class="cc-hdr">
+    <div class="cc-hdr-title">👥 Care Circle</div>
+    <div class="cc-hdr-sub">Protect your neighbours · No one left behind</div>
+    <div class="cc-stats">
+      <div class="cc-stat">
+        <div class="cc-stat-num">6</div>
+        <div class="cc-stat-lbl">In Your Circle</div>
+      </div>
+      <div class="cc-stat">
+        <div class="cc-stat-num" style="color:#30D158;">4</div>
+        <div class="cc-stat-lbl">Checked In Safe</div>
+      </div>
+      <div class="cc-stat">
+        <div class="cc-stat-num" style="color:#FFD60A;">1</div>
+        <div class="cc-stat-lbl">Checking On</div>
+      </div>
+      <div class="cc-stat">
+        <div class="cc-stat-num" style="color:#FF3B30;">1</div>
+        <div class="cc-stat-lbl">Needs Help</div>
+      </div>
+    </div>
+  </div>
+  <div class="cc-pad">
+
+    <!-- Active Alert -->
+    <div class="cc-alert-card">
+      <div class="cc-alert-title">🚨 Immediate Attention Needed</div>
+      <div class="cc-alert-item">
+        <div class="cc-alert-ico">👵</div>
+        <div><strong>Edna — 847 Rosewood Lane</strong><br>Has not checked in for 6 hours. Lives alone. No family nearby.</div>
+      </div>
+    </div>
+
+    <!-- Circle Members -->
+    <div class="cc-section-title">Your Care Circle — 6 Members</div>
+
+    <!-- Member 1 - Needs help -->
+    <div class="cc-member needs-help">
+      <div class="cc-avi" style="background:#2A1A1A;">👵<div class="cc-dot danger"></div></div>
+      <div class="cc-info">
+        <div class="cc-name">Edna Waititi</div>
+        <div class="cc-detail">📍 847 Rosewood Lane · 0.3km away · Last seen 6hrs ago</div>
+        <div class="cc-tags">
+          <span class="cc-tag elderly">Elderly 84</span>
+          <span class="cc-tag alone">Lives Alone</span>
+          <span class="cc-tag medical">Heart condition</span>
+        </div>
+      </div>
+      <div class="cc-actions">
+        <button class="cc-action-btn call" onclick="toast('Calling Edna...')">📞 Call</button>
+        <button class="cc-action-btn help" onclick="toast('Sending help to Edna...')">🆘 Help</button>
+      </div>
+    </div>
+
+    <!-- Member 2 - Safe -->
+    <div class="cc-member checked-in">
+      <div class="cc-avi" style="background:#1A2A1A;">👴<div class="cc-dot safe"></div></div>
+      <div class="cc-info">
+        <div class="cc-name">Robert Tane</div>
+        <div class="cc-detail">📍 12 Maple Ave · 0.5km away · Checked in 20min ago</div>
+        <div class="cc-tags">
+          <span class="cc-tag elderly">Elderly 79</span>
+          <span class="cc-tag disabled">Wheelchair</span>
+        </div>
+      </div>
+      <div class="cc-actions">
+        <button class="cc-action-btn call" onclick="toast('Calling Robert...')">📞 Call</button>
+        <button class="cc-action-btn check" onclick="toast('Robert is safe ✓')">✓ Safe</button>
+      </div>
+    </div>
+
+    <!-- Member 3 - Checking -->
+    <div class="cc-member checking">
+      <div class="cc-avi" style="background:#2A2A1A;">👩<div class="cc-dot unknown"></div></div>
+      <div class="cc-info">
+        <div class="cc-name">Maria Santos</div>
+        <div class="cc-detail">📍 23 Pohutukawa St · 0.7km · Checking in progress</div>
+        <div class="cc-tags">
+          <span class="cc-tag alone">Home alone</span>
+          <span class="cc-tag medical">Diabetic</span>
+        </div>
+      </div>
+      <div class="cc-actions">
+        <button class="cc-action-btn call" onclick="toast('Calling Maria...')">📞 Call</button>
+        <button class="cc-action-btn check" onclick="toast('Marked Maria as safe ✓')">✓ Safe</button>
+      </div>
+    </div>
+
+    <!-- Member 4 - Safe -->
+    <div class="cc-member checked-in">
+      <div class="cc-avi" style="background:#1A2A1A;">👦<div class="cc-dot safe"></div></div>
+      <div class="cc-info">
+        <div class="cc-name">Sione Family</div>
+        <div class="cc-detail">📍 5 Rimu Rd · 0.4km · Checked in 1hr ago</div>
+        <div class="cc-tags">
+          <span class="cc-tag child">3 Young Children</span>
+          <span class="cc-tag pet">2 Dogs</span>
+        </div>
+      </div>
+      <div class="cc-actions">
+        <button class="cc-action-btn call" onclick="toast('Calling Sione family...')">📞 Call</button>
+        <button class="cc-action-btn check" onclick="toast('Sione family safe ✓')">✓ Safe</button>
+      </div>
+    </div>
+
+    <!-- Member 5 - Safe -->
+    <div class="cc-member checked-in">
+      <div class="cc-avi" style="background:#1A1A2A;">👩‍🦽<div class="cc-dot safe"></div></div>
+      <div class="cc-info">
+        <div class="cc-name">Priya Sharma</div>
+        <div class="cc-detail">📍 88 Tui Street · 0.6km · Checked in 45min ago</div>
+        <div class="cc-tags">
+          <span class="cc-tag disabled">Visual impairment</span>
+          <span class="cc-tag alone">Lives alone</span>
+        </div>
+      </div>
+      <div class="cc-actions">
+        <button class="cc-action-btn call" onclick="toast('Calling Priya...')">📞 Call</button>
+        <button class="cc-action-btn check" onclick="toast('Priya safe ✓')">✓ Safe</button>
+      </div>
+    </div>
+
+    <!-- Member 6 - Safe -->
+    <div class="cc-member checked-in">
+      <div class="cc-avi" style="background:#1A2A1A;">👶<div class="cc-dot safe"></div></div>
+      <div class="cc-info">
+        <div class="cc-name">Baby Aroha — Next Door</div>
+        <div class="cc-detail">📍 Next door · Parents checked in 30min ago</div>
+        <div class="cc-tags">
+          <span class="cc-tag child">Infant 8 months</span>
+        </div>
+      </div>
+      <div class="cc-actions">
+        <button class="cc-action-btn call" onclick="toast('Calling parents...')">📞 Call</button>
+        <button class="cc-action-btn check" onclick="toast('Baby Aroha safe ✓')">✓ Safe</button>
+      </div>
+    </div>
+
+    <!-- Add member -->
+    <button class="cc-add-btn" onclick="toast('Adding new circle member...')">
+      + Add Neighbour to Care Circle
+    </button>
+
+    <!-- How it works -->
+    <div class="cc-how">
+      <div class="cc-how-title">💙 How Care Circle Works</div>
+      <div class="cc-how-step">
+        <div class="cc-how-num">1</div>
+        <div>Add vulnerable neighbours — elderly, disabled, families with young children, people living alone — to your Care Circle.</div>
+      </div>
+      <div class="cc-how-step">
+        <div class="cc-how-num">2</div>
+        <div>During an emergency Anchor automatically sends a check-in request to everyone in your circle.</div>
+      </div>
+      <div class="cc-how-step">
+        <div class="cc-how-num">3</div>
+        <div>If someone doesn't check in within 1 hour you get an alert. You go check on them personally or send help.</div>
+      </div>
+      <div class="cc-how-step">
+        <div class="cc-how-num">4</div>
+        <div>No one in your neighbourhood is forgotten. No one is left behind. Every person matters.</div>
+      </div>
+      <div class="cc-how-step">
+        <div class="cc-how-num">5</div>
+        <div>Works via satellite when cell towers are down. Your Care Circle stays connected no matter what.</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="bnav dark">
+    <button class="ntab" onclick="go('daily')"><div class="nico">🏠</div><div class="nlbl">Home</div></button>
+    <button class="ntab" onclick="go('mapscreen')"><div class="nico">🗺️</div><div class="nlbl">Map</div></button>
+    <button class="ntab act"><div class="nico">👥</div><div class="nlbl">Circle</div></button>
+    <button class="ntab" onclick="go('firstaid')"><div class="nico">🩺</div><div class="nlbl">First Aid</div></button>
+    <button class="ntab" onclick="go('settings')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
+  </div>
+</div>
+
+
+<!-- ══════════════ SURVIVAL BOOK ══════════════ -->
+<div id="survival" class="screen">
+  <div class="surv-hdr">
+    <div class="surv-hdr-title">📖 Survival Skills Book</div>
+    <div class="surv-hdr-sub">Simple skills. Clear commands. Every language. Free forever.</div>
+    <div class="surv-lang-row">
+      <button class="surv-lang-btn active" onclick="survLang(this)">🇬🇧 EN</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🇸🇦 AR</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🇨🇳 中文</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🇮🇳 HI</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🇪🇸 ES</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🇫🇷 FR</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🇧🇩 BN</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🇵🇭 TL</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🇰🇪 SW</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🇧🇷 PT</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🇮🇩 ID</button>
+      <button class="surv-lang-btn" onclick="survLang(this)">🌍 Icons</button>
+    </div>
+  </div>
+  <div class="surv-pad">
+    <div class="surv-cats">
+      <button class="surv-cat active" onclick="survCat('all',this)">All</button>
+      <button class="surv-cat inactive" onclick="survCat('fire',this)">🔥 Fire</button>
+      <button class="surv-cat inactive" onclick="survCat('heat',this)">☀️ Heat</button>
+      <button class="surv-cat inactive" onclick="survCat('cold',this)">❄️ Cold</button>
+      <button class="surv-cat inactive" onclick="survCat('volcano',this)">🌋 Volcano</button>
+      <button class="surv-cat inactive" onclick="survCat('water',this)">💧 Water</button>
+      <button class="surv-cat inactive" onclick="survCat('shelter',this)">⛺ Shelter</button>
+      <button class="surv-cat inactive" onclick="survCat('signal',this)">📡 Signal</button>
+      <button class="surv-cat inactive" onclick="survCat('food',this)">🍃 Food</button>
+    </div>
+
+    <!-- HOW TO MAKE FIRE -->
+    <div class="surv-card" data-cat="fire" onclick="toggleSurv(this)">
+      <div class="surv-card-head">
+        <div class="surv-card-ico" style="background:rgba(255,100,20,0.15);">🔥</div>
+        <div class="surv-card-info">
+          <div class="surv-card-title">How to Make a Fire</div>
+          <div class="surv-card-sub">Warmth · Cooking · Signalling for help</div>
+        </div>
+        <div class="surv-card-arr">›</div>
+      </div>
+      <div class="surv-body">
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">FIND A SAFE SPOT</div><div class="surv-rule-desc">Clear flat ground. No dry grass nearby. No trees overhead. At least 3 metres from your tent. Make a ring of rocks to contain the fire.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">GATHER 3 TYPES OF FUEL</div><div class="surv-rule-desc">🌿 TINDER — dry leaves, paper, bark, grass. Lights easily. 🌿 KINDLING — dry sticks, finger-thick. 🪵 WOOD — dry logs, arm-thick. Collect more than you think you need.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">BUILD A TENT SHAPE</div><div class="surv-rule-desc">Put tinder in the centre. Lean kindling sticks around it like a tent. Leave one gap facing the wind for air. Add larger wood on the outside.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">LIGHT FROM THE BOTTOM</div><div class="surv-rule-desc">Use waterproof matches or lighter. Light the tinder at the base of the gap. Cup your hands to block wind. Blow gently and steadily at the base.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">5</div><div class="surv-rule-txt"><div class="surv-rule-cmd">FEED IT SLOWLY</div><div class="surv-rule-desc">Add small sticks first. Then bigger wood when fire is strong. Never dump a big load at once — you will smother it. A steady small fire is safer than a big one.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">6</div><div class="surv-rule-txt"><div class="surv-rule-cmd">PUT IT OUT PROPERLY</div><div class="surv-rule-desc">Pour water over fire. Stir the ash. Pour more water. Touch the ash — if warm, add more water. Fire must be stone cold before you sleep or leave.</div></div></div>
+        <div class="surv-warning">⚠️ NEVER leave fire unattended. NEVER make fire in strong wind. ALWAYS have water nearby. NEVER make fire near your fuel supplies.</div>
+        <div class="surv-tip">💡 Best fire starters in order — 1) Lighter 2) Waterproof matches 3) Flint and steel — strike downward onto tinder, sparks at 3000°C. 4) Focus sunlight through glasses or water-filled plastic bag onto tinder. Always carry flint — it never runs out.</div>
+      </div>
+    </div>
+
+    <!-- FIRE SAFETY WITH CHILDREN -->
+    <div class="surv-card" data-cat="fire" onclick="toggleSurv(this)">
+      <div class="surv-card-head">
+        <div class="surv-card-ico" style="background:rgba(255,59,48,0.15);">👶</div>
+        <div class="surv-card-info">
+          <div class="surv-card-title">Fire Safety With Children</div>
+          <div class="surv-card-sub">Rules every child must know before any fire is lit</div>
+        </div>
+        <div class="surv-card-arr">›</div>
+      </div>
+      <div class="surv-body">
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF3B30;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">DRAW THE SAFETY CIRCLE</div><div class="surv-rule-desc">Mark a circle 2 big adult steps from the fire using rope, stones or a line in the dirt. Tell every child — NEVER cross this line. Review it every time before lighting.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF3B30;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">ONE ADULT ALWAYS WATCHES</div><div class="surv-rule-desc">One adult watches fire AND children at ALL times. No exceptions. If you must leave — put the fire completely out first. Never leave older children in charge of fire.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF3B30;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">TEACH STOP DROP ROLL NOW</div><div class="surv-rule-desc">Practise BEFORE any emergency. If clothes catch fire — STOP immediately. DROP to the ground. ROLL slowly to smother flames. Cover face with hands. Practise this today.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF3B30;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">NO LOOSE CLOTHING</div><div class="surv-rule-desc">Tie back all long hair. Roll up loose sleeves. No scarves or dangling clothes near fire. Synthetic fabrics melt into skin — wear cotton near fire.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF3B30;">5</div><div class="surv-rule-txt"><div class="surv-rule-cmd">WATER READY ALWAYS</div><div class="surv-rule-desc">Full bucket of water beside fire at all times. If burned — run cool water over burn for 20 minutes. Do not use ice. Do not pop blisters. Seek medical help.</div></div></div>
+        <div class="surv-warning">⚠️ Children under 5 must be held or secured at all times near any fire. Never leave them unattended even for one minute.</div>
+        <div class="surv-tip">💡 Make fire safety a game before emergencies — children who practise respond better in real situations.</div>
+      </div>
+    </div>
+
+    <!-- SURVIVING HEAT -->
+    <div class="surv-card" data-cat="heat" onclick="toggleSurv(this)">
+      <div class="surv-card-head">
+        <div class="surv-card-ico" style="background:rgba(255,214,10,0.15);">☀️</div>
+        <div class="surv-card-info">
+          <div class="surv-card-title">Surviving Extreme Heat</div>
+          <div class="surv-card-sub">Heatwave · Desert · Hot evacuation</div>
+        </div>
+        <div class="surv-card-arr">›</div>
+      </div>
+      <div class="surv-body">
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FFD60A;color:#1A1A00;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">DRINK BEFORE YOU ARE THIRSTY</div><div class="surv-rule-desc">Thirst means you are already dehydrated. Small sips constantly. Adults 1 litre per hour in extreme heat. Check children and elderly first — they dehydrate faster and show signs later.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FFD60A;color:#1A1A00;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">REST FROM 10AM TO 4PM</div><div class="surv-rule-desc">These are the killing hours. Find shade and stay still. Move only at dawn or after sunset. Walking in midday heat burns energy and water dangerously fast.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FFD60A;color:#1A1A00;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">COVER ALL SKIN</div><div class="surv-rule-desc">Long sleeves and wide brim hat with neck cover. Light colours reflect heat. This feels hotter but keeps you cooler — it blocks direct sun on your skin which generates enormous heat.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FFD60A;color:#1A1A00;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">MAKE SHADE IF NONE EXISTS</div><div class="surv-rule-desc">Use your emergency tent, tarpaulin or jacket propped on sticks. Even a small shadow saves lives. Stay off hot ground — use a mat or bag as insulation.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FFD60A;color:#1A1A00;">5</div><div class="surv-rule-txt"><div class="surv-rule-cmd">HEAT STROKE — ACT IMMEDIATELY</div><div class="surv-rule-desc">Signs — hot dry skin, no sweating, confusion, fast pulse, red face. This kills fast. Move to shade. Remove excess clothing. Wet their skin. Fan them. Call emergency services NOW.</div></div></div>
+        <div class="surv-tip">💡 Wet a cloth and place on neck, wrists and forehead — these pulse points cool the whole body rapidly.</div>
+        <div class="surv-warning">⚠️ Never give alcohol in heat — it causes dehydration. Never give very cold water to heat stroke victim — causes shock. Cool slowly.</div>
+      </div>
+    </div>
+
+    <!-- SURVIVING COLD -->
+    <div class="surv-card" data-cat="cold" onclick="toggleSurv(this)">
+      <div class="surv-card-head">
+        <div class="surv-card-ico" style="background:rgba(108,194,255,0.15);">❄️</div>
+        <div class="surv-card-info">
+          <div class="surv-card-title">Surviving Extreme Cold</div>
+          <div class="surv-card-sub">Winter · Snow · Cold night evacuation</div>
+        </div>
+        <div class="surv-card-arr">›</div>
+      </div>
+      <div class="surv-body">
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">STAY DRY — THIS IS MOST IMPORTANT</div><div class="surv-rule-desc">Wet kills faster than cold. If clothes are wet — change immediately even if cold. Wet cotton is deadly. Wool and synthetic fabrics keep you warm even when wet.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">THREE LAYERS</div><div class="surv-rule-desc">Base layer — traps warmth next to skin. Middle layer — insulates. Outer layer — blocks wind and rain. Cover head always — 40% of body heat escapes from the head.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">GET OFF THE GROUND</div><div class="surv-rule-desc">Cold ground pulls heat from your body very fast. Always sleep on a mat, branches, dry leaves or bags. Never directly on cold ground or snow — even for a short rest.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">EAT AND DRINK WARM</div><div class="surv-rule-desc">Your body burns food to make heat. Eat regularly even if not hungry. Hot drinks warm from inside. Avoid alcohol — it feels warm but makes your body colder. Give children extra food.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">5</div><div class="surv-rule-txt"><div class="surv-rule-cmd">HYPOTHERMIA — ACT IMMEDIATELY</div><div class="surv-rule-desc">Shivering STOPS — this is dangerous not good. Confusion. Slurred speech. Extreme sleepiness. Get them warm slowly — dry clothes, body heat, warm drinks. Call emergency services.</div></div></div>
+        <div class="surv-tip">💡 Huddle together — body heat from others is the fastest way to rewarm someone with hypothermia. Use sleeping bags, blankets, coats together.</div>
+        <div class="surv-warning">⚠️ Never rub frostbitten skin — causes tissue damage. Warm slowly in lukewarm water only. Never walk on frostbitten feet if avoidable.</div>
+      </div>
+    </div>
+
+    <!-- VOLCANIC SURVIVAL -->
+    <div class="surv-card" data-cat="volcano" onclick="toggleSurv(this)">
+      <div class="surv-card-head">
+        <div class="surv-card-ico" style="background:rgba(255,100,20,0.15);">🌋</div>
+        <div class="surv-card-info">
+          <div class="surv-card-title">Surviving a Volcanic Eruption</div>
+          <div class="surv-card-sub">Ash · Lava · Toxic gas · Lahars</div>
+        </div>
+        <div class="surv-card-arr">›</div>
+      </div>
+      <div class="surv-body">
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">LEAVE IMMEDIATELY</div><div class="surv-rule-desc">Do not wait to see what happens. Volcanoes move faster than people expect. Take your go-bag. Drive away from the volcano — never towards it. Follow official evacuation routes.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">COVER EVERY PART OF YOUR BODY</div><div class="surv-rule-desc">Ash is razor sharp glass particles. P2/N95 mask on face. Goggles on eyes. Long sleeves and gloves on all skin. Ash in lungs causes permanent damage. Ash in eyes causes blindness.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">MOVE TO HIGH GROUND</div><div class="surv-rule-desc">Lava flows downhill. Toxic gas settles in valleys. Lahars follow rivers at high speed. Always move UP and AWAY from rivers, valleys and low ground.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">SEAL YOUR SHELTER</div><div class="surv-rule-desc">Close all windows and doors. Seal every gap with wet towels. Turn off fans and air conditioning. Stay inside until ash completely stops falling. Do not go outside for any reason.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">5</div><div class="surv-rule-txt"><div class="surv-rule-cmd">CLEAR ASH FROM ROOF CAREFULLY</div><div class="surv-rule-desc">Wet ash is extremely heavy and collapses roofs. Brush with a broom from the roof edge. Do NOT hose it — wet ash doubles in weight. Wear full protection. Work slowly and carefully.</div></div></div>
+        <div class="surv-warning">⚠️ A lahar travels at 60km/h. If you hear a deep roar from a valley or river — RUN UP immediately. Do not try to outrun it on flat ground. You cannot.</div>
+        <div class="surv-tip">💡 Cover water tanks and food supplies with plastic sheeting immediately. Volcanic ash contaminates water and food within minutes.</div>
+      </div>
+    </div>
+
+    <!-- FINDING WATER -->
+    <div class="surv-card" data-cat="water" onclick="toggleSurv(this)">
+      <div class="surv-card-head">
+        <div class="surv-card-ico" style="background:rgba(108,194,255,0.15);">💧</div>
+        <div class="surv-card-info">
+          <div class="surv-card-title">Finding Safe Water</div>
+          <div class="surv-card-sub">When taps don't work · After any disaster</div>
+        </div>
+        <div class="surv-card-arr">›</div>
+      </div>
+      <div class="surv-body">
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">USE YOUR LIFESTRAW FIRST</div><div class="surv-rule-desc">Push LifeStraw into any water source and drink. Filters 99.9999% of bacteria instantly. No preparation. No boiling. Fastest safest method in any emergency.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">BOIL FOR 1 FULL MINUTE</div><div class="surv-rule-desc">Rolling boil for 1 minute kills everything. At high altitude — boil 3 minutes. Let cool. Do not blow into it to cool — adds bacteria. Cover while cooling.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">COLLECT RAIN WATER</div><div class="surv-rule-desc">Rain is safe to drink directly. Collect in any clean container. Stretch your emergency tent or tarpaulin as a funnel into a bucket. Fastest and safest water source in wet climates.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">FIND MOVING WATER</div><div class="surv-rule-desc">Moving water is safer than still water. Follow animals — they always know where water is. Green vegetation means water nearby. Morning dew on leaves is safe to drink.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">5</div><div class="surv-rule-txt"><div class="surv-rule-cmd">DEHYDRATION SIGNS — ACT NOW</div><div class="surv-rule-desc">Dark yellow urine means drink immediately. Dry mouth. Dizziness. Confusion. Children and elderly show signs faster. Give them water first always. Dehydration kills in 3 days.</div></div></div>
+        <div class="surv-tip">💡 Dig 1 metre from a river bank — filtered water seeps through soil naturally. Safer than drinking directly from the river.</div>
+        <div class="surv-warning">⚠️ After volcanic eruption — never drink tap water or river water until authorities confirm it is safe. Ash makes water toxic and unfilterble.</div>
+      </div>
+    </div>
+
+    <!-- EMERGENCY SHELTER -->
+    <div class="surv-card" data-cat="shelter" onclick="toggleSurv(this)">
+      <div class="surv-card-head">
+        <div class="surv-card-ico" style="background:rgba(43,96,82,0.2);">⛺</div>
+        <div class="surv-card-info">
+          <div class="surv-card-title">Building Emergency Shelter</div>
+          <div class="surv-card-sub">When you have no building · Night · Bad weather</div>
+        </div>
+        <div class="surv-card-arr">›</div>
+      </div>
+      <div class="surv-body">
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">USE YOUR EMERGENCY TENT FIRST</div><div class="surv-rule-desc">Always use your go-bag emergency tent first. Set it up before dark. Choose flat dry ground. Away from rivers — flash floods come at night. Away from lone trees — lightning strikes them.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">CHOOSE YOUR SPOT CAREFULLY</div><div class="surv-rule-desc">High and dry — not in a valley or low area. Natural windbreak behind you — a hill, rocks or thick bushes. Away from dead trees — they fall in wind. Check ground for ant nests.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">INSULATE THE FLOOR</div><div class="surv-rule-desc">Put leaves, grass, branches or bags on the ground before sleeping. Cold and damp ground steals body heat very fast. Floor insulation is as important as the roof above you.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">MAKE A LEAN-TO IF NO TENT</div><div class="surv-rule-desc">Find a fallen tree or 2 strong sticks. Lean branches at 45 degrees against it. Cover thickly with leaves from top down like roof tiles. Thicker than you think — at least arm-depth.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">5</div><div class="surv-rule-txt"><div class="surv-rule-cmd">SMALL IS WARMER</div><div class="surv-rule-desc">A small shelter traps body heat better than a large one. Just big enough to lie in. Pack everyone together — shared body heat keeps everyone warmer through the night.</div></div></div>
+        <div class="surv-tip">💡 A large plastic bag from your go-bag makes an emergency sleeping bag. Put legs inside the bag — traps body heat immediately.</div>
+      </div>
+    </div>
+
+    <!-- SIGNALLING FOR HELP -->
+    <div class="surv-card" data-cat="signal" onclick="toggleSurv(this)">
+      <div class="surv-card-head">
+        <div class="surv-card-ico" style="background:rgba(48,209,88,0.15);">📡</div>
+        <div class="surv-card-info">
+          <div class="surv-card-title">Signalling for Help</div>
+          <div class="surv-card-sub">When phones don't work · Being found faster</div>
+        </div>
+        <div class="surv-card-arr">›</div>
+      </div>
+      <div class="surv-body">
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#30D158;color:#001A07;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">3 IS THE UNIVERSAL DISTRESS SIGNAL</div><div class="surv-rule-desc">3 whistle blasts. 3 fires in a triangle. 3 gunshots. 3 of anything. This is recognised worldwide as a call for help. Repeat every few minutes. Listen for a response.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#30D158;color:#001A07;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">MAKE YOURSELF VISIBLE FROM AIR</div><div class="surv-rule-desc">Lay out bright coloured items in an open clearing — clothing, bags, tarpaulin. Make a large X or SOS on the ground using rocks, logs or anything dark on light ground.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#30D158;color:#001A07;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">USE MIRROR OR REFLECTIVE SURFACE</div><div class="surv-rule-desc">Flash sunlight towards aircraft or rescuers using your Anchor hand signal mirror, phone screen, foil or reflective jacket. Aim by looking through the hole in the mirror at your target. Flash 3 short, 3 long, 3 short — this is SOS. Visible up to 50km on a clear day.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#30D158;color:#001A07;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">SMOKE SIGNALS IN DAYTIME</div><div class="surv-rule-desc">Dark smoke is visible for kilometres. Add green leaves or rubber to fire for dark smoke in daytime. Use white smoke — dry grass or cloth — at night when it shows against dark sky.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#30D158;color:#001A07;">5</div><div class="surv-rule-txt"><div class="surv-rule-cmd">HEAD TORCH AT NIGHT</div><div class="surv-rule-desc">Flash your Anchor head torch in groups of 3. Reflective strips on your Anchor bag and headband are visible to rescuers with torches from hundreds of metres away.</div></div></div>
+        <div class="surv-tip">💡 Stay in one place once you have signalled. Rescuers are coming to your last known location. Moving makes you harder to find.</div>
+      </div>
+    </div>
+
+    <!-- FINDING FOOD -->
+    <div class="surv-card" data-cat="food" onclick="toggleSurv(this)">
+      <div class="surv-card-head">
+        <div class="surv-card-ico" style="background:rgba(43,96,82,0.2);">🍃</div>
+        <div class="surv-card-info">
+          <div class="surv-card-title">Emergency Food Survival</div>
+          <div class="surv-card-sub">When supplies run out · Foraging basics</div>
+        </div>
+        <div class="surv-card-arr">›</div>
+      </div>
+      <div class="surv-body">
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">RATION YOUR FOOD SUPPLY FIRST</div><div class="surv-rule-desc">Before foraging — ration what you have. Adults can survive 3 weeks without food but only 3 days without water. Prioritise water always. Eat less, drink more.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">INSECTS ARE SAFE PROTEIN</div><div class="surv-rule-desc">Grubs, ants, grasshoppers — cook before eating. Remove wings and legs. High in protein. Avoid brightly coloured insects — bright colour means toxic. Avoid hairy caterpillars.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">UNIVERSAL EDIBILITY TEST</div><div class="surv-rule-desc">If unsure about a plant — rub on wrist. Wait 15 minutes. If no reaction — touch to lips. Wait 15 minutes. If no reaction — small bite. Wait 8 hours. If no reaction — safe to eat.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">SAFE TO EAT ANYWHERE ON EARTH</div><div class="surv-rule-desc">Dandelions — all parts edible. Grass seeds — cook like rice. Clover — all parts edible. Seaweed — rinse and eat raw or cook. Pine needles — boil for tea, high in vitamin C.</div></div></div>
+        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">5</div><div class="surv-rule-txt"><div class="surv-rule-cmd">NEVER EAT THESE</div><div class="surv-rule-desc">Mushrooms unless 100% certain. Berries you cannot identify. Plants with milky white sap. Plants that smell of almonds — cyanide. Plants that sting or irritate skin.</div></div></div>
+        <div class="surv-warning">⚠️ When in doubt — do not eat it. Hunger is uncomfortable. Poisoning can be fatal. Wait for rescue rather than risk unknown plants.</div>
+        <div class="surv-tip">💡 Fishing requires no tools — bend a safety pin into a hook, use thread from clothing as line, use insects as bait. Rivers near disaster zones often have fish.</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="bnav dark">
+    <button class="ntab" onclick="go('daily')"><div class="nico">🏠</div><div class="nlbl">Home</div></button>
+    <button class="ntab" onclick="go('mapscreen')"><div class="nico">🗺️</div><div class="nlbl">Map</div></button>
+    <button class="ntab" onclick="go('carecircle')"><div class="nico">👥</div><div class="nlbl">Circle</div></button>
+    <button class="ntab" onclick="go('firstaid')"><div class="nico">🩺</div><div class="nlbl">First Aid</div></button>
+    <button class="ntab" onclick="go('settings')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
   </div>
 </div>
 
@@ -702,7 +2738,7 @@ html, body {
 <!-- TOAST -->
 <div class="toast" id="toastEl"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── SCREEN NAVIGATION ──
 var mapReady = false;
 var myMap = null;
@@ -1004,6 +3040,448 @@ function toast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function() { el.classList.remove('show'); }, 2500);
 }
-</script>
-</body>
-</html>
+
+
+
+
+// ── COMMUNICATIONS ──
+function openCommsApp(app) {
+  var urls = {
+    whatsapp: 'https://wa.me/?text=' + encodeURIComponent('🆘 ANCHOR FAMILY EMERGENCY GROUP
+This is our emergency communication group for Anchor Safety.
+
+In an emergency:
+1. Check in here first
+2. Share your location
+3. Confirm you are safe
+4. Coordinate help for vulnerable members
+
+Stay safe. ⚓🌏'),
+    telegram: 'https://t.me/',
+    signal: 'https://signal.me/',
+    viber: 'viber://chat',
+    wechat: 'weixin://',
+    line: 'https://line.me/'
+  };
+  var url = urls[app] || 'https://wa.me/';
+  window.open(url, '_blank');
+  toast('Opening ' + app.charAt(0).toUpperCase() + app.slice(1) + '...');
+}
+
+function clearAllData() {
+  if (confirm('Are you sure? This will permanently delete all your Anchor data.')) {
+    try { localStorage.clear(); } catch(e) {}
+    toast('✅ All data cleared');
+    setTimeout(function() { go('consent'); }, 1500);
+  }
+}
+
+// ── CONSENT & PRIVACY ──
+function agreeToTerms() {
+  try {
+    localStorage.setItem('anchor_consent', 'true');
+  } catch(e) {}
+  go('daily');
+}
+
+function checkConsent() {
+  try {
+    var consent = localStorage.getItem('anchor_consent');
+    if (consent === 'true') {
+      go('daily');
+    }
+    // else stay on consent screen
+  } catch(e) {
+    go('daily');
+  }
+}
+checkConsent();
+
+// ── MISSIONS ──
+var missionData = {
+  gobag: { total: 53, checked: 0 },
+  blackout: { total: 5, checked: 0 },
+  evac: { total: 4, checked: 0 },
+  firstaid: { total: 4, checked: 0 }
+};
+var totalXP = 350;
+
+function checkStep(el, mission) {
+  var check = el.querySelector('.mis-step-check');
+  var txt = el.querySelector('.mis-step-txt');
+  var isChecked = check.classList.contains('checked');
+  if (isChecked) {
+    check.classList.remove('checked');
+    txt.classList.remove('checked');
+    missionData[mission].checked--;
+  } else {
+    check.classList.add('checked');
+    txt.classList.add('checked');
+    missionData[mission].checked++;
+  }
+  updateMissionProgress(mission);
+}
+
+function updateMissionProgress(mission) {
+  var data = missionData[mission];
+  var pct = Math.round((data.checked / data.total) * 100);
+  document.getElementById(mission + '-bar').style.width = pct + '%';
+  document.getElementById(mission + '-prog-txt').textContent = data.checked + ' of ' + data.total + ' complete';
+  document.getElementById(mission + '-pct').textContent = pct + '%';
+  var btn = document.getElementById(mission + '-btn');
+  if (data.checked >= data.total) {
+    btn.disabled = false;
+    btn.textContent = '🎉 Claim Badge & XP!';
+  } else {
+    btn.disabled = true;
+    btn.textContent = 'Complete Mission';
+  }
+}
+
+function completeMission(mission, emoji, name, xp) {
+  totalXP += xp;
+  document.getElementById('xpLabel').textContent = totalXP + ' XP';
+  var pct = Math.min(100, Math.round((totalXP / 500) * 100));
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  var card = document.getElementById('mission-' + mission);
+  card.classList.remove('active-mis');
+  card.classList.add('done-mis');
+  document.getElementById(mission + '-xp').classList.add('done');
+  document.getElementById(mission + '-xp').textContent = '✓ ' + xp + ' XP earned!';
+  document.getElementById(mission + '-btn').style.display = 'none';
+  // Unlock badge
+  var badges = document.querySelectorAll('.badge-ico.locked');
+  if (badges.length > 0) {
+    badges[0].classList.remove('locked');
+    badges[0].classList.add('earned');
+    badges[0].parentElement.querySelector('.badge-name').classList.add('earned');
+  }
+  toast('🎉 ' + name + ' badge earned! +' + xp + ' XP');
+}
+
+// ── TRANSLATIONS ──
+var translations = {
+  'English': {
+    sos_title: 'SEND SOS', sos_sub: 'Emergency services + contacts · GPS attached',
+    daily_title: 'Your family is ready.', map_title: '🗺️ Safety Map',
+    fa_title: '🩺 First Aid Guide', settings_title: '⚙️ Settings',
+    missions_title: '🏅 Family Missions', cc_title: '👥 Care Circle',
+    nav_home: 'Home', nav_map: 'Map', nav_family: 'Circle',
+    nav_firstaid: 'First Aid', nav_settings: 'Settings',
+    em_active: 'ACTIVE EMERGENCY', safe: 'SAFE', checking: 'CHECKING', danger: 'NEEDS HELP'
+  },
+  'العربية': {
+    sos_title: 'إرسال نداء استغاثة', sos_sub: 'خدمات الطوارئ + جهات الاتصال · GPS',
+    daily_title: 'عائلتك بأمان.', map_title: '🗺️ خريطة السلامة',
+    fa_title: '🩺 دليل الإسعافات الأولية', settings_title: '⚙️ الإعدادات',
+    missions_title: '🏅 مهام العائلة', cc_title: '👥 دائرة الرعاية',
+    nav_home: 'الرئيسية', nav_map: 'خريطة', nav_family: 'دائرة',
+    nav_firstaid: 'إسعاف', nav_settings: 'إعدادات',
+    em_active: 'طوارئ نشطة', safe: 'بأمان', checking: 'جارٍ التحقق', danger: 'يحتاج مساعدة'
+  },
+  '中文': {
+    sos_title: '发送求救信号', sos_sub: '紧急服务 + 联系人 · GPS定位',
+    daily_title: '您的家人已准备好。', map_title: '🗺️ 安全地图',
+    fa_title: '🩺 急救指南', settings_title: '⚙️ 设置',
+    missions_title: '🏅 家庭任务', cc_title: '👥 关爱圈',
+    nav_home: '主页', nav_map: '地图', nav_family: '圈子',
+    nav_firstaid: '急救', nav_settings: '设置',
+    em_active: '紧急情况激活', safe: '安全', checking: '确认中', danger: '需要帮助'
+  },
+  'हिन्दी': {
+    sos_title: 'SOS भेजें', sos_sub: 'आपातकालीन सेवाएं + संपर्क · GPS',
+    daily_title: 'आपका परिवार तैयार है।', map_title: '🗺️ सुरक्षा मानचित्र',
+    fa_title: '🩺 प्राथमिक चिकित्सा', settings_title: '⚙️ सेटिंग्स',
+    missions_title: '🏅 पारिवारिक मिशन', cc_title: '👥 केयर सर्कल',
+    nav_home: 'होम', nav_map: 'नक्शा', nav_family: 'सर्कल',
+    nav_firstaid: 'प्राथमिक', nav_settings: 'सेटिंग',
+    em_active: 'आपातकाल सक्रिय', safe: 'सुरक्षित', checking: 'जाँच हो रही', danger: 'मदद चाहिए'
+  },
+  'Español': {
+    sos_title: 'ENVIAR SOS', sos_sub: 'Servicios de emergencia + contactos · GPS',
+    daily_title: 'Tu familia está lista.', map_title: '🗺️ Mapa de Seguridad',
+    fa_title: '🩺 Guía de Primeros Auxilios', settings_title: '⚙️ Configuración',
+    missions_title: '🏅 Misiones Familiares', cc_title: '👥 Círculo de Cuidado',
+    nav_home: 'Inicio', nav_map: 'Mapa', nav_family: 'Círculo',
+    nav_firstaid: 'Primeros', nav_settings: 'Ajustes',
+    em_active: 'EMERGENCIA ACTIVA', safe: 'SEGURO', checking: 'VERIFICANDO', danger: 'NECESITA AYUDA'
+  },
+  'Français': {
+    sos_title: 'ENVOYER SOS', sos_sub: 'Services d'urgence + contacts · GPS',
+    daily_title: 'Votre famille est prête.', map_title: '🗺️ Carte de Sécurité',
+    fa_title: '🩺 Guide de Premiers Secours', settings_title: '⚙️ Paramètres',
+    missions_title: '🏅 Missions Familiales', cc_title: '👥 Cercle de Soins',
+    nav_home: 'Accueil', nav_map: 'Carte', nav_family: 'Cercle',
+    nav_firstaid: 'Secours', nav_settings: 'Réglages',
+    em_active: 'URGENCE ACTIVE', safe: 'EN SÉCURITÉ', checking: 'VÉRIFICATION', danger: 'BESOIN D'AIDE'
+  },
+  'বাংলা': {
+    sos_title: 'SOS পাঠান', sos_sub: 'জরুরি সেবা + পরিচিতি · GPS',
+    daily_title: 'আপনার পরিবার প্রস্তুত।', map_title: '🗺️ নিরাপত্তা মানচিত্র',
+    fa_title: '🩺 প্রাথমিক চিকিৎসা', settings_title: '⚙️ সেটিংস',
+    missions_title: '🏅 পারিবারিক মিশন', cc_title: '👥 কেয়ার সার্কেল',
+    nav_home: 'হোম', nav_map: 'মানচিত্র', nav_family: 'সার্কেল',
+    nav_firstaid: 'প্রাথমিক', nav_settings: 'সেটিং',
+    em_active: 'জরুরি অবস্থা', safe: 'নিরাপদ', checking: 'যাচাই', danger: 'সাহায্য দরকার'
+  },
+  'Tagalog': {
+    sos_title: 'MAGPADALA NG SOS', sos_sub: 'Serbisyong pang-emergency + GPS',
+    daily_title: 'Handa na ang inyong pamilya.', map_title: '🗺️ Mapa ng Kaligtasan',
+    fa_title: '🩺 Gabay sa First Aid', settings_title: '⚙️ Mga Setting',
+    missions_title: '🏅 Mga Misyon ng Pamilya', cc_title: '👥 Care Circle',
+    nav_home: 'Tahanan', nav_map: 'Mapa', nav_family: 'Bilog',
+    nav_firstaid: 'First Aid', nav_settings: 'Setting',
+    em_active: 'AKTIBONG EMERGENCY', safe: 'LIGTAS', checking: 'SINUSURI', danger: 'KAILANGAN NG TULONG'
+  },
+  'Kiswahili': {
+    sos_title: 'TUMA SOS', sos_sub: 'Huduma za dharura + anwani · GPS',
+    daily_title: 'Familia yako iko tayari.', map_title: '🗺️ Ramani ya Usalama',
+    fa_title: '🩺 Mwongozo wa Msaada wa Kwanza', settings_title: '⚙️ Mipangilio',
+    missions_title: '🏅 Misheni ya Familia', cc_title: '👥 Duara la Huduma',
+    nav_home: 'Nyumbani', nav_map: 'Ramani', nav_family: 'Duara',
+    nav_firstaid: 'Msaada', nav_settings: 'Mipangilio',
+    em_active: 'DHARURA INAFANYA KAZI', safe: 'SALAMA', checking: 'INAKAGUA', danger: 'ANAHITAJI MSAADA'
+  },
+  'Português': {
+    sos_title: 'ENVIAR SOS', sos_sub: 'Serviços de emergência + contatos · GPS',
+    daily_title: 'Sua família está pronta.', map_title: '🗺️ Mapa de Segurança',
+    fa_title: '🩺 Guia de Primeiros Socorros', settings_title: '⚙️ Configurações',
+    missions_title: '🏅 Missões da Família', cc_title: '👥 Círculo de Cuidado',
+    nav_home: 'Início', nav_map: 'Mapa', nav_family: 'Círculo',
+    nav_firstaid: 'Primeiros', nav_settings: 'Config',
+    em_active: 'EMERGÊNCIA ATIVA', safe: 'SEGURO', checking: 'VERIFICANDO', danger: 'PRECISA DE AJUDA'
+  },
+  'Русский': {
+    sos_title: 'ОТПРАВИТЬ SOS', sos_sub: 'Экстренные службы + контакты · GPS',
+    daily_title: 'Ваша семья готова.', map_title: '🗺️ Карта безопасности',
+    fa_title: '🩺 Руководство первой помощи', settings_title: '⚙️ Настройки',
+    missions_title: '🏅 Семейные миссии', cc_title: '👥 Круг заботы',
+    nav_home: 'Главная', nav_map: 'Карта', nav_family: 'Круг',
+    nav_firstaid: 'Помощь', nav_settings: 'Настройки',
+    em_active: 'АКТИВНАЯ ЧРЕЗВЫЧАЙНАЯ СИТУАЦИЯ', safe: 'В БЕЗОПАСНОСТИ', checking: 'ПРОВЕРКА', danger: 'НУЖНА ПОМОЩЬ'
+  },
+  '日本語': {
+    sos_title: 'SOS送信', sos_sub: '緊急サービス＋連絡先・GPS',
+    daily_title: 'あなたの家族は準備ができています。', map_title: '🗺️ 安全マップ',
+    fa_title: '🩺 応急処置ガイド', settings_title: '⚙️ 設定',
+    missions_title: '🏅 ファミリーミッション', cc_title: '👥 ケアサークル',
+    nav_home: 'ホーム', nav_map: '地図', nav_family: 'サークル',
+    nav_firstaid: '応急', nav_settings: '設定',
+    em_active: '緊急事態発生中', safe: '安全', checking: '確認中', danger: '助けが必要'
+  },
+  'Deutsch': {
+    sos_title: 'SOS SENDEN', sos_sub: 'Notfalldienste + Kontakte · GPS',
+    daily_title: 'Ihre Familie ist bereit.', map_title: '🗺️ Sicherheitskarte',
+    fa_title: '🩺 Erste-Hilfe-Leitfaden', settings_title: '⚙️ Einstellungen',
+    missions_title: '🏅 Familienmissionen', cc_title: '👥 Pflegekreis',
+    nav_home: 'Start', nav_map: 'Karte', nav_family: 'Kreis',
+    nav_firstaid: 'Erste Hilfe', nav_settings: 'Einstellung',
+    em_active: 'AKTIVER NOTFALL', safe: 'SICHER', checking: 'PRÜFEN', danger: 'BRAUCHT HILFE'
+  },
+  'Türkçe': {
+    sos_title: 'SOS GÖNDER', sos_sub: 'Acil servisler + kişiler · GPS',
+    daily_title: 'Aileniz hazır.', map_title: '🗺️ Güvenlik Haritası',
+    fa_title: '🩺 İlk Yardım Rehberi', settings_title: '⚙️ Ayarlar',
+    missions_title: '🏅 Aile Görevleri', cc_title: '👥 Bakım Çemberi',
+    nav_home: 'Ana Sayfa', nav_map: 'Harita', nav_family: 'Çember',
+    nav_firstaid: 'İlk Yardım', nav_settings: 'Ayarlar',
+    em_active: 'ACİL DURUM AKTİF', safe: 'GÜVENLİ', checking: 'KONTROL', danger: 'YARDIM GEREKİYOR'
+  },
+  'Tiếng Việt': {
+    sos_title: 'GỬI TÍN HIỆU SOS', sos_sub: 'Dịch vụ khẩn cấp + danh bạ · GPS',
+    daily_title: 'Gia đình bạn đã sẵn sàng.', map_title: '🗺️ Bản đồ An toàn',
+    fa_title: '🩺 Hướng dẫn Sơ cứu', settings_title: '⚙️ Cài đặt',
+    missions_title: '🏅 Nhiệm vụ Gia đình', cc_title: '👥 Vòng Quan tâm',
+    nav_home: 'Trang chủ', nav_map: 'Bản đồ', nav_family: 'Vòng tròn',
+    nav_firstaid: 'Sơ cứu', nav_settings: 'Cài đặt',
+    em_active: 'KHẨN CẤP ĐANG HOẠT ĐỘNG', safe: 'AN TOÀN', checking: 'ĐANG KIỂM TRA', danger: 'CẦN GIÚP ĐỠ'
+  },
+  'Hausa': {
+    sos_title: 'AIKA SOS', sos_sub: 'Ayyukan gaggawa + lambobin sadarwa · GPS',
+    daily_title: 'Iyalinka sun shirya.', map_title: '🗺️ Taswirar Aminci',
+    fa_title: '🩺 Jagoran Agajin Farko', settings_title: '⚙️ Saitunan',
+    missions_title: '🏅 Ayyukan Iyali', cc_title: '👥 Zagayen Kulawa',
+    nav_home: 'Gida', nav_map: 'Taswira', nav_family: 'Zagaye',
+    nav_firstaid: 'Agaji', nav_settings: 'Saituna',
+    em_active: 'GAGGAWA NA AIKI', safe: 'LAFIYA', checking: 'DUBA', danger: 'YANA BUKATAR TAIMAKO'
+  },
+  'Bahasa': {
+    sos_title: 'KIRIM SOS', sos_sub: 'Layanan darurat + kontak · GPS',
+    daily_title: 'Keluarga Anda siap.', map_title: '🗺️ Peta Keselamatan',
+    fa_title: '🩺 Panduan Pertolongan Pertama', settings_title: '⚙️ Pengaturan',
+    missions_title: '🏅 Misi Keluarga', cc_title: '👥 Lingkaran Peduli',
+    nav_home: 'Beranda', nav_map: 'Peta', nav_family: 'Lingkaran',
+    nav_firstaid: 'P3K', nav_settings: 'Setelan',
+    em_active: 'DARURAT AKTIF', safe: 'AMAN', checking: 'MEMERIKSA', danger: 'BUTUH BANTUAN'
+  }
+};
+
+var currentLang = 'English';
+
+function applyTranslation(lang) {
+  var t = translations[lang];
+  if (!t) return;
+  currentLang = lang;
+  try {
+    // SOS
+    var sosTitle = document.querySelector('.sos-title');
+    if (sosTitle) sosTitle.textContent = t.sos_title;
+    var sosSub = document.querySelector('.sos-sub');
+    if (sosSub) sosSub.textContent = t.sos_sub;
+    // Emergency badge
+    var emBadge = document.querySelector('.em-badge-txt');
+    if (emBadge) emBadge.textContent = t.em_active;
+    // Map header
+    var mapTitle = document.querySelector('.map-hdr-title');
+    if (mapTitle) mapTitle.textContent = t.map_title;
+    // Save language
+    try { localStorage.setItem('anchor_lang', lang); } catch(e) {}
+    toast('✅ ' + lang + ' applied');
+  } catch(e) {}
+}
+
+function loadSavedLang() {
+  try {
+    var saved = localStorage.getItem('anchor_lang');
+    if (saved && translations[saved]) {
+      applyTranslation(saved);
+      // Update language button UI
+      document.querySelectorAll('.lang-btn').forEach(function(b) {
+        if (b.textContent.indexOf(saved) > -1 || b.textContent.replace(/[^a-zA-Z-￿]/g,'').trim() === saved.replace(/[^a-zA-Z-￿]/g,'').trim()) {
+          b.classList.add('selected');
+        } else {
+          b.classList.remove('selected');
+        }
+      });
+    }
+  } catch(e) {}
+}
+
+// ── SETTINGS ──
+function updateProfile() {
+  var name = document.getElementById('inputName').value;
+  if (name) {
+    document.getElementById('profileName').textContent = name;
+    saveToStorage();
+  }
+}
+
+function toggleSetting(btn) {
+  btn.classList.toggle('on');
+  toast(btn.classList.contains('on') ? 'Setting enabled ✓' : 'Setting disabled');
+}
+
+function selectLang(btn) {
+  document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  // Extract language name from button
+  var langName = btn.textContent.replace(/[^a-zA-Z-￿\s]/g,'').trim();
+  // Match to translations
+  var matched = Object.keys(translations).find(function(k) {
+    return btn.textContent.indexOf(k) > -1;
+  });
+  if (matched) {
+    applyTranslation(matched);
+  } else {
+    toast('Language set: ' + btn.textContent);
+  }
+}
+
+function saveSettings() {
+  saveToStorage();
+  toast('✅ Settings saved!');
+}
+
+function saveToStorage() {
+  try {
+    var data = {
+      name: document.getElementById('inputName').value,
+      phone: document.getElementById('inputPhone').value,
+      location: document.getElementById('inputLocation').value,
+      c1name: document.getElementById('contact1name').value,
+      c1phone: document.getElementById('contact1phone').value,
+      c2name: document.getElementById('contact2name').value,
+      c2phone: document.getElementById('contact2phone').value,
+      c3name: document.getElementById('contact3name').value,
+      c3phone: document.getElementById('contact3phone').value,
+    };
+    localStorage.setItem('anchor_settings', JSON.stringify(data));
+  } catch(e) {}
+}
+
+function loadFromStorage() {
+  try {
+    var raw = localStorage.getItem('anchor_settings');
+    if (!raw) return;
+    var data = JSON.parse(raw);
+    if (data.name) { document.getElementById('inputName').value = data.name; document.getElementById('profileName').textContent = data.name; }
+    if (data.phone) document.getElementById('inputPhone').value = data.phone;
+    if (data.location) document.getElementById('inputLocation').value = data.location;
+    if (data.c1name) document.getElementById('contact1name').value = data.c1name;
+    if (data.c1phone) document.getElementById('contact1phone').value = data.c1phone;
+    if (data.c2name) document.getElementById('contact2name').value = data.c2name;
+    if (data.c2phone) document.getElementById('contact2phone').value = data.c2phone;
+    if (data.c3name) document.getElementById('contact3name').value = data.c3name;
+    if (data.c3phone) document.getElementById('contact3phone').value = data.c3phone;
+  } catch(e) {}
+}
+loadFromStorage();
+loadSavedLang();
+
+
+// ── SURVIVAL BOOK ──
+function toggleSurv(card) {
+  var body = card.querySelector('.surv-body');
+  var arr = card.querySelector('.surv-card-arr');
+  var isOpen = body.classList.contains('open');
+  document.querySelectorAll('.surv-body').forEach(function(b) { b.classList.remove('open'); });
+  document.querySelectorAll('.surv-card-arr').forEach(function(a) { a.textContent = '›'; });
+  if (!isOpen) { body.classList.add('open'); arr.textContent = '⌃'; }
+}
+
+function survCat(cat, btn) {
+  document.querySelectorAll('.surv-cat').forEach(function(b) { b.className = 'surv-cat inactive'; });
+  btn.className = 'surv-cat active';
+  document.querySelectorAll('.surv-card').forEach(function(card) {
+    card.style.display = (cat === 'all' || card.getAttribute('data-cat') === cat) ? 'block' : 'none';
+  });
+}
+
+function survLang(btn) {
+  document.querySelectorAll('.surv-lang-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  toast('📖 ' + btn.textContent + ' — Translation coming in next update');
+}
+
+// ── FIRST AID ──
+function toggleFA(card) {
+  var body = card.querySelector('.fa-card-body');
+  var arr = card.querySelector('.fa-card-arr');
+  var isOpen = body.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.fa-card-body').forEach(function(b) { b.classList.remove('open'); });
+  document.querySelectorAll('.fa-card-arr').forEach(function(a) { a.textContent = '›'; });
+  // Open this one if it was closed
+  if (!isOpen) {
+    body.classList.add('open');
+    arr.textContent = '⌃';
+  }
+}
+
+function filterCat(cat, btn) {
+  document.querySelectorAll('.fa-cat').forEach(function(b) { b.className = 'fa-cat inactive'; });
+  btn.className = 'fa-cat active';
+  document.querySelectorAll('.fa-card').forEach(function(card) {
+    if (cat === 'all' || card.getAttribute('data-cat') === cat) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function filterFA(val) {
+  val = val.toLowerCase();
+  document.querySelectorAll('.fa-card').forEach(function(card) {
+    var title = card.querySelector('.fa-card-title').textContent.toLowerCase();
+  
