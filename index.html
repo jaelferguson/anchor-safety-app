@@ -1017,7 +1017,7 @@ html, body {
 </div>
 
 <!-- ══════════════ PRIVACY POLICY SCREEN ══════════════ -->
-<div id="privacy" class="screen" style="display:none;">
+<div id="privacy" style="position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;display:none;-webkit-overflow-scrolling:touch;padding-bottom:80px;background:#0A0A0A;">
   <div class="priv-hdr">
     <div class="priv-hdr-title">🔒 Privacy Policy</div>
     <div class="priv-hdr-sub">Last updated: March 2026 · Plain English. No legal jargon.</div>
@@ -1119,7 +1119,7 @@ html, body {
 </div>
 
 <!-- ══════════════ DAILY MODE ══════════════ -->
-<div id="daily" class="screen" style="display:none;">
+<div id="daily" style="position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;display:none;-webkit-overflow-scrolling:touch;padding-bottom:80px;background:#F4F0E8;">
   <div class="hero">
     <div class="hero-greet" id="greet">Good afternoon · Auckland, NZ</div>
     <div class="hero-title">Your family is <em>ready.</em></div>
@@ -1224,7 +1224,7 @@ html, body {
 </div>
 
 <!-- ══════════════ MAP SCREEN ══════════════ -->
-<div id="mapscreen" class="screen" style="display:none;flex-direction:column;padding-bottom:0;">
+<div id="mapscreen" style="position:fixed;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;overflow:hidden;background:#0A0A0A;padding-bottom:0;">
   <div class="map-hdr">
     <div>
       <div class="map-hdr-title">🗺️ Safety Map</div>
@@ -1257,7 +1257,7 @@ html, body {
 </div>
 
 <!-- ══════════════ EMERGENCY MODE ══════════════ -->
-<div id="emergency" class="screen" style="display:none;">
+<div id="emergency" style="position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;display:none;-webkit-overflow-scrolling:touch;padding-bottom:80px;background:#0A0A0A;">
   <div class="em-bar">
     <div class="em-badge">
       <div class="em-pulse"></div>
@@ -1358,7 +1358,7 @@ html, body {
 
 
 <!-- ══════════════ FIRST AID SCREEN ══════════════ -->
-<div id="firstaid" class="screen" style="display:none;">
+<div id="firstaid" style="position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;display:none;-webkit-overflow-scrolling:touch;padding-bottom:80px;background:#0A0A0A;">
   <div class="fa-hdr">
     <div class="fa-hdr-title">🩺 First Aid Guide</div>
     <div class="fa-hdr-sub">Step-by-step emergency instructions · Works offline</div>
@@ -1616,7 +1616,7 @@ html, body {
 
 
 <!-- ══════════════ SETTINGS SCREEN ══════════════ -->
-<div id="settings" class="screen" style="display:none;">
+<div id="settings" style="position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;display:none;-webkit-overflow-scrolling:touch;padding-bottom:80px;background:#0A0A0A;">
   <div class="set-hdr">
     <div class="set-hdr-title">⚙️ Settings</div>
     <div class="set-hdr-sub">Personalise Anchor for your family</div>
@@ -1893,7 +1893,7 @@ html, body {
 
 
 <!-- ══════════════ MISSIONS SCREEN ══════════════ -->
-<div id="missions" class="screen" style="display:none;">
+<div id="missions" style="position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;display:none;-webkit-overflow-scrolling:touch;padding-bottom:80px;background:#0A0A0A;">
   <div class="mis-hdr">
     <div class="mis-hdr-title">🏅 Family Missions</div>
     <div class="mis-hdr-sub">Complete missions to keep your family safe</div>
@@ -2292,7 +2292,7 @@ html, body {
 
 
 <!-- ══════════════ CARE CIRCLE SCREEN ══════════════ -->
-<div id="carecircle" class="screen" style="display:none;">
+<div id="carecircle" style="position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;display:none;-webkit-overflow-scrolling:touch;padding-bottom:80px;background:#0A0A0A;">
   <div class="cc-hdr">
     <div class="cc-hdr-title">👥 Care Circle</div>
     <div class="cc-hdr-sub">Protect your neighbours · No one left behind</div>
@@ -2508,7 +2508,7 @@ html, body {
 
 
 <!-- ══════════════ SURVIVAL BOOK ══════════════ -->
-<div id="survival" class="screen" style="display:none;">
+<div id="survival" style="position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;display:none;-webkit-overflow-scrolling:touch;padding-bottom:80px;background:#0A0A0A;">
   <div class="surv-hdr">
     <div class="surv-hdr-title">📖 Survival Skills Book</div>
     <div class="surv-hdr-sub">Simple skills. Clear commands. Every language. Free forever.</div>
@@ -2784,30 +2784,33 @@ var layers = {};
 var layerOn = {hosp:true, fam:true, shel:true, dang:true, route:true};
 
 function go(id) {
-  // Hide ALL screens using direct style
   var allScreens = ['consent','privacy','daily','mapscreen','emergency','firstaid','survival','missions','carecircle','settings'];
-  allScreens.forEach(function(sid) {
-    var s = document.getElementById(sid);
-    if (s) s.style.display = 'none';
-  });
+  
+  // Hide ALL screens
+  for (var i = 0; i < allScreens.length; i++) {
+    var s = document.getElementById(allScreens[i]);
+    if (s) {
+      s.style.display = 'none';
+      s.style.visibility = 'hidden';
+    }
+  }
 
-  // Show the requested screen
+  // Show target screen
   var target = document.getElementById(id);
   if (target) {
+    target.style.visibility = 'visible';
     if (id === 'mapscreen') {
       target.style.display = 'flex';
-      setTimeout(initMap, 200);
+      setTimeout(function() { initMap(); }, 300);
     } else {
       target.style.display = 'block';
     }
-    target.scrollTop = 0;
+    setTimeout(function() { target.scrollTop = 0; }, 50);
   }
 
-  // FAB button
+  // FAB
   var fab = document.getElementById('fab');
   if (fab) fab.style.display = (id === 'emergency') ? 'block' : 'none';
-
-  window.scrollTo(0, 0);
 }
 
 // ── GREETING ──
@@ -3129,16 +3132,20 @@ function clearAllData() {
 
 // ── CONSENT & PRIVACY ──
 function agreeToTerms() {
-  document.getElementById('consent').style.display = 'none';
-  document.getElementById('daily').style.display = 'block';
+  var consent = document.getElementById('consent');
+  var daily = document.getElementById('daily');
+  if (consent) { consent.style.display = 'none'; consent.style.visibility = 'hidden'; }
+  if (daily) { daily.style.display = 'block'; daily.style.visibility = 'visible'; }
   try { localStorage.setItem('anchor_consent', 'true'); } catch(e) {}
 }
 
 function checkConsent() {
   try {
     if (localStorage.getItem('anchor_consent') === 'true') {
-      document.getElementById('consent').style.display = 'none';
-      document.getElementById('daily').style.display = 'block';
+      var consent = document.getElementById('consent');
+      var daily = document.getElementById('daily');
+      if (consent) { consent.style.display = 'none'; consent.style.visibility = 'hidden'; }
+      if (daily) { daily.style.display = 'block'; daily.style.visibility = 'visible'; }
     }
   } catch(e) {}
 }
