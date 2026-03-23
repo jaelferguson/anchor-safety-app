@@ -1145,7 +1145,7 @@ html, body {
         <div class="read-info">
           <div class="read-title">Almost there</div>
           <div class="read-desc">Update your go-bag to reach Silver status and unlock advanced features.</div>
-          <button class="btn-green" onclick="toast('Opening tasks...')">Complete 2 tasks →</button>
+          <button class="btn-green" onclick="go('missions')">Complete 2 tasks →</button>
         </div>
       </div>
     </div>
@@ -1173,19 +1173,19 @@ html, body {
     <!-- Missions -->
     <div class="sec-head">Family Missions</div>
     <div class="mgrid">
-      <div class="mcard" onclick="toast('Opening Go-Bag mission...')">
+      <div class="mcard" onclick="go('missions')">
         <div class="mico">🎒</div><div class="mtit">Pack the Go-Bag</div><div class="mxp">+150 XP</div>
         <div class="mprog"><div class="mbar" data-w="60%"></div></div>
       </div>
-      <div class="mcard org" onclick="toast('Opening Blackout Drill...')">
+      <div class="mcard org" onclick="go('missions')">
         <div class="mico">🔦</div><div class="mtit">Blackout Drill</div><div class="mxp">+200 XP</div>
         <div class="mprog"><div class="mbar" data-w="30%"></div></div>
       </div>
-      <div class="mcard done" onclick="toast('Mission complete! ✓')">
+      <div class="mcard done" onclick="go('missions')">
         <div class="mico">📋</div><div class="mtit">Family Plan</div><div class="mxp">✓ Complete</div>
         <div class="mprog"><div class="mbar" data-w="100%"></div></div>
       </div>
-      <div class="mcard org" onclick="toast('Opening Evacuation Run...')">
+      <div class="mcard org" onclick="go('missions')">
         <div class="mico">🏃</div><div class="mtit">Evacuation Run</div><div class="mxp">+300 XP</div>
         <div class="mprog"><div class="mbar" data-w="0%"></div></div>
       </div>
@@ -1309,16 +1309,16 @@ html, body {
         </div>
         <div class="asub">GO →</div>
       </button>
-      <button class="abtn dk" onclick="toast('Drop! Cover your head. Hold On!')">
+      <button class="abtn dk" onclick="document.getElementById('drop-cover-info').style.display='block'">
         <div class="aico">🏠</div><div class="atxt">Drop & Cover</div><div class="asub">Indoor protocol</div>
       </button>
-      <button class="abtn yw" onclick="toast('Tuning emergency broadcast...')">
+      <button class="abtn yw" onclick="toast('📻 Tune to: AM 585 National Radio NZ · BBC World Service · Local Emergency FM')">
         <div class="aico">📻</div><div class="atxt">Emergency Broadcast</div><div class="asub">Live updates</div>
       </button>
       <button class="abtn eg" onclick="go('firstaid')">
         <div class="aico">🩺</div><div class="atxt">First Aid</div><div class="asub">Step by step</div>
       </button>
-      <button class="abtn dk" onclick="toast('Casting to nearby TV...')">
+      <button class="abtn dk" onclick="toast('📲 Open your TV remote app and cast Anchor screen')">
         <div class="aico">📲</div><div class="atxt">Cast to TV</div><div class="asub">Family briefing</div>
       </button>
     </div>
@@ -1348,8 +1348,8 @@ html, body {
     <button class="ntab act" onclick="go('emergency')"><div class="nico">🚨</div><div class="nlbl">Alerts</div></button>
     <button class="ntab" onclick="go('mapscreen')"><div class="nico">🗺️</div><div class="nlbl">Evacuate</div></button>
     <button class="ntab" onclick="go('carecircle')"><div class="nico">👥</div><div class="nlbl">Family</div></button>
-    <button class="ntab" onclick="toast('Satellite comms active...')"><div class="nico">📡</div><div class="nlbl">Comms</div></button>
-    <button class="ntab" onclick="toast('Settings loading...')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
+    <button class="ntab" onclick="toast('📡 Satellite active — Garmin inReach or Spot Gen4 required for full satellite comms')"><div class="nico">📡</div><div class="nlbl">Comms</div></button>
+    <button class="ntab" onclick="go('settings')"><div class="nico">⚙️</div><div class="nlbl">Settings</div></button>
   </div>
   <div class="fab" id="fab">
     <button class="fab-btn" onclick="go('daily')">☀️ Daily Mode</button>
@@ -1771,22 +1771,22 @@ html, body {
     <div class="set-section">
       <div class="set-section-title">About Anchor</div>
       <div class="set-card">
-        <div class="set-row" onclick="toast('anchorsafety.org')">
+        <div class="set-row" onclick="window.open('https://anchorsafety.org','_blank')">
           <div class="set-ico" style="background:rgba(43,96,82,0.2);">⚓</div>
           <div class="set-row-info"><div class="set-row-label">Anchor Safety</div><div class="set-row-val">anchorsafety.org · Version 1.0</div></div>
           <div class="set-row-arr">›</div>
         </div>
-        <div class="set-row" onclick="toast('Safety for every human being on earth 🌏')">
+        <div class="set-row" onclick="toast('🌏 Anchor — Free safety for every human being on earth. Founded in Auckland, New Zealand.')">
           <div class="set-ico" style="background:rgba(43,96,82,0.2);">🌏</div>
           <div class="set-row-info"><div class="set-row-label">Our Mission</div><div class="set-row-val">Free for every human being on earth</div></div>
           <div class="set-row-arr">›</div>
         </div>
-        <div class="set-row" onclick="toast('hello@anchorsafety.org')">
+        <div class="set-row" onclick="window.open('mailto:hello@anchorsafety.org','_blank')">
           <div class="set-ico" style="background:rgba(43,96,82,0.2);">✉️</div>
           <div class="set-row-info"><div class="set-row-label">Contact Us</div><div class="set-row-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d6beb3babab996b7b8b5beb9a4a5b7b0b3a2aff8b9a4b1">[email&#160;protected]</a></div></div>
           <div class="set-row-arr">›</div>
         </div>
-        <div class="set-row" onclick="toast('Coming soon — Anchor branded gear! 🎒🐾📡')">
+        <div class="set-row" onclick="toast('🎒 Anchor Gear coming soon — Emergency Bag, Dog Saddlebag, GPS Tracker, Head Torch')">
           <div class="set-ico" style="background:rgba(43,96,82,0.2);">🛍️</div>
           <div class="set-row-info">
             <div class="set-row-label">Anchor Gear — Coming Soon</div>
@@ -2342,8 +2342,8 @@ html, body {
         </div>
       </div>
       <div class="cc-actions">
-        <button class="cc-action-btn call" onclick="toast('Calling Edna...')">📞 Call</button>
-        <button class="cc-action-btn help" onclick="toast('Sending help to Edna...')">🆘 Help</button>
+        <button class="cc-action-btn call" onclick="toast('📞 Add Edna phone number in Settings to enable calling')">📞 Call</button>
+        <button class="cc-action-btn help" onclick="openSOS()">🆘 Help</button>
       </div>
     </div>
 
@@ -2359,8 +2359,8 @@ html, body {
         </div>
       </div>
       <div class="cc-actions">
-        <button class="cc-action-btn call" onclick="toast('Calling Robert...')">📞 Call</button>
-        <button class="cc-action-btn check" onclick="toast('Robert is safe ✓')">✓ Safe</button>
+        <button class="cc-action-btn call" onclick="toast('📞 Add Robert phone number in Settings to enable calling')">📞 Call</button>
+        <button class="cc-action-btn check" onclick="toast('✅ Robert marked as safe')">✓ Safe</button>
       </div>
     </div>
 
@@ -2376,8 +2376,8 @@ html, body {
         </div>
       </div>
       <div class="cc-actions">
-        <button class="cc-action-btn call" onclick="toast('Calling Maria...')">📞 Call</button>
-        <button class="cc-action-btn check" onclick="toast('Marked Maria as safe ✓')">✓ Safe</button>
+        <button class="cc-action-btn call" onclick="toast('📞 Add Maria phone number in Settings to enable calling')">📞 Call</button>
+        <button class="cc-action-btn check" onclick="toast('✅ Maria marked as safe')">✓ Safe</button>
       </div>
     </div>
 
@@ -2393,8 +2393,8 @@ html, body {
         </div>
       </div>
       <div class="cc-actions">
-        <button class="cc-action-btn call" onclick="toast('Calling Sione family...')">📞 Call</button>
-        <button class="cc-action-btn check" onclick="toast('Sione family safe ✓')">✓ Safe</button>
+        <button class="cc-action-btn call" onclick="toast('📞 Add Sione family number in Settings to enable calling')">📞 Call</button>
+        <button class="cc-action-btn check" onclick="toast('✅ Sione family marked as safe')">✓ Safe</button>
       </div>
     </div>
 
@@ -2410,8 +2410,8 @@ html, body {
         </div>
       </div>
       <div class="cc-actions">
-        <button class="cc-action-btn call" onclick="toast('Calling Priya...')">📞 Call</button>
-        <button class="cc-action-btn check" onclick="toast('Priya safe ✓')">✓ Safe</button>
+        <button class="cc-action-btn call" onclick="toast('📞 Add Priya number in Settings to enable calling')">📞 Call</button>
+        <button class="cc-action-btn check" onclick="toast('✅ Priya marked as safe')">✓ Safe</button>
       </div>
     </div>
 
@@ -2426,15 +2426,50 @@ html, body {
         </div>
       </div>
       <div class="cc-actions">
-        <button class="cc-action-btn call" onclick="toast('Calling parents...')">📞 Call</button>
-        <button class="cc-action-btn check" onclick="toast('Baby Aroha safe ✓')">✓ Safe</button>
+        <button class="cc-action-btn call" onclick="toast('📞 Add parents number in Settings to enable calling')">📞 Call</button>
+        <button class="cc-action-btn check" onclick="toast('✅ Baby Aroha marked as safe')">✓ Safe</button>
       </div>
     </div>
 
     <!-- Add member -->
-    <button class="cc-add-btn" onclick="toast('Adding new circle member...')">
+    <button class="cc-add-btn" onclick="document.getElementById('cc-add-form').style.display='block';this.style.display='none';">
       + Add Neighbour to Care Circle
     </button>
+
+    <!-- Add Member Form -->
+    <div id="cc-add-form" style="display:none;background:#141414;border:1px solid #2A2A2A;border-radius:18px;padding:16px;margin-bottom:14px;">
+      <div style="font-size:15px;font-weight:800;color:white;margin-bottom:14px;">👤 Add to Care Circle</div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:11px;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;">Name</div>
+        <input id="cc-new-name" type="text" placeholder="e.g. Margaret" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:10px;padding:12px;color:white;font-size:14px;font-family:-apple-system,sans-serif;">
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:11px;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;">Address / Location</div>
+        <input id="cc-new-address" type="text" placeholder="e.g. 12 Maple Street" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:10px;padding:12px;color:white;font-size:14px;font-family:-apple-system,sans-serif;">
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:11px;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;">Phone Number</div>
+        <input id="cc-new-phone" type="tel" placeholder="e.g. 021 123 456" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:10px;padding:12px;color:white;font-size:14px;font-family:-apple-system,sans-serif;">
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:11px;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;">Needs (select all that apply)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <button onclick="toggleNeedTag(this)" style="background:#1A1A1A;color:#888;border:1px solid #2A2A2A;border-radius:100px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;">👴 Elderly</button>
+          <button onclick="toggleNeedTag(this)" style="background:#1A1A1A;color:#888;border:1px solid #2A2A2A;border-radius:100px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;">♿ Disabled</button>
+          <button onclick="toggleNeedTag(this)" style="background:#1A1A1A;color:#888;border:1px solid #2A2A2A;border-radius:100px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;">🏠 Lives Alone</button>
+          <button onclick="toggleNeedTag(this)" style="background:#1A1A1A;color:#888;border:1px solid #2A2A2A;border-radius:100px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;">💊 Medical</button>
+          <button onclick="toggleNeedTag(this)" style="background:#1A1A1A;color:#888;border:1px solid #2A2A2A;border-radius:100px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;">👶 Children</button>
+          <button onclick="toggleNeedTag(this)" style="background:#1A1A1A;color:#888;border:1px solid #2A2A2A;border-radius:100px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;">🐾 Pets</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="addCircleMember()" style="flex:1;background:#2B6052;color:white;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;">✓ Add to Circle</button>
+        <button onclick="document.getElementById('cc-add-form').style.display='none';document.querySelector('.cc-add-btn').style.display='flex';" style="background:#1A1A1A;color:#888;border:1px solid #2A2A2A;border-radius:12px;padding:14px;font-size:14px;cursor:pointer;">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Added members list -->
+    <div id="cc-added-members"></div>
 
     <!-- How it works -->
     <div class="cc-how">
@@ -3445,6 +3480,66 @@ function loadFromStorage() {
 loadFromStorage();
 loadSavedLang();
 
+
+// ── CARE CIRCLE ADD MEMBER ──
+function toggleNeedTag(btn) {
+  if (btn.style.background === 'rgb(43, 96, 82)' || btn.style.background === '#2B6052') {
+    btn.style.background = '#1A1A1A';
+    btn.style.color = '#888';
+    btn.style.borderColor = '#2A2A2A';
+  } else {
+    btn.style.background = '#2B6052';
+    btn.style.color = 'white';
+    btn.style.borderColor = '#2B6052';
+  }
+}
+
+function addCircleMember() {
+  var name = document.getElementById('cc-new-name').value.trim();
+  var address = document.getElementById('cc-new-address').value.trim();
+  var phone = document.getElementById('cc-new-phone').value.trim();
+
+  if (!name) { toast('Please enter a name'); return; }
+
+  // Build tags from selected buttons
+  var tags = [];
+  document.querySelectorAll('#cc-add-form button').forEach(function(btn) {
+    if (btn.style.background === 'rgb(43, 96, 82)' || btn.style.background === '#2B6052') {
+      if (btn.textContent !== '✓ Add to Circle') tags.push(btn.textContent.trim());
+    }
+  });
+
+  // Create new member card
+  var memberDiv = document.createElement('div');
+  memberDiv.style.cssText = 'background:#141414;border:1px solid rgba(48,209,88,0.3);border-radius:18px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;';
+  memberDiv.innerHTML =
+    '<div style="width:48px;height:48px;border-radius:50%;background:#1A2A1A;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;position:relative;">👤' +
+    '<div style="position:absolute;bottom:0;right:0;width:14px;height:14px;border-radius:50%;background:#30D158;border:2px solid #141414;"></div></div>' +
+    '<div style="flex:1;">' +
+    '<div style="font-size:15px;font-weight:700;color:white;margin-bottom:3px;">' + name + '</div>' +
+    (address ? '<div style="font-size:12px;color:#666;margin-bottom:6px;">📍 ' + address + '</div>' : '') +
+    (tags.length ? '<div style="display:flex;gap:6px;flex-wrap:wrap;">' + tags.map(function(t){return '<span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:rgba(43,96,82,0.2);color:#A8D5C2;">'+t+'</span>';}).join('') + '</div>' : '') +
+    '</div>' +
+    '<div style="display:flex;flex-direction:column;gap:6px;">' +
+    (phone ? '<button onclick="window.location.href='tel:' + phone + ''" style="background:#30D158;color:white;border:none;border-radius:10px;padding:8px 12px;font-size:11px;font-weight:700;cursor:pointer;">📞 Call</button>' : '') +
+    '<button style="background:#1E1E1E;color:#888;border:1px solid #2A2A2A;border-radius:10px;padding:8px 12px;font-size:11px;font-weight:700;cursor:pointer;">✓ Safe</button>' +
+    '</div>';
+
+  document.getElementById('cc-added-members').appendChild(memberDiv);
+
+  // Reset form
+  document.getElementById('cc-new-name').value = '';
+  document.getElementById('cc-new-address').value = '';
+  document.getElementById('cc-new-phone').value = '';
+  document.getElementById('cc-add-form').style.display = 'none';
+  document.querySelector('.cc-add-btn').style.display = 'flex';
+
+  // Update counter
+  var statNum = document.querySelector('.cc-stat-num');
+  if (statNum) statNum.textContent = parseInt(statNum.textContent) + 1;
+
+  toast('✅ ' + name + ' added to Care Circle!');
+}
 
 // ── SURVIVAL BOOK ──
 function toggleSurv(card) {
