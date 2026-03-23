@@ -3077,10 +3077,11 @@ function clearAllData() {
 }
 
 // ── CONSENT & PRIVACY ──
+var consentGiven = false;
+
 function agreeToTerms() {
-  try {
-    localStorage.setItem('anchor_consent', 'true');
-  } catch(e) {}
+  consentGiven = true;
+  try { localStorage.setItem('anchor_consent', 'true'); } catch(e) {}
   go('daily');
 }
 
@@ -3088,11 +3089,11 @@ function checkConsent() {
   try {
     var consent = localStorage.getItem('anchor_consent');
     if (consent === 'true') {
+      consentGiven = true;
       go('daily');
     }
-    // else stay on consent screen
   } catch(e) {
-    go('daily');
+    // localStorage blocked — just show consent screen, button will still work
   }
 }
 checkConsent();
