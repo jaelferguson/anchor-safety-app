@@ -42,6 +42,7 @@ html, body {
 .screen::-webkit-scrollbar { display: none; }
 .screen.active { display: block; }
 #mapscreen.active { display: flex; flex-direction: column; padding-bottom: 0; }
+#consent.active { display: flex; flex-direction: column; justify-content: center; padding-bottom: 30px; }
 
 /* ── DAILY ── */
 #daily { background: var(--cream); }
@@ -1007,7 +1008,7 @@ html, body {
     </div>
   </div>
 
-  <button class="consent-agree-btn" onclick="agreeToTerms()">
+  <butto  <button class="consent-agree-btn" onclick="agreeToTerms()">
     ✓ I Understand — Open Anchor
   </button>
   <button class="consent-privacy-btn" onclick="go('privacy')">
@@ -2751,8 +2752,13 @@ function go(id) {
   document.querySelectorAll('.screen').forEach(function(s) {
     s.classList.remove('active');
   });
-  document.getElementById(id).classList.add('active');
-  document.getElementById('fab').style.display = (id === 'emergency') ? 'block' : 'none';
+  var screen = document.getElementById(id);
+  if (screen) {
+    screen.classList.add('active');
+    screen.scrollTop = 0;
+  }
+  var fab = document.getElementById('fab');
+  if (fab) fab.style.display = (id === 'emergency') ? 'block' : 'none';
   if (id === 'mapscreen') {
     setTimeout(initMap, 200);
   }
@@ -3077,24 +3083,17 @@ function clearAllData() {
 }
 
 // ── CONSENT & PRIVACY ──
-var consentGiven = false;
-
 function agreeToTerms() {
-  consentGiven = true;
   try { localStorage.setItem('anchor_consent', 'true'); } catch(e) {}
   go('daily');
 }
 
 function checkConsent() {
   try {
-    var consent = localStorage.getItem('anchor_consent');
-    if (consent === 'true') {
-      consentGiven = true;
+    if (localStorage.getItem('anchor_consent') === 'true') {
       go('daily');
     }
-  } catch(e) {
-    // localStorage blocked — just show consent screen, button will still work
-  }
+  } catch(e) {}
 }
 checkConsent();
 
