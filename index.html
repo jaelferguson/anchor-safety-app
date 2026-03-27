@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Anchor Safety</title>
+<title>Anchor — Emergency Safety App</title>
+<meta name="description" content="A digital survival companion for every human being on earth.">
 <meta name="theme-color" content="#2B6052">
-
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
@@ -24,133 +25,67 @@
 }
 html, body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  height: 100%; overflow: hidden; background: #000;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
 }
 .screen {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  overflow-y: auto; overflow-x: hidden;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: none;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding-bottom: 80px;
 }
 .screen::-webkit-scrollbar { display: none; }
+.screen.active { display: block; }
+#mapscreen.active { display: flex; flex-direction: column; padding-bottom: 0; }
 
-/* NAV */
-.bnav {
-  position: fixed; bottom: 0; left: 0; right: 0; height: 72px;
-  display: flex; align-items: center; justify-content: space-around;
-  z-index: 100; border-top: 1px solid;
-}
-.bnav.light { background: rgba(244,240,232,0.97); border-color: var(--border); }
-.bnav.dark { background: rgba(8,8,8,0.97); border-color: #1A1A1A; }
-.ntab {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 3px; cursor: pointer; flex: 1; padding: 8px 0;
-  border: none; background: transparent;
-}
-.ntab:active { opacity: 0.7; }
-.nico { font-size: 26px; }
-.nlbl { font-size: 9px; font-weight: 700; }
-.bnav.light .nlbl { color: var(--muted); }
-.bnav.light .ntab.act .nlbl { color: var(--green); }
-.bnav.dark .nlbl { color: #888; }
-.bnav.dark .ntab.act .nlbl { color: var(--red); }
-.bnav.dark .ntab .nico { opacity: 0.85; }
-.bnav.dark .ntab.act .nico { opacity: 1; }
-.bnav.light .ntab .nico { opacity: 0.75; }
-.bnav.light .ntab.act .nico { opacity: 1; }
-
-/* FAB */
-.fab {
-  position: fixed; bottom: 86px; right: 16px; z-index: 101; display: none;
-}
-.fab button {
-  background: var(--green); color: white; border: none;
-  border-radius: 100px; padding: 12px 18px;
-  font-size: 13px; font-weight: 700; cursor: pointer;
-  box-shadow: 0 4px 20px rgba(43,96,82,0.45);
-}
-
-/* TOAST */
-.toast {
-  position: fixed; top: 60px; left: 50%;
-  transform: translateX(-50%) translateY(-20px);
-  background: #1A1A1A; color: white;
-  padding: 12px 20px; border-radius: 100px;
-  font-size: 13px; font-weight: 600;
-  z-index: 9999; opacity: 0; transition: all 0.3s;
-  white-space: nowrap; border: 1px solid #333;
-  pointer-events: none;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* CONSENT */
-#consent {
-  background: #0A0A0A; padding: 40px 20px;
-  justify-content: center;
-}
-.consent-logo { text-align: center; margin-bottom: 24px; padding-top: 20px; }
-.consent-card {
-  background: #141414; border: 1px solid #2A2A2A;
-  border-radius: 20px; padding: 20px; margin-bottom: 20px;
-}
-.consent-item {
-  display: flex; gap: 12px; padding: 10px 0;
-  border-bottom: 1px solid #1E1E1E; align-items: flex-start;
-}
-.consent-item:last-child { border-bottom: none; }
-.consent-agree {
-  width: 100%; background: var(--green); color: white;
-  border: none; border-radius: 16px; padding: 20px;
-  font-size: 18px; font-weight: 800; cursor: pointer;
-  margin-bottom: 12px; display: block;
-}
-.consent-agree:active { opacity: 0.9; }
-.consent-privacy {
-  width: 100%; background: transparent; color: #666;
-  border: none; padding: 12px; font-size: 13px;
-  cursor: pointer; text-decoration: underline;
-}
-
-/* PRIVACY */
-#privacy { background: #0A0A0A; }
-.priv-back {
-  width: 100%; background: var(--green); color: white;
-  border: none; border-radius: 16px; padding: 16px;
-  font-size: 15px; font-weight: 700; cursor: pointer; margin: 16px 0 30px;
-}
-
-/* DAILY */
+/* ── DAILY ── */
 #daily { background: var(--cream); }
 .hero {
   background: linear-gradient(135deg, #2B6052, #1A3D30);
-  padding: 52px 20px 24px; position: relative; overflow: hidden;
+  padding: 52px 20px 24px;
+  position: relative;
+  overflow: hidden;
 }
 .hero::after {
-  content: '⚓'; position: absolute; right: -20px; top: -20px;
-  font-size: 130px; opacity: 0.05; pointer-events: none;
+  content: '⚓';
+  position: absolute;
+  right: -20px; top: -20px;
+  font-size: 130px;
+  opacity: 0.05;
+  pointer-events: none;
 }
 .hero-greet { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 4px; }
-.hero-title { font-size: 26px; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 14px; }
+.hero-title { font-size: 26px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 14px; }
 .hero-title em { font-style: italic; color: #A8D5C2; }
 .hero-badge {
   display: inline-flex; align-items: center; gap: 7px;
-  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 100px; padding: 7px 14px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px;
+  padding: 7px 14px;
   font-size: 12px; color: rgba(255,255,255,0.8); font-weight: 500;
 }
-.bdot { width: 7px; height: 7px; background: #A8D5C2; border-radius: 50%; }
+.badge-dot { width: 7px; height: 7px; background: #A8D5C2; border-radius: 50%; }
 .pad { padding: 16px; }
 .card {
-  background: white; border-radius: 18px; padding: 16px;
-  margin-bottom: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  background: white;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
 .sec-head {
-  font-size: 11px; font-weight: 700; letter-spacing: 1px;
-  text-transform: uppercase; color: var(--muted);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted);
   margin-bottom: 10px; margin-top: 2px;
 }
+/* Readiness ring */
 .read-row { display: flex; align-items: center; gap: 16px; }
 .ring-wrap { position: relative; width: 72px; height: 72px; flex-shrink: 0; }
 .ring-wrap svg { transform: rotate(-90deg); }
@@ -161,9 +96,12 @@ html, body {
 .read-title { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
 .read-desc { font-size: 12px; color: var(--muted); line-height: 1.4; margin-bottom: 10px; }
 .btn-green {
-  background: var(--green); color: white; border: none;
-  border-radius: 100px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer;
+  background: var(--green); color: #fff;
+  border: none; border-radius: 100px;
+  padding: 8px 16px; font-size: 12px; font-weight: 600;
+  cursor: pointer;
 }
+/* Members */
 .mem { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
 .mem:last-child { border-bottom: none; padding-bottom: 0; }
 .mem:first-child { padding-top: 0; }
@@ -177,13 +115,15 @@ html, body {
 .tag { font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 100px; }
 .tag-safe { background: #E8F5EE; color: var(--green); }
 .tag-away { background: #FFF4E6; color: #C05E1A; }
+/* Missions */
 .mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
 .mcard {
   background: white; border-radius: 16px; padding: 16px 14px;
   position: relative; overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06); cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  cursor: pointer; transition: transform 0.15s;
 }
-.mcard:active { opacity: 0.85; }
+.mcard:active { transform: scale(0.97); }
 .mcard::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--green); }
 .mcard.org::after { background: var(--orange); }
 .mcard.done::after { background: var(--emgreen); }
@@ -196,65 +136,84 @@ html, body {
 .mbar { height: 100%; background: var(--green); border-radius: 2px; transition: width 1s ease; }
 .mcard.org .mbar { background: var(--orange); }
 .mcard.done .mbar { background: var(--emgreen); }
+/* Em trigger */
 .em-trig {
   background: linear-gradient(135deg, #1A0A08, #3A1010);
-  border-radius: 18px; padding: 18px; margin-bottom: 14px;
+  border-radius: 18px; padding: 18px;
+  margin-bottom: 14px;
   display: flex; align-items: center; gap: 14px;
-  cursor: pointer; border: 1px solid rgba(255,59,48,0.25);
+  cursor: pointer;
+  border: 1px solid rgba(255,59,48,0.25);
+  transition: transform 0.15s;
 }
-.em-trig:active { opacity: 0.85; }
+.em-trig:active { transform: scale(0.98); }
 .em-trig-ico {
-  width: 48px; height: 48px; background: rgba(255,59,48,0.15);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px;
+  background: rgba(255,59,48,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
   font-size: 24px; flex-shrink: 0;
 }
+.em-trig-txt { flex: 1; }
 .em-trig-title { font-size: 15px; font-weight: 700; color: white; margin-bottom: 2px; }
 .em-trig-sub { font-size: 12px; color: rgba(255,255,255,0.45); }
+.em-trig-arr { color: rgba(255,59,48,0.5); font-size: 22px; }
 
-/* MAP */
-#mapscreen { background: #0A0A0A; padding-bottom: 0; }
+/* ── MAP ── */
+#mapscreen { background: #0A0A0A; overflow: hidden; }
 .map-hdr {
-  background: var(--green); padding: 50px 16px 14px;
-  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  background: var(--green);
+  padding: 50px 16px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
 }
 .map-hdr-title { font-size: 18px; font-weight: 800; color: white; }
 .map-hdr-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
 .map-loc-btn {
-  background: rgba(255,255,255,0.2); border: none; border-radius: 50%;
-  width: 40px; height: 40px; font-size: 20px; cursor: pointer; flex-shrink: 0;
+  background: rgba(255,255,255,0.2); border: none;
+  border-radius: 50%; width: 40px; height: 40px;
+  font-size: 20px; cursor: pointer; flex-shrink: 0;
 }
 .map-filters {
   display: flex; gap: 8px; padding: 10px 16px;
-  background: #111; overflow-x: auto; scrollbar-width: none; flex-shrink: 0;
+  background: #111; overflow-x: auto;
+  scrollbar-width: none; flex-shrink: 0;
   border-bottom: 1px solid #1E1E1E;
 }
 .map-filters::-webkit-scrollbar { display: none; }
 .fbtn {
   padding: 8px 14px; border-radius: 100px; border: none;
-  cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+  cursor: pointer; font-size: 12px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0;
 }
 .fon { background: var(--green); color: white; }
 .fon-red { background: var(--red); color: white; }
 .foff { background: #1E1E1E; color: #666; border: 1px solid #2A2A2A; }
-#map { height: calc(100vh - 220px); z-index: 1; }
+#map { flex: 1; min-height: 0; z-index: 1; }
 .map-legend {
   background: #111; border-top: 1px solid #1E1E1E;
-  padding: 8px 16px; display: flex; gap: 14px; flex-wrap: wrap; flex-shrink: 0;
+  padding: 8px 16px; flex-shrink: 0;
+  display: flex; gap: 14px; flex-wrap: wrap;
 }
 .leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #666; font-weight: 600; }
 .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
-/* EMERGENCY */
+/* ── EMERGENCY ── */
 #emergency { background: var(--embg); }
 .em-bar {
-  background: var(--red); padding: 50px 16px 14px;
+  background: var(--red);
+  padding: 50px 16px 14px;
   display: flex; align-items: center; justify-content: space-between;
 }
 .em-badge { display: flex; align-items: center; gap: 8px; }
-.em-pulse { width: 10px; height: 10px; background: white; border-radius: 50%; animation: ep 1s infinite; }
-@keyframes ep { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.6)} }
-.em-badge-txt { font-size: 14px; font-weight: 800; color: white; }
-.em-clock { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
+.em-pulse {
+  width: 10px; height: 10px;
+  background: white; border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.6)} }
+.em-badge-txt { font-size: 14px; font-weight: 800; color: white; letter-spacing: 0.5px; }
+.em-clock { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); font-variant-numeric: tabular-nums; }
 .em-pad { padding: 14px 16px; }
 .conn-row { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; }
 .conn-row::-webkit-scrollbar { display: none; }
@@ -268,6 +227,7 @@ html, body {
 .cbadge.cy { color: var(--yellow); border-color: rgba(255,214,10,0.3); background: rgba(255,214,10,0.07); }
 .cbadge.cb { color: #6CC2FF; border-color: rgba(108,194,255,0.3); background: rgba(108,194,255,0.07); }
 .cdot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.cbadge.cy .cdot { animation: pulse 1.5s infinite; }
 .ecard {
   background: var(--emsurf); border: 1px solid #2A2A2A;
   border-radius: 18px; padding: 18px; margin-bottom: 14px;
@@ -291,25 +251,37 @@ html, body {
 .sevbar.f { background: var(--red); }
 .sevbar.h { background: #FF7A32; }
 .sevlbl { font-size: 10px; font-weight: 700; color: var(--red); }
+/* SOS button */
 .sos-btn {
-  width: 100%; background: linear-gradient(135deg, #CC1A1A, #FF3B30);
-  border: none; border-radius: 18px; padding: 20px; margin-bottom: 14px;
-  display: flex; align-items: center; gap: 14px; cursor: pointer;
+  width: 100%;
+  background: linear-gradient(135deg, #CC1A1A, #FF3B30);
+  border: none; border-radius: 18px;
+  padding: 20px; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: transform 0.15s;
 }
-.sos-btn:active { opacity: 0.9; }
+.sos-btn:active { transform: scale(0.97); }
 .sos-ring {
   width: 52px; height: 52px; border-radius: 50%;
   background: rgba(255,255,255,0.15);
   display: flex; align-items: center; justify-content: center;
-  font-size: 28px; flex-shrink: 0; animation: sr 2s infinite;
+  font-size: 28px; flex-shrink: 0;
+  animation: sos 2s infinite;
 }
-@keyframes sr { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+@keyframes sos { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
 .sos-txt { flex: 1; text-align: left; }
 .sos-title { font-size: 20px; font-weight: 800; color: white; }
 .sos-sub { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+.sos-arr { font-size: 22px; color: rgba(255,255,255,0.4); }
+/* Action grid */
 .agrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-.abtn { border-radius: 16px; padding: 16px 14px; border: none; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; }
-.abtn:active { opacity: 0.85; }
+.abtn {
+  border-radius: 16px; padding: 16px 14px; border: none;
+  cursor: pointer; text-align: left;
+  display: flex; flex-direction: column; gap: 6px;
+  transition: transform 0.15s;
+}
+.abtn:active { transform: scale(0.95); }
 .abtn.full { grid-column: 1/-1; flex-direction: row; align-items: center; padding: 18px 20px; background: var(--red); }
 .abtn.dk { background: var(--emsurf); border: 1px solid #2A2A2A; }
 .abtn.yw { background: var(--yellow); }
@@ -322,11 +294,15 @@ html, body {
 .abtn.yw .atxt { color: #1A1A00; }
 .abtn.eg .atxt { color: #001A07; }
 .asub { font-size: 11px; }
-.abtn.full .asub { color: rgba(255,255,255,0.7); margin-left: auto; font-weight: 700; font-size: 13px; }
+.abtn.full .asub { color: rgba(255,255,255,0.65); margin-left: auto; font-weight: 700; font-size: 13px; }
 .abtn.dk .asub { color: #555; }
 .abtn.yw .asub { color: rgba(26,26,0,0.6); }
 .abtn.eg .asub { color: rgba(0,26,7,0.6); }
-.fcard { background: var(--emsurf); border: 1px solid #2A2A2A; border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+/* Family em */
+.fcard {
+  background: var(--emsurf); border: 1px solid #2A2A2A;
+  border-radius: 18px; padding: 16px; margin-bottom: 14px;
+}
 .flbl { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 12px; }
 .frow { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1E1E1E; }
 .frow:last-child { border-bottom: none; padding-bottom: 0; }
@@ -335,7 +311,7 @@ html, body {
 .fdot { position: absolute; bottom: 0; right: 0; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--emsurf); }
 .fdot.s { background: var(--emgreen); }
 .fdot.u { background: var(--yellow); }
-.fdot.d { background: var(--red); animation: ep 1s infinite; }
+.fdot.d { background: var(--red); animation: pulse 1s infinite; }
 .finfo { flex: 1; }
 .fname { font-size: 14px; font-weight: 700; color: white; }
 .floc { font-size: 12px; color: #555; margin-top: 2px; }
@@ -344,100 +320,293 @@ html, body {
 .fstat.u { color: var(--yellow); }
 .fstat.d { color: var(--red); }
 
-/* SOS MODAL */
+/* ── SOS MODAL ── */
 .modal {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.88);
-  z-index: 500; display: none; align-items: flex-end; justify-content: center;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 500; display: none;
+  align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(5px);
 }
 .modal.open { display: flex; }
 .modal-sheet {
-  background: #141414; border-radius: 28px 28px 0 0;
-  padding: 24px 20px 44px; width: 100%; max-width: 480px;
+  background: #141414;
+  border-radius: 28px 28px 0 0;
+  padding: 24px 20px 44px;
+  width: 100%; max-width: 480px;
   border-top: 1px solid #2A2A2A;
 }
 .modal-handle { width: 36px; height: 4px; background: #333; border-radius: 2px; margin: 0 auto 20px; }
 .modal-title { font-size: 22px; font-weight: 800; color: white; text-align: center; margin-bottom: 6px; }
 .modal-sub { font-size: 14px; color: #666; text-align: center; margin-bottom: 20px; line-height: 1.4; }
-.c-row { background: #1E1E1E; border: 1px solid #2A2A2A; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+.country-row {
+  background: #1E1E1E; border: 1px solid #2A2A2A;
+  border-radius: 14px; padding: 14px 16px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 12px;
+}
+.c-flag { font-size: 28px; flex-shrink: 0; }
 .c-info { flex: 1; }
 .c-name { font-size: 14px; font-weight: 600; color: white; }
 .c-num { font-size: 12px; color: #666; margin-top: 2px; }
 .c-auto { font-size: 11px; color: var(--emgreen); font-weight: 700; }
-.em-nums { background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 14px; padding: 14px 16px; margin-bottom: 4px; }
-.em-nums-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
-.em-num { font-size: 12px; color: #777; }
-.call-btn {
-  width: 100%; background: var(--red); color: white; border: none;
-  border-radius: 16px; padding: 18px; font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 12px;
+.em-nums {
+  background: #1A1A1A; border: 1px solid #2A2A2A;
+  border-radius: 14px; padding: 14px 16px; margin-bottom: 4px;
 }
-.loc-btn {
-  width: 100%; background: #1E1E1E; color: white; border: 1px solid #2A2A2A;
-  border-radius: 16px; padding: 16px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px;
+.em-nums-title { font-size: 12px; color: #555; margin-bottom: 8px; font-weight: 600; }
+.em-nums-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.em-num-item { font-size: 12px; color: #777; }
+.modal-call-btn {
+  width: 100%; background: var(--red); color: white;
+  border: none; border-radius: 16px; padding: 18px;
+  font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 12px;
+  transition: transform 0.15s;
 }
-.cancel-btn {
-  width: 100%; background: transparent; color: #555; border: none;
-  padding: 16px; font-size: 15px; cursor: pointer; margin-top: 6px;
+.modal-call-btn:active { transform: scale(0.98); }
+.modal-loc-btn {
+  width: 100%; background: #1E1E1E; color: white;
+  border: 1px solid #2A2A2A; border-radius: 16px; padding: 16px;
+  font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px;
+}
+.modal-cancel {
+  width: 100%; background: transparent; color: #555;
+  border: none; padding: 16px; font-size: 15px; cursor: pointer; margin-top: 6px;
 }
 
-/* FIRST AID */
+/* ── BOTTOM NAV ── */
+.bnav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 72px; display: flex; align-items: center;
+  justify-content: space-around; z-index: 100;
+  border-top: 1px solid;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.bnav.light { background: rgba(244,240,232,0.96); border-color: var(--border); backdrop-filter: blur(20px); }
+.bnav.dark { background: rgba(8,8,8,0.97); border-color: #1A1A1A; backdrop-filter: blur(20px); }
+.ntab {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; cursor: pointer; flex: 1; padding: 8px 0;
+  border: none; background: transparent;
+  transition: transform 0.15s;
+}
+.ntab:active { transform: scale(0.88); }
+.nico { font-size: 22px; }
+.nlbl { font-size: 9px; font-weight: 700; }
+.bnav.light .nlbl { color: var(--muted); }
+.bnav.light .ntab.act .nlbl { color: var(--green); }
+.bnav.dark .nlbl { color: #444; }
+.bnav.dark .ntab.act .nlbl { color: var(--red); }
+.bnav.map .nlbl { color: #444; }
+.bnav.map .ntab.act .nlbl { color: var(--green); }
+
+/* FAB */
+.fab {
+  position: fixed; bottom: 86px; right: 16px; z-index: 101; display: none;
+}
+.fab-btn {
+  background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 12px 18px;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(43,96,82,0.45);
+}
+
+/* TOAST */
+.toast {
+  position: fixed; top: 60px; left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: #1A1A1A; color: white;
+  padding: 12px 20px; border-radius: 100px;
+  font-size: 13px; font-weight: 600;
+  z-index: 600; opacity: 0; transition: all 0.3s;
+  white-space: nowrap; border: 1px solid #333;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Leaflet popup overrides */
+.leaflet-container { background: #1A1A2E; }
+.lp {
+  background: #1E1E1E; border: 1px solid #3A3A3A;
+  border-radius: 12px; color: white; padding: 10px 14px;
+  font-family: -apple-system, sans-serif; min-width: 150px;
+}
+.lp h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.lp p { font-size: 12px; color: #888; line-height: 1.4; }
+.lp .open { color: var(--emgreen); font-weight: 700; margin-top: 4px; font-size: 12px; }
+.leaflet-popup-content-wrapper { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
+.leaflet-popup-tip-container { display: none !important; }
+.leaflet-popup-close-button { color: #888 !important; top: 6px !important; right: 8px !important; font-size: 18px !important; }
+
+/* ── FIRST AID SCREEN ── */
 #firstaid { background: #0A0A0A; }
 .fa-hdr { background: var(--emgreen); padding: 50px 16px 20px; }
 .fa-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
 .fa-hdr-sub { font-size: 13px; color: rgba(255,255,255,0.7); }
 .fa-pad { padding: 16px; }
+.fa-search {
+  background: #1A1A1A; border: 1px solid #2A2A2A;
+  border-radius: 14px; padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px;
+}
+.fa-search input {
+  background: transparent; border: none; outline: none;
+  color: white; font-size: 15px; flex: 1;
+  font-family: -apple-system, sans-serif;
+}
+.fa-search input::placeholder { color: #555; }
 .fa-cats { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
 .fa-cats::-webkit-scrollbar { display: none; }
-.fa-cat { padding: 8px 16px; border-radius: 100px; border: none; cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+.fa-cat {
+  padding: 8px 16px; border-radius: 100px; border: none;
+  cursor: pointer; font-size: 12px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0;
+}
 .fa-cat.active { background: var(--emgreen); color: white; }
 .fa-cat.inactive { background: #1A1A1A; color: #666; border: 1px solid #2A2A2A; }
-.fa-card { background: #141414; border: 1px solid #2A2A2A; border-radius: 18px; overflow: hidden; margin-bottom: 12px; cursor: pointer; }
-.fa-card-head { display: flex; align-items: center; gap: 14px; padding: 16px; }
-.fa-card-ico { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.fa-grid { display: flex; flex-direction: column; gap: 10px; }
+.fa-card {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; overflow: hidden; cursor: pointer;
+  transition: border-color 0.2s;
+}
+.fa-card:active { border-color: var(--emgreen); }
+.fa-card-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px;
+}
+.fa-card-ico {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; flex-shrink: 0;
+}
 .fa-card-info { flex: 1; }
 .fa-card-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 3px; }
 .fa-card-sub { font-size: 12px; color: #666; }
 .fa-card-arr { font-size: 20px; color: #444; }
 .fa-card-body { display: none; padding: 0 16px 16px; border-top: 1px solid #1E1E1E; }
 .fa-card-body.open { display: block; }
-.fa-step { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #1E1E1E; }
+.fa-step {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid #1E1E1E;
+}
 .fa-step:last-child { border-bottom: none; }
-.fa-step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--emgreen); color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; }
+.fa-step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--emgreen); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; flex-shrink: 0;
+}
 .fa-step-txt { flex: 1; }
 .fa-step-title { font-size: 14px; font-weight: 700; color: white; margin-bottom: 3px; }
 .fa-step-desc { font-size: 12px; color: #888; line-height: 1.5; }
-.fa-warning { background: rgba(255,59,48,0.08); border-left: 3px solid var(--red); padding: 12px 14px; margin-top: 12px; border-radius: 0 10px 10px 0; font-size: 12px; color: #FF7A6A; line-height: 1.5; }
-.fa-call { width: 100%; background: var(--red); color: white; border: none; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 12px; }
+.fa-warning {
+  background: rgba(255,59,48,0.1); border: 1px solid rgba(255,59,48,0.25);
+  border-radius: 12px; padding: 12px 14px; margin-top: 12px;
+  font-size: 12px; color: #FF7A6A; line-height: 1.5;
+}
+.fa-call-btn {
+  width: 100%; background: var(--red); color: white;
+  border: none; border-radius: 14px; padding: 14px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  margin-top: 12px; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
 
-/* SURVIVAL */
-#survival { background: #0A0A0A; }
-.surv-hdr { background: linear-gradient(135deg, #1A0A00, #3A1A00); padding: 50px 16px 20px; }
-.surv-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
-.surv-hdr-sub { font-size: 13px; color: rgba(255,255,255,0.6); }
-.surv-pad { padding: 16px; }
-.surv-cats { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
-.surv-cats::-webkit-scrollbar { display: none; }
-.surv-cat { padding: 8px 16px; border-radius: 100px; border: none; cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
-.surv-cat.active { background: var(--orange); color: white; }
-.surv-cat.inactive { background: #1A1A1A; color: #666; border: 1px solid #2A2A2A; }
-.surv-card { background: #141414; border: 1px solid #2A2A2A; border-radius: 18px; overflow: hidden; margin-bottom: 12px; cursor: pointer; }
-.surv-card-head { display: flex; align-items: center; gap: 14px; padding: 16px; }
-.surv-card-ico { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
-.surv-card-info { flex: 1; }
-.surv-card-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 3px; }
-.surv-card-sub { font-size: 12px; color: #666; }
-.surv-card-arr { font-size: 20px; color: #444; }
-.surv-body { display: none; border-top: 1px solid #1E1E1E; }
-.surv-body.open { display: block; }
-.surv-rule { display: flex; gap: 14px; padding: 14px 16px; border-bottom: 1px solid #1E1E1E; align-items: flex-start; }
-.surv-rule:last-child { border-bottom: none; }
-.surv-rule-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; flex-shrink: 0; color: white; }
-.surv-rule-txt { flex: 1; }
-.surv-rule-cmd { font-size: 15px; font-weight: 800; color: white; margin-bottom: 4px; }
-.surv-rule-desc { font-size: 12px; color: #888; line-height: 1.5; }
-.surv-warning { background: rgba(255,59,48,0.08); border-left: 3px solid var(--red); padding: 12px 14px; margin: 0 16px 14px; border-radius: 0 10px 10px 0; font-size: 12px; color: #FF7A6A; line-height: 1.5; }
-.surv-tip { background: rgba(43,96,82,0.1); border-left: 3px solid var(--green); padding: 12px 14px; margin: 0 16px 14px; border-radius: 0 10px 10px 0; font-size: 12px; color: #A8D5C2; line-height: 1.5; }
 
-/* MISSIONS */
+/* ── SETTINGS SCREEN ── */
+#settings { background: #0A0A0A; }
+.set-hdr { background: #1A1A1A; padding: 50px 16px 20px; border-bottom: 1px solid #2A2A2A; }
+.set-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+.set-hdr-sub { font-size: 13px; color: #666; }
+.set-pad { padding: 16px; }
+.set-section { margin-bottom: 24px; }
+.set-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: #555;
+  margin-bottom: 10px; padding: 0 4px;
+}
+.set-card {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; overflow: hidden;
+}
+.set-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; border-bottom: 1px solid #1E1E1E;
+}
+.set-row:last-child { border-bottom: none; }
+.set-ico {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.set-row-info { flex: 1; }
+.set-row-label { font-size: 14px; font-weight: 600; color: white; }
+.set-row-val { font-size: 12px; color: #666; margin-top: 2px; }
+.set-row-arr { font-size: 18px; color: #444; }
+.set-input-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px; border-bottom: 1px solid #1E1E1E;
+}
+.set-input-row:last-child { border-bottom: none; }
+.set-input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: white; font-size: 14px; font-family: -apple-system, sans-serif;
+  text-align: right;
+}
+.set-input::placeholder { color: #444; }
+.set-toggle {
+  width: 44px; height: 26px; border-radius: 13px;
+  background: #333; border: none; cursor: pointer;
+  position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.set-toggle.on { background: var(--emgreen); }
+.set-toggle::after {
+  content: ''; position: absolute;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: white; top: 3px; left: 3px;
+  transition: transform 0.2s;
+}
+.set-toggle.on::after { transform: translateX(18px); }
+.set-contact-add {
+  width: 100%; background: transparent; color: var(--emgreen);
+  border: 1px dashed rgba(48,209,88,0.3); border-radius: 14px;
+  padding: 14px; font-size: 14px; font-weight: 600;
+  cursor: pointer; margin-top: 10px; display: flex;
+  align-items: center; justify-content: center; gap: 8px;
+}
+.set-save-btn {
+  width: 100%; background: var(--green); color: white;
+  border: none; border-radius: 16px; padding: 16px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  margin-top: 8px; transition: transform 0.15s;
+}
+.set-save-btn:active { transform: scale(0.98); }
+.set-danger-btn {
+  width: 100%; background: transparent; color: var(--red);
+  border: 1px solid rgba(255,59,48,0.3); border-radius: 16px;
+  padding: 14px; font-size: 14px; font-weight: 600;
+  cursor: pointer; margin-top: 10px;
+}
+.profile-avatar {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--green); display: flex; align-items: center;
+  justify-content: center; font-size: 32px; margin: 0 auto 16px;
+  border: 3px solid rgba(43,96,82,0.5);
+}
+.profile-name { font-size: 20px; font-weight: 800; color: white; text-align: center; margin-bottom: 4px; }
+.profile-sub { font-size: 13px; color: #666; text-align: center; margin-bottom: 20px; }
+.lang-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.lang-btn {
+  background: #1A1A1A; border: 1px solid #2A2A2A;
+  border-radius: 12px; padding: 12px 8px;
+  font-size: 12px; font-weight: 600; color: #888;
+  cursor: pointer; text-align: center; transition: all 0.2s;
+}
+.lang-btn.selected { background: var(--green); color: white; border-color: var(--green); }
+
+
+/* ── MISSIONS SCREEN ── */
 #missions { background: #0A0A0A; }
 .mis-hdr { background: linear-gradient(135deg, #1A3D30, #2B6052); padding: 50px 16px 20px; }
 .mis-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
@@ -446,1436 +615,337 @@ html, body {
 .xp-bar-fill { height: 100%; background: var(--emgreen); border-radius: 100px; transition: width 1s ease; }
 .xp-label { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.6); font-weight: 600; }
 .mis-pad { padding: 16px; }
-.mis-section { margin-bottom: 12px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #555; }
-.mis-card { background: #141414; border: 1px solid #2A2A2A; border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+.badge-shelf {
+  display: flex; gap: 12px; overflow-x: auto;
+  scrollbar-width: none; margin-bottom: 20px; padding-bottom: 4px;
+}
+.badge-shelf::-webkit-scrollbar { display: none; }
+.badge-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; flex-shrink: 0; width: 72px;
+}
+.badge-ico {
+  width: 60px; height: 60px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; border: 3px solid;
+}
+.badge-ico.earned { border-color: var(--yellow); background: rgba(255,214,10,0.12); }
+.badge-ico.locked { border-color: #2A2A2A; background: #1A1A1A; filter: grayscale(1); opacity: 0.4; }
+.badge-name { font-size: 10px; font-weight: 700; color: #888; text-align: center; line-height: 1.3; }
+.badge-name.earned { color: var(--yellow); }
+.mis-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: #555; margin-bottom: 10px;
+}
+.mis-card {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; padding: 16px; margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
 .mis-card.active-mis { border-color: var(--emgreen); }
 .mis-card.done-mis { border-color: var(--yellow); opacity: 0.7; }
 .mis-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
-.mis-card-ico { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.mis-card-ico {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; flex-shrink: 0;
+}
 .mis-card-info { flex: 1; }
 .mis-card-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 3px; }
 .mis-card-sub { font-size: 12px; color: #666; }
-.mis-xp-badge { background: rgba(48,209,88,0.12); color: var(--emgreen); border: 1px solid rgba(48,209,88,0.25); border-radius: 100px; padding: 4px 10px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.mis-xp-badge {
+  background: rgba(48,209,88,0.12); color: var(--emgreen);
+  border: 1px solid rgba(48,209,88,0.25);
+  border-radius: 100px; padding: 4px 10px;
+  font-size: 11px; font-weight: 700; white-space: nowrap;
+}
 .mis-xp-badge.done { background: rgba(255,214,10,0.12); color: var(--yellow); border-color: rgba(255,214,10,0.25); }
+.mis-prog-wrap { margin-bottom: 10px; }
 .mis-prog-bar { height: 6px; background: #2A2A2A; border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
 .mis-prog-fill { height: 100%; background: var(--emgreen); border-radius: 3px; transition: width 0.8s ease; }
-.mis-prog-label { font-size: 11px; color: #555; display: flex; justify-content: space-between; margin-bottom: 10px; }
-.mis-step { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: #1A1A1A; cursor: pointer; margin-bottom: 6px; }
+.mis-card.done-mis .mis-prog-fill { background: var(--yellow); }
+.mis-prog-label { font-size: 11px; color: #555; display: flex; justify-content: space-between; }
+.mis-steps { display: flex; flex-direction: column; gap: 8px; }
+.mis-step {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 12px;
+  background: #1A1A1A; cursor: pointer;
+  transition: background 0.2s;
+}
 .mis-step:active { background: #222; }
-.mis-step-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #333; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; color: transparent; }
+.mis-step-check {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid #333; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; font-size: 12px;
+  transition: all 0.2s;
+}
 .mis-step-check.checked { background: var(--emgreen); border-color: var(--emgreen); color: white; }
-.mis-step-txt { flex: 1; font-size: 12px; color: #AAA; line-height: 1.4; }
+.mis-step-txt { flex: 1; font-size: 13px; color: #AAA; }
 .mis-step-txt.checked { color: #555; text-decoration: line-through; }
-.mis-complete-btn { width: 100%; background: var(--emgreen); color: white; border: none; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 12px; }
+.mis-complete-btn {
+  width: 100%; background: var(--emgreen); color: white;
+  border: none; border-radius: 14px; padding: 14px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  margin-top: 12px; transition: transform 0.15s;
+}
+.mis-complete-btn:active { transform: scale(0.98); }
 .mis-complete-btn:disabled { background: #2A2A2A; color: #555; cursor: not-allowed; }
+.level-card {
+  background: linear-gradient(135deg, #1A3D30, #2B6052);
+  border-radius: 18px; padding: 20px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 16px;
+}
+.level-ico { font-size: 40px; flex-shrink: 0; }
+.level-info { flex: 1; }
+.level-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 4px; }
+.level-sub { font-size: 12px; color: rgba(255,255,255,0.6); }
+.level-badge {
+  background: rgba(255,214,10,0.2); color: var(--yellow);
+  border: 1px solid rgba(255,214,10,0.3);
+  border-radius: 100px; padding: 6px 14px;
+  font-size: 13px; font-weight: 800;
+}
 
-/* CARE CIRCLE */
+
+/* ── CARE CIRCLE SCREEN ── */
 #carecircle { background: #0A0A0A; }
-.cc-hdr { background: linear-gradient(135deg, #1A2A3A, #2A4A6A); padding: 50px 16px 20px; }
+.cc-hdr {
+  background: linear-gradient(135deg, #1A2A3A, #2A4A6A);
+  padding: 50px 16px 20px;
+}
 .cc-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
 .cc-hdr-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
 .cc-stats { display: flex; gap: 10px; }
-.cc-stat { flex: 1; background: rgba(255,255,255,0.1); border-radius: 14px; padding: 12px; text-align: center; }
+.cc-stat {
+  flex: 1; background: rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 12px;
+  text-align: center;
+}
 .cc-stat-num { font-size: 22px; font-weight: 800; color: white; }
 .cc-stat-lbl { font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 2px; font-weight: 600; }
 .cc-pad { padding: 16px; }
-.cc-section { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #555; margin-bottom: 10px; }
-.cc-member { background: #141414; border: 1px solid #2A2A2A; border-radius: 18px; padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; }
+.cc-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: #555;
+  margin-bottom: 10px; margin-top: 4px;
+}
+.cc-member {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; padding: 16px;
+  margin-bottom: 10px; display: flex;
+  align-items: center; gap: 14px;
+  transition: border-color 0.2s;
+}
 .cc-member.needs-help { border-color: rgba(255,59,48,0.4); }
 .cc-member.checked-in { border-color: rgba(48,209,88,0.3); }
 .cc-member.checking { border-color: rgba(255,214,10,0.3); }
-.cc-avi { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; position: relative; }
-.cc-dot { position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #141414; }
+.cc-avi {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0; position: relative;
+}
+.cc-dot {
+  position: absolute; bottom: 0; right: 0;
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid #141414;
+}
 .cc-dot.safe { background: var(--emgreen); }
-.cc-dot.danger { background: var(--red); animation: ep 1s infinite; }
+.cc-dot.danger { background: var(--red); animation: pulse 1s infinite; }
 .cc-dot.unknown { background: var(--yellow); }
+.cc-dot.offline { background: #555; }
 .cc-info { flex: 1; }
 .cc-name { font-size: 15px; font-weight: 700; color: white; margin-bottom: 3px; }
-.cc-detail { font-size: 12px; color: #666; margin-bottom: 6px; }
+.cc-detail { font-size: 12px; color: #666; margin-bottom: 6px; line-height: 1.4; }
+.cc-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.cc-tag {
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: 100px;
+}
+.cc-tag.elderly { background: rgba(108,194,255,0.15); color: #6CC2FF; }
+.cc-tag.disabled { background: rgba(255,214,10,0.15); color: var(--yellow); }
+.cc-tag.child { background: rgba(48,209,88,0.15); color: var(--emgreen); }
+.cc-tag.medical { background: rgba(255,59,48,0.15); color: #FF7A6A; }
+.cc-tag.alone { background: rgba(232,132,90,0.15); color: var(--orange); }
+.cc-tag.pet { background: rgba(43,96,82,0.3); color: #A8D5C2; }
 .cc-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
-.cc-btn { padding: 8px 12px; border-radius: 10px; border: none; font-size: 11px; font-weight: 700; cursor: pointer; }
-.cc-btn.call { background: var(--emgreen); color: white; }
-.cc-btn.check { background: #1E1E1E; color: #888; border: 1px solid #2A2A2A; }
-.cc-btn.help { background: var(--red); color: white; }
-.cc-add-btn { width: 100%; background: transparent; color: #6CC2FF; border: 1px dashed rgba(108,194,255,0.3); border-radius: 16px; padding: 16px; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 16px; }
-.cc-how { background: #141414; border: 1px solid #2A2A2A; border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+.cc-action-btn {
+  padding: 8px 12px; border-radius: 10px; border: none;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  white-space: nowrap; transition: transform 0.15s;
+}
+.cc-action-btn:active { transform: scale(0.95); }
+.cc-action-btn.call { background: var(--emgreen); color: white; }
+.cc-action-btn.check { background: #1E1E1E; color: #888; border: 1px solid #2A2A2A; }
+.cc-action-btn.help { background: var(--red); color: white; }
+.cc-add-btn {
+  width: 100%; background: transparent;
+  color: #6CC2FF; border: 1px dashed rgba(108,194,255,0.3);
+  border-radius: 16px; padding: 16px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.cc-alert-card {
+  background: rgba(255,59,48,0.08);
+  border: 1px solid rgba(255,59,48,0.25);
+  border-radius: 18px; padding: 16px; margin-bottom: 14px;
+}
+.cc-alert-title { font-size: 14px; font-weight: 800; color: var(--red); margin-bottom: 8px; }
+.cc-alert-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,59,48,0.1);
+  font-size: 13px; color: #CCC;
+}
+.cc-alert-item:last-child { border-bottom: none; }
+.cc-alert-ico { font-size: 20px; flex-shrink: 0; }
+.cc-how {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; padding: 16px; margin-bottom: 14px;
+}
 .cc-how-title { font-size: 14px; font-weight: 700; color: white; margin-bottom: 12px; }
-.cc-how-step { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid #1E1E1E; font-size: 13px; color: #888; line-height: 1.5; }
+.cc-how-step {
+  display: flex; gap: 10px; padding: 8px 0;
+  border-bottom: 1px solid #1E1E1E; font-size: 13px; color: #888;
+  line-height: 1.5;
+}
 .cc-how-step:last-child { border-bottom: none; }
-.cc-how-num { width: 24px; height: 24px; border-radius: 50%; background: #6CC2FF; color: #0A0A1A; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
-
-/* SETTINGS */
-#settings { background: #0A0A0A; }
-.set-hdr { background: #1A1A1A; padding: 50px 16px 20px; border-bottom: 1px solid #2A2A2A; }
-.set-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
-.set-hdr-sub { font-size: 13px; color: #666; }
-.set-pad { padding: 16px; }
-.set-section { margin-bottom: 24px; }
-.set-section-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #555; margin-bottom: 10px; padding: 0 4px; }
-.set-card { background: #141414; border: 1px solid #2A2A2A; border-radius: 18px; overflow: hidden; }
-.set-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-bottom: 1px solid #1E1E1E; }
-.set-row:last-child { border-bottom: none; }
-.set-ico { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.set-row-info { flex: 1; }
-.set-row-label { font-size: 14px; font-weight: 600; color: white; }
-.set-row-val { font-size: 12px; color: #666; margin-top: 2px; }
-.set-row-arr { font-size: 18px; color: #444; }
-.set-input-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid #1E1E1E; }
-.set-input-row:last-child { border-bottom: none; }
-.set-input { flex: 1; background: transparent; border: none; outline: none; color: white; font-size: 14px; font-family: -apple-system, sans-serif; text-align: right; }
-.set-input::placeholder { color: #444; }
-.set-toggle { width: 44px; height: 26px; border-radius: 13px; background: #333; border: none; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
-.set-toggle.on { background: var(--emgreen); }
-.set-toggle::after { content: ''; position: absolute; width: 20px; height: 20px; border-radius: 50%; background: white; top: 3px; left: 3px; transition: transform 0.2s; }
-.set-toggle.on::after { transform: translateX(18px); }
-.lang-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-.lang-btn { background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 12px; padding: 10px 8px; font-size: 11px; font-weight: 600; color: #888; cursor: pointer; text-align: center; }
-.lang-btn.selected { background: var(--green); color: white; border-color: var(--green); }
-.set-save-btn { width: 100%; background: var(--green); color: white; border: none; border-radius: 16px; padding: 16px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px; }
-.set-danger-btn { width: 100%; background: transparent; color: var(--red); border: 1px solid rgba(255,59,48,0.3); border-radius: 16px; padding: 14px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px; }
-
-/* Leaflet popup overrides */
-.leaflet-container { background: #1A1A2E; }
-.lp { background: #1E1E1E; border: 1px solid #3A3A3A; border-radius: 12px; color: white; padding: 10px 14px; font-family: -apple-system, sans-serif; min-width: 150px; }
-.lp h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-.lp p { font-size: 12px; color: #888; line-height: 1.4; }
-.lp .open { color: var(--emgreen); font-weight: 700; margin-top: 4px; font-size: 12px; }
-.leaflet-popup-content-wrapper { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
-.leaflet-popup-tip-container { display: none !important; }
-</style>
-</head>
-<body>
-
-<!-- CONSENT SCREEN -->
-<div id="consent" class="screen" style="display:flex;flex-direction:column;background:#0A0A0A;padding:40px 20px;">
-  <div class="consent-logo">
-    <div style="font-size:52px;">&#9875;</div>
-    <div style="font-size:24px;font-weight:800;color:white;margin-top:8px;">Anchor Safety</div>
-    <div style="font-size:13px;color:#666;margin-top:4px;">A digital survival companion for every human being on earth</div>
-    <div style="font-size:11px;color:#444;margin-top:10px;line-height:1.8;text-align:center;">English &middot; &#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577; &middot; &#20013;&#25991; &middot; &#2361;&#2367;&#2344;&#2381;&#2342;&#2368; &middot; Espa&ntilde;ol &middot; Fran&ccedil;ais &middot; Bahasa &middot; Tagalog &middot; Kiswahili + all languages of earth</div>
-    <div style="font-size:11px;color:#444;margin-top:6px;">Sign Language supported &middot; Icon interface for all</div>
-  </div>
-  <div class="consent-card">
-    <div style="font-size:16px;font-weight:800;color:white;margin-bottom:14px;">&#128274; Your Privacy &mdash; Our Promise</div>
-    <div class="consent-item">
-      <div style="font-size:20px;flex-shrink:0;">&#128241;</div>
-      <div style="font-size:13px;color:#AAA;line-height:1.5;"><strong style="color:white;">All data stays on YOUR device.</strong> Your name and contacts are stored only on your phone. Anchor never sees them.</div>
-    </div>
-    <div class="consent-item">
-      <div style="font-size:20px;flex-shrink:0;">&#128683;</div>
-      <div style="font-size:13px;color:#AAA;line-height:1.5;"><strong style="color:white;">We collect nothing.</strong> No personal data is ever sent to Anchor. We have no servers storing your information.</div>
-    </div>
-    <div class="consent-item">
-      <div style="font-size:20px;flex-shrink:0;">&#128205;</div>
-      <div style="font-size:13px;color:#AAA;line-height:1.5;"><strong style="color:white;">Location is optional.</strong> GPS is only used when you tap the map or SOS button. Never tracked in background.</div>
-    </div>
-    <div class="consent-item">
-      <div style="font-size:20px;flex-shrink:0;">&#128465;</div>
-      <div style="font-size:13px;color:#AAA;line-height:1.5;"><strong style="color:white;">Delete everything anytime.</strong> Go to Settings and tap Clear All Data to remove everything instantly.</div>
-    </div>
-    <div class="consent-item" style="border-bottom:none;">
-      <div style="font-size:20px;flex-shrink:0;">&#9989;</div>
-      <div style="font-size:13px;color:#AAA;line-height:1.5;"><strong style="color:white;">Free forever.</strong> Anchor is always free for individuals. No ads. No data selling. Ever.</div>
-    </div>
-  </div>
-  <button class="consent-agree" id="agreeBtn">&#10003; I Understand &mdash; Open Anchor</button>
-  <button class="consent-privacy" onclick="showScreen('privacy')">Read Full Privacy Policy</button>
-</div>
-
-<!-- PRIVACY POLICY -->
-<div id="privacy" class="screen" style="display:none;background:#0A0A0A;">
-  <div style="background:#141414;padding:50px 16px 20px;border-bottom:1px solid #2A2A2A;">
-    <div style="font-size:22px;font-weight:800;color:white;margin-bottom:4px;">&#128274; Privacy Policy</div>
-    <div style="font-size:13px;color:#666;">Plain English. No legal jargon. Last updated March 2026.</div>
-  </div>
-  <div style="padding:16px;">
-    <div style="background:rgba(43,96,82,0.15);border:1px solid rgba(43,96,82,0.3);border-radius:14px;padding:14px 16px;margin-bottom:20px;">
-      <p style="font-size:13px;color:#A8D5C2;line-height:1.6;"><strong style="color:white;">The short version:</strong> Anchor collects nothing. All data stays on your device only. We never see it, store it, or share it.</p>
-    </div>
-    <div style="font-size:15px;font-weight:800;color:white;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #2A2A2A;">1. Who We Are</div>
-    <p style="font-size:13px;color:#888;line-height:1.7;margin-bottom:16px;">Anchor Safety is a free emergency app for individuals and families worldwide. Contact: hello [at] anchorsafety.org &middot; anchorsafety.org &middot; Auckland, New Zealand.</p>
-    <div style="font-size:15px;font-weight:800;color:white;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #2A2A2A;">2. What Data We Collect</div>
-    <p style="font-size:13px;color:#888;line-height:1.7;margin-bottom:16px;">We collect NO personal data. All information you enter is stored exclusively on your own device using local storage. This data never leaves your device and is never transmitted to Anchor or any third party.</p>
-    <div style="font-size:15px;font-weight:800;color:white;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #2A2A2A;">3. Location Data</div>
-    <p style="font-size:13px;color:#888;line-height:1.7;margin-bottom:16px;">Anchor only accesses your GPS location when you explicitly open the Safety Map or tap the SOS button. Your location is never accessed in the background, never stored, and never transmitted to Anchor.</p>
-    <div style="font-size:15px;font-weight:800;color:white;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #2A2A2A;">4. Your Rights</div>
-    <p style="font-size:13px;color:#888;line-height:1.7;margin-bottom:16px;">Under the NZ Privacy Act 2020, GDPR, and equivalent laws worldwide you have the right to access, correct, and delete your data at any time. To delete all data: open Settings and tap Clear All Data.</p>
-    <div style="font-size:15px;font-weight:800;color:white;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #2A2A2A;">5. Children</div>
-    <p style="font-size:13px;color:#888;line-height:1.7;margin-bottom:16px;">We do not knowingly collect any personal information from children. All information relating to children entered into Anchor is entered by a parent or guardian on their own device and is never transmitted to Anchor.</p>
-    <button class="priv-back" onclick="showScreen('consent')">&#8592; Back to Anchor</button>
-  </div>
-</div>
-
-<!-- DAILY MODE -->
-<div id="daily" class="screen" style="display:none;background:#F4F0E8;">
-  <div class="hero">
-    <div class="hero-greet" id="greetTxt">Good afternoon &middot; Auckland, NZ</div>
-    <div class="hero-title">Your family is <em>ready.</em></div>
-    <div class="hero-badge"><div class="bdot"></div>No active alerts &middot; Monitoring 3 zones</div>
-  </div>
-  <div class="pad">
-    <div class="sec-head">Preparedness Score</div>
-    <div class="card">
-      <div class="read-row">
-        <div class="ring-wrap">
-          <svg width="72" height="72" viewBox="0 0 72 72">
-            <circle cx="36" cy="36" r="28" fill="none" stroke="#E0DDD4" stroke-width="6"/>
-            <circle cx="36" cy="36" r="28" fill="none" stroke="#2B6052" stroke-width="6" stroke-dasharray="176" stroke-dashoffset="44" stroke-linecap="round"/>
-          </svg>
-          <div class="ring-inner"><div class="ring-num">75%</div><div class="ring-lbl">READY</div></div>
-        </div>
-        <div class="read-info">
-          <div class="read-title">Almost there</div>
-          <div class="read-desc">Update your go-bag to reach Silver status.</div>
-          <button class="btn-green" onclick="showScreen('missions')">Complete tasks &rarr;</button>
-        </div>
-      </div>
-    </div>
-    <div class="sec-head">Care Circle &mdash; 3 Members</div>
-    <div class="card">
-      <div class="mem"><div class="avi">&#128117;<div class="avi-dot on"></div></div><div class="mem-info"><div class="mem-name">Margaret</div><div class="mem-sub">&#128205; Home &middot; 12 min ago</div></div><span class="tag tag-safe">Safe</span></div>
-      <div class="mem"><div class="avi">&#128102;<div class="avi-dot on"></div></div><div class="mem-info"><div class="mem-name">Liam (Son)</div><div class="mem-sub">&#127979; Lincoln Elementary</div></div><span class="tag tag-safe">Safe</span></div>
-      <div class="mem"><div class="avi">&#129476;<div class="avi-dot aw"></div></div><div class="mem-info"><div class="mem-name">David (Partner)</div><div class="mem-sub">&#128663; In transit &middot; 23 min away</div></div><span class="tag tag-away">Away</span></div>
-    </div>
-    <div class="sec-head">Quick Actions</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-      <button onclick="showScreen('survival')" style="background:linear-gradient(135deg,#1A0A00,#3A1A00);border:1px solid rgba(255,100,20,0.2);border-radius:16px;padding:14px;cursor:pointer;text-align:left;">
-        <div style="font-size:24px;margin-bottom:6px;">&#128214;</div>
-        <div style="font-size:13px;font-weight:700;color:white;">Survival Book</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">Skills for any crisis</div>
-      </button>
-      <button onclick="showScreen('carecircle')" style="background:linear-gradient(135deg,#1A2A3A,#1A3A5A);border:1px solid rgba(108,194,255,0.2);border-radius:16px;padding:14px;cursor:pointer;text-align:left;">
-        <div style="font-size:24px;margin-bottom:6px;">&#128104;&#8205;&#128105;&#8205;&#128102;</div>
-        <div style="font-size:13px;font-weight:700;color:white;">Care Circle</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">No one left behind</div>
-      </button>
-    </div>
-    <div class="sec-head">Family Missions</div>
-    <div class="mgrid">
-      <div class="mcard" onclick="showScreen('missions')"><div class="mico">&#127890;</div><div class="mtit">Pack the Go-Bag</div><div class="mxp">+150 XP</div><div class="mprog"><div class="mbar" style="width:0%" data-w="60%"></div></div></div>
-      <div class="mcard org" onclick="showScreen('missions')"><div class="mico">&#128294;</div><div class="mtit">Blackout Drill</div><div class="mxp">+200 XP</div><div class="mprog"><div class="mbar" style="width:0%" data-w="30%"></div></div></div>
-      <div class="mcard done" onclick="showScreen('missions')"><div class="mico">&#128203;</div><div class="mtit">Family Plan</div><div class="mxp">&#10003; Complete</div><div class="mprog"><div class="mbar" style="width:0%" data-w="100%"></div></div></div>
-      <div class="mcard org" onclick="showScreen('missions')"><div class="mico">&#127939;</div><div class="mtit">Evacuation Run</div><div class="mxp">+300 XP</div><div class="mprog"><div class="mbar" style="width:0%" data-w="0%"></div></div></div>
-    </div>
-    <div class="em-trig" onclick="showScreen('emergency')">
-      <div class="em-trig-ico">&#128680;</div>
-      <div><div class="em-trig-title">Activate Emergency Mode</div><div class="em-trig-sub">Tap during a crisis</div></div>
-      <div style="color:rgba(255,59,48,0.5);font-size:22px;">&rsaquo;</div>
-    </div>
-  </div>
-  <div class="bnav light">
-    <button class="ntab act" onclick="showScreen('daily')"><div class="nico">&#127968;</div><div class="nlbl">Home</div></button>
-    <button class="ntab" onclick="showScreen('mapscreen')"><div class="nico">&#127757;</div><div class="nlbl">Map</div></button>
-    <button class="ntab" onclick="showScreen('carecircle')"><div class="nico">&#128104;&#8205;&#128105;&#8205;&#128102;</div><div class="nlbl">Circle</div></button>
-    <button class="ntab" onclick="showScreen('missions')"><div class="nico">&#127919;</div><div class="nlbl">Missions</div></button>
-    <button class="ntab" onclick="showScreen('settings')"><div class="nico">&#9965;</div><div class="nlbl">Settings</div></button>
-  </div>
-</div>
-
-<!-- MAP SCREEN -->
-<div id="mapscreen" class="screen" style="display:none;background:#0A0A0A;padding-bottom:100px;">
-  <div style="background:var(--green);padding:50px 16px 20px;">
-    <div style="font-size:22px;font-weight:800;color:white;margin-bottom:4px;">&#127757; Safety Map</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.6);">Open maps app to find hospitals, shelters and safe routes</div>
-  </div>
-  <div style="padding:16px;">
-
-    <!-- Quick action buttons -->
-    <div style="background:#141414;border:1px solid #2A2A2A;border-radius:18px;padding:16px;margin-bottom:14px;">
-      <div style="font-size:14px;font-weight:700;color:white;margin-bottom:14px;">&#128205; Find Near Me</div>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <button onclick="openGoogleMap('hospital')" style="width:100%;background:#FFD60A;color:#1A1A00;border:none;border-radius:14px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;">
-          <span style="font-size:24px;">&#127973;</span>
-          <div><div style="font-weight:800;">Find Nearest Hospital</div><div style="font-size:12px;opacity:0.7;margin-top:2px;">Opens Google Maps with hospitals near you</div></div>
-        </button>
-        <button onclick="openGoogleMap('pharmacy')" style="width:100%;background:#30D158;color:#001A07;border:none;border-radius:14px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;">
-          <span style="font-size:24px;">&#128138;</span>
-          <div><div style="font-weight:800;">Find Nearest Pharmacy</div><div style="font-size:12px;opacity:0.7;margin-top:2px;">Opens Google Maps with pharmacies near you</div></div>
-        </button>
-        <button onclick="openGoogleMap('police')" style="width:100%;background:#6CC2FF;color:#0A0A2A;border:none;border-radius:14px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;">
-          <span style="font-size:24px;">&#128110;</span>
-          <div><div style="font-weight:800;">Find Nearest Police Station</div><div style="font-size:12px;opacity:0.7;margin-top:2px;">Opens Google Maps with police stations near you</div></div>
-        </button>
-        <button onclick="openGoogleMap('shelter')" style="width:100%;background:#2B6052;color:white;border:none;border-radius:14px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;">
-          <span style="font-size:24px;">&#127968;</span>
-          <div><div style="font-weight:800;">Find Emergency Shelter</div><div style="font-size:12px;opacity:0.7;margin-top:2px;">Opens Google Maps with community centres</div></div>
-        </button>
-        <button onclick="openGoogleMap('fire_station')" style="width:100%;background:#FF3B30;color:white;border:none;border-radius:14px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;">
-          <span style="font-size:24px;">&#128658;</span>
-          <div><div style="font-weight:800;">Find Nearest Fire Station</div><div style="font-size:12px;opacity:0.7;margin-top:2px;">Opens Google Maps with fire stations near you</div></div>
-        </button>
-      </div>
-    </div>
-
-    <!-- Download offline map -->
-    <div style="background:#141414;border:1px solid #2A2A2A;border-radius:18px;padding:16px;margin-bottom:14px;">
-      <div style="font-size:14px;font-weight:700;color:white;margin-bottom:8px;">&#11015; Download Offline Map</div>
-      <div style="font-size:13px;color:#888;line-height:1.6;margin-bottom:14px;">Download your local area map to Google Maps so it works with NO internet during an emergency. Do this NOW before a disaster.</div>
-      <button onclick="openGoogleMapsOffline()" style="width:100%;background:#1A1A1A;color:#6CC2FF;border:1px solid rgba(108,194,255,0.3);border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;">
-        &#127757; Open Google Maps to Download Offline Map
-      </button>
-      <div style="font-size:11px;color:#555;margin-top:10px;line-height:1.6;">
-        In Google Maps: tap your profile photo &rarr; Offline maps &rarr; Select your own map &rarr; Draw your area &rarr; Download
-      </div>
-    </div>
-
-    <!-- My location share -->
-    <div style="background:#141414;border:1px solid #2A2A2A;border-radius:18px;padding:16px;margin-bottom:14px;">
-      <div style="font-size:14px;font-weight:700;color:white;margin-bottom:8px;">&#128205; Share My Location</div>
-      <div style="font-size:13px;color:#888;line-height:1.6;margin-bottom:14px;">Share your exact GPS location with your family or emergency services right now.</div>
-      <button onclick="shareMyLocation()" style="width:100%;background:#FF3B30;color:white;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;">
-        &#128680; Share My GPS Location Now
-      </button>
-    </div>
-
-  </div>
-  <div class="bnav dark">
-    <button class="ntab" onclick="showScreen('daily')"><div class="nico">&#127968;</div><div class="nlbl">Home</div></button>
-    <button class="ntab act" onclick="showScreen('mapscreen')"><div class="nico">&#127757;</div><div class="nlbl">Map</div></button>
-    <button class="ntab" onclick="showScreen('carecircle')"><div class="nico">&#128104;&#8205;&#128105;&#8205;&#128102;</div><div class="nlbl">Circle</div></button>
-    <button class="ntab" onclick="showScreen('firstaid')"><div class="nico">&#129514;&#65039;</div><div class="nlbl">First Aid</div></button>
-    <button class="ntab" onclick="showScreen('settings')"><div class="nico">&#9881;&#65039;</div><div class="nlbl">Settings</div></button>
-  </div>
-</div>
-
-<!-- EMERGENCY MODE -->
-<div id="emergency" class="screen" style="display:none;background:#0A0A0A;">
-  <div class="em-bar">
-    <div class="em-badge"><div class="em-pulse"></div><div class="em-badge-txt">ACTIVE EMERGENCY</div></div>
-    <div class="em-clock" id="emClock">--:--:--</div>
-  </div>
-  <div class="em-pad">
-    <div class="conn-row">
-      <div class="cbadge cy"><div class="cdot"></div>SATELLITE</div>
-      <div class="cbadge cg"><div class="cdot"></div>MESH ACTIVE</div>
-      <div class="cbadge cb"><div class="cdot"></div>OFFLINE MAPS</div>
-    </div>
-    <div class="ecard">
-      <div class="etype">&#9888; Earthquake &middot; M 6.2</div>
-      <div class="etitle">Seismic Activity<br>Detected Nearby</div>
-      <div class="edesc">Strong shaking reported in your area. Aftershocks likely. Avoid damaged buildings and downed power lines.</div>
-      <div class="sevrow"><div class="sevbar f"></div><div class="sevbar f"></div><div class="sevbar f"></div><div class="sevbar h"></div><div class="sevbar"></div><div class="sevlbl">SEVERE</div></div>
-    </div>
-    <button class="sos-btn" onclick="openSOS()">
-      <div class="sos-ring">&#128682;</div>
-      <div class="sos-txt"><div class="sos-title">SEND SOS</div><div class="sos-sub">Emergency services + contacts &middot; GPS attached</div></div>
-      <div style="color:rgba(255,255,255,0.4);font-size:22px;">&rsaquo;</div>
-    </button>
-    <div class="agrid">
-      <button class="abtn full" onclick="showScreen('mapscreen')">
-        <div class="aico">&#128205;</div>
-        <div><div class="atxt">Navigate to Safety</div><div style="color:rgba(255,255,255,0.65);font-size:11px;margin-top:2px;">Nearest shelter: 0.4mi</div></div>
-        <div class="asub">GO &rarr;</div>
-      </button>
-      <button class="abtn dk" onclick="showDropCover()"><div class="aico">&#127968;</div><div class="atxt">Drop &amp; Cover</div><div class="asub">Indoor protocol</div></button>
-      <button class="abtn yw" onclick="showToast('Tune to: AM 585 National Radio NZ')"><div class="aico">&#128251;</div><div class="atxt">Emergency Broadcast</div><div class="asub">Live updates</div></button>
-      <button class="abtn eg" onclick="showScreen('firstaid')"><div class="aico">&#129306;</div><div class="atxt">First Aid</div><div class="asub">Step by step</div></button>
-      <button class="abtn dk" onclick="showScreen('survival')"><div class="aico">&#128214;</div><div class="atxt">Survival Book</div><div class="asub">Skills guide</div></button>
-    </div>
-    <div id="dropCoverPanel" style="display:none;background:#1A1A1A;border:1px solid #FF3B30;border-radius:18px;padding:16px;margin-bottom:14px;">
-      <div style="font-size:16px;font-weight:800;color:white;margin-bottom:12px;">&#127968; Drop Cover Hold On</div>
-      <div style="font-size:14px;color:#AAA;line-height:1.7;">
-        <div style="margin-bottom:8px;">1. <strong style="color:white;">DROP</strong> to hands and knees immediately</div>
-        <div style="margin-bottom:8px;">2. Take <strong style="color:white;">COVER</strong> under a sturdy table</div>
-        <div style="margin-bottom:8px;">3. <strong style="color:white;">HOLD ON</strong> and protect head and neck</div>
-        <div style="color:#FF7A6A;font-size:12px;">&#9888; Do NOT run outside during shaking</div>
-      </div>
-      <button onclick="document.getElementById('dropCoverPanel').style.display='none'" style="width:100%;background:#2B6052;color:white;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;">Got it &#10003;</button>
-    </div>
-    <div class="fcard">
-      <div class="flbl">&mdash; Family &amp; Circle Status &mdash;</div>
-      <div class="frow"><div class="favi" style="background:#1A2A1A;">&#128102;<div class="fdot s"></div></div><div class="finfo"><div class="fname">Liam</div><div class="floc">&#128205; Lincoln Elementary</div></div><div class="fstat s">SAFE</div></div>
-      <div class="frow"><div class="favi" style="background:#2A2A1A;">&#129476;<div class="fdot u"></div></div><div class="finfo"><div class="fname">David</div><div class="floc">Last seen: Route 7</div></div><div class="fstat u">CHECKING</div></div>
-      <div class="frow"><div class="favi" style="background:#2A1A1A;">&#128117;<div class="fdot d"></div></div><div class="finfo"><div class="fname">Margaret</div><div class="floc">&#128205; 124 Maple St</div></div><div class="fstat d">NEEDS HELP</div></div>
-    </div>
-  </div>
-  <div class="bnav dark">
-    <button class="ntab act" onclick="showScreen('emergency')"><div class="nico">&#128680;</div><div class="nlbl">Alerts</div></button>
-    <button class="ntab" onclick="showScreen('mapscreen')"><div class="nico">&#127757;</div><div class="nlbl">Evacuate</div></button>
-    <button class="ntab" onclick="showScreen('carecircle')"><div class="nico">&#128104;&#8205;&#128105;&#8205;&#128102;</div><div class="nlbl">Family</div></button>
-    <button class="ntab" onclick="showScreen('firstaid')"><div class="nico">&#129514;&#65039;</div><div class="nlbl">First Aid</div></button>
-    <button class="ntab" onclick="showScreen('settings')"><div class="nico">&#9881;&#65039;</div><div class="nlbl">Settings</div></button>
-  </div>
-  <div class="fab" id="fab"><button onclick="showScreen('daily')">&#9728; Daily Mode</button></div>
-</div>
-
-<!-- FIRST AID -->
-<div id="firstaid" class="screen" style="display:none;background:#0A0A0A;">
-  <div class="fa-hdr">
-    <div class="fa-hdr-title">&#129514;&#65039; First Aid Guide</div>
-    <div class="fa-hdr-sub">Step-by-step emergency instructions &middot; Works offline</div>
-  </div>
-  <div class="fa-pad">
-    <div class="fa-cats">
-      <button class="fa-cat active" onclick="filterFACat('all',this)">All</button>
-      <button class="fa-cat inactive" onclick="filterFACat('injury',this)">&#129656; Injury</button>
-      <button class="fa-cat inactive" onclick="filterFACat('disaster',this)">&#127754; Disaster</button>
-      <button class="fa-cat inactive" onclick="filterFACat('medical',this)">&#10084; Medical</button>
-      <button class="fa-cat inactive" onclick="filterFACat('child',this)">&#128118; Children</button>
-    </div>
-
-    <div class="fa-card" data-cat="medical" onclick="toggleFA(this)">
-      <div class="fa-card-head"><div class="fa-card-ico" style="background:rgba(255,59,48,0.15);">&#10084;</div><div class="fa-card-info"><div class="fa-card-title">CPR &mdash; Adult</div><div class="fa-card-sub">Cardiac arrest &middot; Not breathing</div></div><div class="fa-card-arr">&rsaquo;</div></div>
-      <div class="fa-card-body">
-        <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Call emergency services NOW</div><div class="fa-step-desc">Call 111 (NZ) or your local emergency number before starting CPR if someone else is present.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Check for response</div><div class="fa-step-desc">Tap shoulders firmly and shout "Are you okay?" If no response begin CPR.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">30 chest compressions</div><div class="fa-step-desc">Place heel of hand on centre of chest. Push down hard and fast 5-6cm deep. Rate: 100-120 per minute.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">2 rescue breaths</div><div class="fa-step-desc">Tilt head back, lift chin. Pinch nose, seal mouth, blow for 1 second. Watch chest rise. Repeat twice.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">5</div><div class="fa-step-txt"><div class="fa-step-title">Continue 30:2 ratio</div><div class="fa-step-desc">Keep going until help arrives or person recovers.</div></div></div>
-        <button class="fa-call" onclick="openSOS()">&#128222; Call Emergency Services Now</button>
-      </div>
-    </div>
-
-    <div class="fa-card" data-cat="disaster" onclick="toggleFA(this)">
-      <div class="fa-card-head"><div class="fa-card-ico" style="background:rgba(232,132,90,0.15);">&#127818;</div><div class="fa-card-info"><div class="fa-card-title">Earthquake</div><div class="fa-card-sub">During and after shaking</div></div><div class="fa-card-arr">&rsaquo;</div></div>
-      <div class="fa-card-body">
-        <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">DROP, COVER, HOLD ON</div><div class="fa-step-desc">Drop to hands and knees. Take cover under a sturdy table. Hold on and protect head and neck.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Stay inside until shaking stops</div><div class="fa-step-desc">Do NOT run outside. Most injuries happen when people move during shaking.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Check for hazards after</div><div class="fa-step-desc">Gas leaks, damaged wiring, structural damage. If gas smell - open windows, leave immediately.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">Move to open ground</div><div class="fa-step-desc">Away from buildings, trees, and power lines. Expect aftershocks.</div></div></div>
-        <div class="fa-warning">&#9888; If near coast - move to high ground immediately after shaking stops. Tsunami risk is real in NZ.</div>
-      </div>
-    </div>
-
-    <div class="fa-card" data-cat="injury" onclick="toggleFA(this)">
-      <div class="fa-card-head"><div class="fa-card-ico" style="background:rgba(255,59,48,0.15);">&#129656;</div><div class="fa-card-info"><div class="fa-card-title">Severe Bleeding</div><div class="fa-card-sub">Deep cuts &middot; Heavy blood loss</div></div><div class="fa-card-arr">&rsaquo;</div></div>
-      <div class="fa-card-body">
-        <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Apply direct pressure</div><div class="fa-step-desc">Press firmly on wound with clean cloth. Do not remove - add more on top if soaked through.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Elevate injured area</div><div class="fa-step-desc">Raise injured limb above level of the heart if possible. This slows blood flow.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Keep pressing for 10 minutes</div><div class="fa-step-desc">Do not lift the cloth to check. Maintain constant firm pressure for at least 10 minutes.</div></div></div>
-        <button class="fa-call" onclick="openSOS()">&#128222; Call Emergency Services Now</button>
-      </div>
-    </div>
-
-    <div class="fa-card" data-cat="disaster" onclick="toggleFA(this)">
-      <div class="fa-card-head"><div class="fa-card-ico" style="background:rgba(108,194,255,0.15);">&#127754;</div><div class="fa-card-info"><div class="fa-card-title">Flooding</div><div class="fa-card-sub">Flash floods &middot; Rising water</div></div><div class="fa-card-arr">&rsaquo;</div></div>
-      <div class="fa-card-body">
-        <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Move to higher ground immediately</div><div class="fa-step-desc">Do not wait. Take essential items only. Move children and elderly first.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Never walk in moving water</div><div class="fa-step-desc">Just 15cm of moving water can knock you down. 30cm can sweep a car away.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Turn off electricity if safe</div><div class="fa-step-desc">Turn off at the main switch if it is safe to do so. Do not touch electrical equipment in wet areas.</div></div></div>
-      </div>
-    </div>
-
-    <div class="fa-card" data-cat="disaster" onclick="toggleFA(this)">
-      <div class="fa-card-head"><div class="fa-card-ico" style="background:rgba(255,100,20,0.15);">&#127755;</div><div class="fa-card-info"><div class="fa-card-title">Volcanic Eruption</div><div class="fa-card-sub">Ash &middot; Lava &middot; Toxic gases</div></div><div class="fa-card-arr">&rsaquo;</div></div>
-      <div class="fa-card-body">
-        <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Evacuate immediately if ordered</div><div class="fa-step-desc">Leave without delay. Take your go-bag. Drive away from the volcano.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Cover every part of your body</div><div class="fa-step-desc">Ash is razor sharp glass. P2/N95 mask on face. Goggles on eyes. Long sleeves and gloves on skin.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Move to high ground</div><div class="fa-step-desc">Lava flows down. Gas settles in valleys. Lahars follow rivers at high speed. Move UP and AWAY.</div></div></div>
-        <div class="fa-warning">&#9888; A lahar travels at 60km/h. If you hear a deep roar from a valley - RUN UP immediately.</div>
-      </div>
-    </div>
-
-    <div class="fa-card" data-cat="disaster" onclick="toggleFA(this)">
-      <div class="fa-card-head"><div class="fa-card-ico" style="background:rgba(255,214,10,0.15);">&#9888;</div><div class="fa-card-info"><div class="fa-card-title">Gas Leak</div><div class="fa-card-sub">Natural gas &middot; Carbon monoxide</div></div><div class="fa-card-arr">&rsaquo;</div></div>
-      <div class="fa-card-body">
-        <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Do NOT switch anything on or off</div><div class="fa-step-desc">Any spark can ignite gas. Leave immediately without touching switches.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Open windows and doors as you leave</div><div class="fa-step-desc">Ventilate as you exit. Do not stop to collect belongings.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Move far away and call for help</div><div class="fa-step-desc">Move at least 100 metres away. Call emergency services from outside.</div></div></div>
-        <div class="fa-warning">&#9888; Carbon monoxide is invisible and odourless. Symptoms: headache, dizziness, nausea. Get fresh air immediately.</div>
-        <button class="fa-call" onclick="openSOS()">&#128222; Call Emergency Services Now</button>
-      </div>
-    </div>
-
-    <div class="fa-card" data-cat="medical" onclick="toggleFA(this)">
-      <div class="fa-card-head"><div class="fa-card-ico" style="background:rgba(108,194,255,0.15);">&#129440;</div><div class="fa-card-info"><div class="fa-card-title">Epidemic / Disease Outbreak</div><div class="fa-card-sub">Infectious disease &middot; Pandemic</div></div><div class="fa-card-arr">&rsaquo;</div></div>
-      <div class="fa-card-body">
-        <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Follow official health guidance</div><div class="fa-step-desc">Listen only to official government and health authority sources. Follow quarantine instructions.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Wear a mask correctly</div><div class="fa-step-desc">Use P2/N95 mask in public. Pinch the nose wire, cover nose and mouth fully.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Hand hygiene - most important step</div><div class="fa-step-desc">Wash hands with soap for 20 seconds frequently. Do not touch your face.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">4</div><div class="fa-step-txt"><div class="fa-step-title">Protect the most vulnerable</div><div class="fa-step-desc">Elderly and immunocompromised people need extra protection. Use your Care Circle to coordinate support.</div></div></div>
-      </div>
-    </div>
-
-    <div class="fa-card" data-cat="child" onclick="toggleFA(this)">
-      <div class="fa-card-head"><div class="fa-card-ico" style="background:rgba(48,209,88,0.15);">&#128118;</div><div class="fa-card-info"><div class="fa-card-title">Choking &mdash; Infant under 1</div><div class="fa-card-sub">Baby cannot breathe &middot; Turning blue</div></div><div class="fa-card-arr">&rsaquo;</div></div>
-      <div class="fa-card-body">
-        <div class="fa-step"><div class="fa-step-num">1</div><div class="fa-step-txt"><div class="fa-step-title">Face-down back blows</div><div class="fa-step-desc">Hold baby face-down along your forearm, head lower than chest. Give 5 gentle but firm back blows between shoulder blades with 2 fingers.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">2</div><div class="fa-step-txt"><div class="fa-step-title">Face-up chest thrusts</div><div class="fa-step-desc">Turn baby face-up. Give 5 chest thrusts using 2 fingers on centre of chest, just below nipple line.</div></div></div>
-        <div class="fa-step"><div class="fa-step-num">3</div><div class="fa-step-txt"><div class="fa-step-title">Repeat until clear</div><div class="fa-step-desc">If baby becomes unconscious begin infant CPR and call emergency services immediately.</div></div></div>
-        <div class="fa-warning">&#9888; NEVER use abdominal thrusts on an infant under 1 year old. Use chest thrusts only.</div>
-        <button class="fa-call" onclick="openSOS()">&#128222; Call Emergency Services Now</button>
-      </div>
-    </div>
-
-  </div>
-  <div class="bnav dark">
-    <button class="ntab" onclick="showScreen('daily')"><div class="nico">&#127968;</div><div class="nlbl">Home</div></button>
-    <button class="ntab" onclick="showScreen('mapscreen')"><div class="nico">&#127757;</div><div class="nlbl">Map</div></button>
-    <button class="ntab" onclick="showScreen('emergency')"><div class="nico">&#128680;</div><div class="nlbl">Emergency</div></button>
-    <button class="ntab act"><div class="nico">&#129514;&#65039;</div><div class="nlbl">First Aid</div></button>
-    <button class="ntab" onclick="showScreen('settings')"><div class="nico">&#9881;&#65039;</div><div class="nlbl">Settings</div></button>
-  </div>
-</div>
-
-<!-- SURVIVAL BOOK -->
-<div id="survival" class="screen" style="display:none;background:#0A0A0A;">
-  <div class="surv-hdr">
-    <div class="surv-hdr-title">&#128214; Survival Skills Book</div>
-    <div class="surv-hdr-sub">Simple skills. Clear commands. Free forever.</div>
-  </div>
-  <div class="surv-pad">
-    <div class="surv-cats">
-      <button class="surv-cat active" onclick="survCat('all',this)">All</button>
-      <button class="surv-cat inactive" onclick="survCat('fire',this)">&#128293; Fire</button>
-      <button class="surv-cat inactive" onclick="survCat('heat',this)">&#9728; Heat</button>
-      <button class="surv-cat inactive" onclick="survCat('cold',this)">&#10052; Cold</button>
-      <button class="surv-cat inactive" onclick="survCat('volcano',this)">&#127755; Volcano</button>
-      <button class="surv-cat inactive" onclick="survCat('water',this)">&#128167; Water</button>
-      <button class="surv-cat inactive" onclick="survCat('shelter',this)">&#9978; Shelter</button>
-      <button class="surv-cat inactive" onclick="survCat('signal',this)">&#128225; Signal</button>
-    </div>
-
-    <div class="surv-card" data-cat="fire" onclick="toggleSurv(this)">
-      <div class="surv-card-head"><div class="surv-card-ico" style="background:rgba(255,100,20,0.15);">&#128293;</div><div class="surv-card-info"><div class="surv-card-title">How to Make a Fire</div><div class="surv-card-sub">Warmth &middot; Cooking &middot; Signalling</div></div><div class="surv-card-arr">&rsaquo;</div></div>
-      <div class="surv-body">
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">FIND A SAFE SPOT</div><div class="surv-rule-desc">Clear flat ground. No dry grass nearby. No trees overhead. At least 3 metres from your tent. Make a ring of rocks.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">GATHER 3 TYPES OF FUEL</div><div class="surv-rule-desc">TINDER - dry leaves, paper, bark. KINDLING - dry sticks, finger-thick. WOOD - dry logs, arm-thick.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">BUILD A TENT SHAPE</div><div class="surv-rule-desc">Put tinder in centre. Lean kindling around it like a tent. Leave one gap facing wind for air.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">LIGHT FROM THE BOTTOM</div><div class="surv-rule-desc">Use waterproof matches, lighter, or flint and steel. Light tinder at base. Blow gently and steadily.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF6414;">5</div><div class="surv-rule-txt"><div class="surv-rule-cmd">PUT IT OUT PROPERLY</div><div class="surv-rule-desc">Pour water over fire. Stir the ash. Pour more water. Fire must be stone cold before you sleep or leave.</div></div></div>
-        <div class="surv-warning">&#9888; NEVER leave fire unattended. NEVER make fire in strong wind. ALWAYS have water nearby.</div>
-        <div class="surv-tip">Flint and steel never runs out - works in rain, wind and cold. Always carry one in your go-bag.</div>
-      </div>
-    </div>
-
-    <div class="surv-card" data-cat="fire" onclick="toggleSurv(this)">
-      <div class="surv-card-head"><div class="surv-card-ico" style="background:rgba(255,59,48,0.15);">&#128118;</div><div class="surv-card-info"><div class="surv-card-title">Fire Safety With Children</div><div class="surv-card-sub">Rules every child must know</div></div><div class="surv-card-arr">&rsaquo;</div></div>
-      <div class="surv-body">
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF3B30;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">DRAW THE SAFETY CIRCLE</div><div class="surv-rule-desc">Mark a circle 2 big adult steps from fire using rope or stones. Tell every child - NEVER cross this line.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF3B30;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">ONE ADULT ALWAYS WATCHES</div><div class="surv-rule-desc">One adult watches fire AND children at ALL times. If you leave - put fire completely out first.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF3B30;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">TEACH STOP DROP ROLL NOW</div><div class="surv-rule-desc">Practise BEFORE any emergency. If clothes catch fire - STOP. DROP to ground. ROLL to smother flames.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FF3B30;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">WATER READY ALWAYS</div><div class="surv-rule-desc">Full bucket of water beside fire at all times. If burned - run cool water over burn for 20 minutes.</div></div></div>
-        <div class="surv-warning">&#9888; Children under 5 must be held or secured at all times near any fire.</div>
-      </div>
-    </div>
-
-    <div class="surv-card" data-cat="heat" onclick="toggleSurv(this)">
-      <div class="surv-card-head"><div class="surv-card-ico" style="background:rgba(255,214,10,0.15);">&#9728;</div><div class="surv-card-info"><div class="surv-card-title">Surviving Extreme Heat</div><div class="surv-card-sub">Heatwave &middot; Hot evacuation</div></div><div class="surv-card-arr">&rsaquo;</div></div>
-      <div class="surv-body">
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FFD60A;color:#1A1A00;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">DRINK BEFORE YOU ARE THIRSTY</div><div class="surv-rule-desc">Thirst means you are already dehydrated. Small sips constantly. Adults need 1 litre per hour in extreme heat.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FFD60A;color:#1A1A00;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">REST FROM 10AM TO 4PM</div><div class="surv-rule-desc">These are the killing hours. Find shade and stay still. Move only at dawn or after sunset.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FFD60A;color:#1A1A00;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">COVER ALL SKIN</div><div class="surv-rule-desc">Long sleeves and wide brim hat with neck cover. Light colours reflect heat. This keeps you cooler.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#FFD60A;color:#1A1A00;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">HEAT STROKE - ACT IMMEDIATELY</div><div class="surv-rule-desc">Hot dry skin, no sweating, confusion, fast pulse. Move to shade. Wet their skin. Fan them. Call emergency services NOW.</div></div></div>
-        <div class="surv-tip">Wet a cloth and place on neck, wrists and forehead - these pulse points cool the whole body rapidly.</div>
-      </div>
-    </div>
-
-    <div class="surv-card" data-cat="cold" onclick="toggleSurv(this)">
-      <div class="surv-card-head"><div class="surv-card-ico" style="background:rgba(108,194,255,0.15);">&#10052;</div><div class="surv-card-info"><div class="surv-card-title">Surviving Extreme Cold</div><div class="surv-card-sub">Winter &middot; Cold night evacuation</div></div><div class="surv-card-arr">&rsaquo;</div></div>
-      <div class="surv-body">
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">STAY DRY - MOST IMPORTANT</div><div class="surv-rule-desc">Wet kills faster than cold. If clothes are wet change immediately. Wool and synthetic stay warm when wet.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">THREE LAYERS</div><div class="surv-rule-desc">Base layer traps warmth. Middle layer insulates. Outer layer blocks wind and rain. Cover head always.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">GET OFF THE GROUND</div><div class="surv-rule-desc">Cold ground pulls heat from your body fast. Always sleep on a mat, branches, or bags. Never directly on cold ground.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">HYPOTHERMIA - ACT IMMEDIATELY</div><div class="surv-rule-desc">Shivering STOPS - this is dangerous not good. Confusion. Slurred speech. Get them warm slowly. Call emergency services.</div></div></div>
-        <div class="surv-tip">Huddle together - body heat from others is the fastest way to rewarm someone with hypothermia.</div>
-        <div class="surv-warning">&#9888; Never rub frostbitten skin. Warm slowly in lukewarm water only.</div>
-      </div>
-    </div>
-
-    <div class="surv-card" data-cat="water" onclick="toggleSurv(this)">
-      <div class="surv-card-head"><div class="surv-card-ico" style="background:rgba(108,194,255,0.15);">&#128167;</div><div class="surv-card-info"><div class="surv-card-title">Finding Safe Water</div><div class="surv-card-sub">When taps do not work</div></div><div class="surv-card-arr">&rsaquo;</div></div>
-      <div class="surv-body">
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">USE YOUR LIFESTRAW FIRST</div><div class="surv-rule-desc">Push LifeStraw into any water source and drink. Filters 99.9999% of bacteria instantly. No preparation needed.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">BOIL FOR 1 FULL MINUTE</div><div class="surv-rule-desc">Rolling boil for 1 minute kills everything. At high altitude boil for 3 minutes. Let cool before drinking.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">COLLECT RAIN WATER</div><div class="surv-rule-desc">Rain is safe to drink directly. Collect in any clean container. Use emergency tent or tarpaulin as funnel.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#6CC2FF;color:#0A0A1A;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">DEHYDRATION SIGNS - ACT NOW</div><div class="surv-rule-desc">Dark yellow urine means drink immediately. Dizziness. Confusion. Give children and elderly water first always.</div></div></div>
-      </div>
-    </div>
-
-    <div class="surv-card" data-cat="shelter" onclick="toggleSurv(this)">
-      <div class="surv-card-head"><div class="surv-card-ico" style="background:rgba(43,96,82,0.2);">&#9978;</div><div class="surv-card-info"><div class="surv-card-title">Building Emergency Shelter</div><div class="surv-card-sub">When you have no building</div></div><div class="surv-card-arr">&rsaquo;</div></div>
-      <div class="surv-body">
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">USE YOUR EMERGENCY TENT FIRST</div><div class="surv-rule-desc">Always use your go-bag emergency tent first. Set up before dark. Choose flat dry ground away from rivers.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">INSULATE THE FLOOR</div><div class="surv-rule-desc">Put leaves, grass, or branches on ground before sleeping. Cold ground steals body heat very fast.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#2B6052;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">SMALL IS WARMER</div><div class="surv-rule-desc">A small shelter traps body heat better than a large one. Pack everyone together for shared body heat.</div></div></div>
-        <div class="surv-tip">A large plastic bag from your go-bag makes an emergency sleeping bag. Put legs inside - traps body heat immediately.</div>
-      </div>
-    </div>
-
-    <div class="surv-card" data-cat="signal" onclick="toggleSurv(this)">
-      <div class="surv-card-head"><div class="surv-card-ico" style="background:rgba(48,209,88,0.15);">&#128225;</div><div class="surv-card-info"><div class="surv-card-title">Signalling for Help</div><div class="surv-card-sub">Being found faster</div></div><div class="surv-card-arr">&rsaquo;</div></div>
-      <div class="surv-body">
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#30D158;color:#001A07;">1</div><div class="surv-rule-txt"><div class="surv-rule-cmd">3 IS THE UNIVERSAL DISTRESS SIGNAL</div><div class="surv-rule-desc">3 whistle blasts. 3 fires in a triangle. 3 of anything. Recognised worldwide as a call for help.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#30D158;color:#001A07;">2</div><div class="surv-rule-txt"><div class="surv-rule-cmd">USE YOUR HAND SIGNAL MIRROR</div><div class="surv-rule-desc">Flash sunlight towards aircraft or rescuers using your signal mirror. Visible up to 50km on a clear day. Flash SOS: 3 short, 3 long, 3 short.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#30D158;color:#001A07;">3</div><div class="surv-rule-txt"><div class="surv-rule-cmd">MAKE YOURSELF VISIBLE FROM AIR</div><div class="surv-rule-desc">Lay out bright coloured items in a clearing. Make a large X or SOS on the ground using rocks or logs.</div></div></div>
-        <div class="surv-rule"><div class="surv-rule-num" style="background:#30D158;color:#001A07;">4</div><div class="surv-rule-txt"><div class="surv-rule-cmd">HEAD TORCH AT NIGHT</div><div class="surv-rule-desc">Flash your Anchor head torch in groups of 3. Reflective strips on your Anchor bag are visible from hundreds of metres.</div></div></div>
-        <div class="surv-tip">Stay in one place once you have signalled. Rescuers are coming to your last known location. Moving makes you harder to find.</div>
-      </div>
-    </div>
-
-  </div>
-  <div class="bnav dark">
-    <button class="ntab" onclick="showScreen('daily')"><div class="nico">&#127968;</div><div class="nlbl">Home</div></button>
-    <button class="ntab" onclick="showScreen('mapscreen')"><div class="nico">&#127757;</div><div class="nlbl">Map</div></button>
-    <button class="ntab" onclick="showScreen('carecircle')"><div class="nico">&#128104;&#8205;&#128105;&#8205;&#128102;</div><div class="nlbl">Circle</div></button>
-    <button class="ntab act"><div class="nico">&#128214;</div><div class="nlbl">Survival</div></button>
-    <button class="ntab" onclick="showScreen('settings')"><div class="nico">&#9881;&#65039;</div><div class="nlbl">Settings</div></button>
-  </div>
-</div>
-
-<!-- MISSIONS -->
-<div id="missions" class="screen" style="display:none;background:#0A0A0A;">
-  <div class="mis-hdr">
-    <div class="mis-hdr-title">&#127919; Family Missions</div>
-    <div class="mis-hdr-sub">Complete missions to keep your family safe</div>
-    <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBar" style="width:35%;"></div></div>
-    <div class="xp-label"><span id="xpLabel">350 XP</span><span>Level 2 - Silver - Next: 500 XP</span></div>
-  </div>
-  <div class="mis-pad">
-    <div class="mis-section">Active Missions</div>
-
-    <!-- GO BAG -->
-    <div class="mis-card active-mis" id="mis-gobag">
-      <div class="mis-card-head">
-        <div class="mis-card-ico" style="background:rgba(43,96,82,0.2);">&#127890;</div>
-        <div class="mis-card-info"><div class="mis-card-title">Pack the Go-Bag</div><div class="mis-card-sub">53 essential items for 72-hour emergency</div></div>
-        <div class="mis-xp-badge" id="xp-gobag">+150 XP</div>
-      </div>
-      <div class="mis-prog-bar"><div class="mis-prog-fill" id="bar-gobag" style="width:0%;"></div></div>
-      <div class="mis-prog-label"><span id="txt-gobag">0 of 10 complete</span><span id="pct-gobag">0%</span></div>
-      <div id="steps-gobag">
-        <div class="mis-step" onclick="checkStep(this,'gobag')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Water - 3 litres per person per day</div></div>
-        <div class="mis-step" onclick="checkStep(this,'gobag')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Food - 3 day supply of non-perishables</div></div>
-        <div class="mis-step" onclick="checkStep(this,'gobag')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">First aid kit with medications</div></div>
-        <div class="mis-step" onclick="checkStep(this,'gobag')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Torch and spare batteries + Anchor head torch</div></div>
-        <div class="mis-step" onclick="checkStep(this,'gobag')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">P2/N95 masks - volcanic ash, smoke, disease</div></div>
-        <div class="mis-step" onclick="checkStep(this,'gobag')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Eye protection goggles and heavy duty gloves</div></div>
-        <div class="mis-step" onclick="checkStep(this,'gobag')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Flint and steel fire starter - never runs out</div></div>
-        <div class="mis-step" onclick="checkStep(this,'gobag')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Hand signal mirror - SOS flash visible 50km</div></div>
-        <div class="mis-step" onclick="checkStep(this,'gobag')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">LifeStraw personal water filter - one per person</div></div>
-        <div class="mis-step" onclick="checkStep(this,'gobag')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Emergency tent sized for whole family</div></div>
-      </div>
-      <button class="mis-complete-btn" id="btn-gobag" onclick="completeMission('gobag','Go-Bag',150)" disabled>Complete Mission</button>
-    </div>
-
-    <!-- BLACKOUT DRILL -->
-    <div class="mis-card active-mis" id="mis-blackout">
-      <div class="mis-card-head">
-        <div class="mis-card-ico" style="background:rgba(232,132,90,0.2);">&#128294;</div>
-        <div class="mis-card-info"><div class="mis-card-title">Blackout Drill</div><div class="mis-card-sub">Practice operating without power</div></div>
-        <div class="mis-xp-badge" id="xp-blackout">+200 XP</div>
-      </div>
-      <div class="mis-prog-bar"><div class="mis-prog-fill" id="bar-blackout" style="width:0%;"></div></div>
-      <div class="mis-prog-label"><span id="txt-blackout">0 of 5 complete</span><span id="pct-blackout">0%</span></div>
-      <div id="steps-blackout">
-        <div class="mis-step" onclick="checkStep(this,'blackout')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Locate all torches in the house</div></div>
-        <div class="mis-step" onclick="checkStep(this,'blackout')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Test batteries - replace if needed</div></div>
-        <div class="mis-step" onclick="checkStep(this,'blackout')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Know where your fuse box is</div></div>
-        <div class="mis-step" onclick="checkStep(this,'blackout')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Have candles and matches stored safely</div></div>
-        <div class="mis-step" onclick="checkStep(this,'blackout')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Practice finding exits in the dark</div></div>
-      </div>
-      <button class="mis-complete-btn" id="btn-blackout" onclick="completeMission('blackout','Blackout',200)" disabled>Complete Mission</button>
-    </div>
-
-    <!-- EVACUATION RUN -->
-    <div class="mis-card active-mis" id="mis-evac">
-      <div class="mis-card-head">
-        <div class="mis-card-ico" style="background:rgba(255,59,48,0.15);">&#127939;</div>
-        <div class="mis-card-info"><div class="mis-card-title">Evacuation Run</div><div class="mis-card-sub">Know your escape routes</div></div>
-        <div class="mis-xp-badge" id="xp-evac">+300 XP</div>
-      </div>
-      <div class="mis-prog-bar"><div class="mis-prog-fill" id="bar-evac" style="width:0%;"></div></div>
-      <div class="mis-prog-label"><span id="txt-evac">0 of 4 complete</span><span id="pct-evac">0%</span></div>
-      <div id="steps-evac">
-        <div class="mis-step" onclick="checkStep(this,'evac')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Identify 2 exit routes from your home</div></div>
-        <div class="mis-step" onclick="checkStep(this,'evac')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Agree on a family meeting point</div></div>
-        <div class="mis-step" onclick="checkStep(this,'evac')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Find your nearest emergency shelter on the map</div></div>
-        <div class="mis-step" onclick="checkStep(this,'evac')"><div class="mis-step-check">&#10003;</div><div class="mis-step-txt">Walk the evacuation route as a family</div></div>
-      </div>
-      <button class="mis-complete-btn" id="btn-evac" onclick="completeMission('evac','Evacuator',300)" disabled>Complete Mission</button>
-    </div>
-
-    <!-- FAMILY PLAN -->
-    <div class="mis-card done-mis" id="mis-plan">
-      <div class="mis-card-head">
-        <div class="mis-card-ico" style="background:rgba(255,214,10,0.15);">&#128203;</div>
-        <div class="mis-card-info"><div class="mis-card-title">Family Plan</div><div class="mis-card-sub">Emergency communication plan</div></div>
-        <div class="mis-xp-badge done">&#10003; 100 XP earned</div>
-      </div>
-      <div class="mis-prog-bar"><div class="mis-prog-fill" style="width:100%;background:#FFD60A;"></div></div>
-      <div class="mis-prog-label"><span style="color:#FFD60A;">Completed!</span><span style="color:#FFD60A;">100%</span></div>
-    </div>
-
-  </div>
-  <div class="bnav dark">
-    <button class="ntab" onclick="showScreen('daily')"><div class="nico">&#127968;</div><div class="nlbl">Home</div></button>
-    <button class="ntab" onclick="showScreen('mapscreen')"><div class="nico">&#127757;</div><div class="nlbl">Map</div></button>
-    <button class="ntab" onclick="showScreen('emergency')"><div class="nico">&#128680;</div><div class="nlbl">Emergency</div></button>
-    <button class="ntab act"><div class="nico">&#127919;</div><div class="nlbl">Missions</div></button>
-    <button class="ntab" onclick="showScreen('settings')"><div class="nico">&#9881;&#65039;</div><div class="nlbl">Settings</div></button>
-  </div>
-</div>
-
-<!-- CARE CIRCLE -->
-<div id="carecircle" class="screen" style="display:none;background:#0A0A0A;">
-  <div class="cc-hdr">
-    <div class="cc-hdr-title">&#128104;&#8205;&#128105;&#8205;&#128102; Care Circle</div>
-    <div class="cc-hdr-sub">Protect your neighbours - No one left behind</div>
-    <div class="cc-stats">
-      <div class="cc-stat"><div class="cc-stat-num" id="ccTotal">6</div><div class="cc-stat-lbl">In Circle</div></div>
-      <div class="cc-stat"><div class="cc-stat-num" style="color:#30D158;">4</div><div class="cc-stat-lbl">Safe</div></div>
-      <div class="cc-stat"><div class="cc-stat-num" style="color:#FFD60A;">1</div><div class="cc-stat-lbl">Checking</div></div>
-      <div class="cc-stat"><div class="cc-stat-num" style="color:#FF3B30;">1</div><div class="cc-stat-lbl">Needs Help</div></div>
-    </div>
-  </div>
-  <div class="cc-pad">
-    <div style="background:rgba(255,59,48,0.08);border:1px solid rgba(255,59,48,0.25);border-radius:18px;padding:16px;margin-bottom:14px;">
-      <div style="font-size:14px;font-weight:800;color:#FF3B30;margin-bottom:8px;">&#128680; Immediate Attention Needed</div>
-      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#CCC;">
-        <div style="font-size:20px;">&#128117;</div>
-        <div><strong>Edna - 847 Rosewood Lane</strong><br><span style="font-size:12px;color:#888;">Has not checked in for 6 hours. Lives alone. No family nearby.</span></div>
-      </div>
-    </div>
-    <div class="cc-section">Your Care Circle</div>
-    <div class="cc-member needs-help">
-      <div class="cc-avi" style="background:#2A1A1A;">&#128117;<div class="cc-dot danger"></div></div>
-      <div class="cc-info"><div class="cc-name">Edna Waititi</div><div class="cc-detail">&#128205; 847 Rosewood Lane - 0.3km away</div><div style="display:flex;gap:6px;"><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:rgba(108,194,255,0.15);color:#6CC2FF;">Elderly 84</span><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:rgba(255,59,48,0.15);color:#FF7A6A;">Heart condition</span></div></div>
-      <div class="cc-actions"><button class="cc-btn call" onclick="showToast('Add phone number in Settings to call')">&#128222; Call</button><button class="cc-btn help" onclick="openSOS()">&#128682; Help</button></div>
-    </div>
-    <div class="cc-member checked-in">
-      <div class="cc-avi" style="background:#1A2A1A;">&#128116;<div class="cc-dot safe"></div></div>
-      <div class="cc-info"><div class="cc-name">Robert Tane</div><div class="cc-detail">&#128205; 12 Maple Ave - 0.5km away</div><div style="display:flex;gap:6px;"><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:rgba(108,194,255,0.15);color:#6CC2FF;">Elderly 79</span><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:rgba(255,214,10,0.15);color:#FFD60A;">Wheelchair</span></div></div>
-      <div class="cc-actions"><button class="cc-btn call" onclick="showToast('Add phone number in Settings to call')">&#128222; Call</button><button class="cc-btn check" onclick="showToast('Robert marked safe')">&#10003; Safe</button></div>
-    </div>
-    <div class="cc-member checking">
-      <div class="cc-avi" style="background:#2A2A1A;">&#128105;<div class="cc-dot unknown"></div></div>
-      <div class="cc-info"><div class="cc-name">Maria Santos</div><div class="cc-detail">&#128205; 23 Pohutukawa St - 0.7km</div><div style="display:flex;gap:6px;"><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:rgba(255,59,48,0.15);color:#FF7A6A;">Diabetic</span></div></div>
-      <div class="cc-actions"><button class="cc-btn call" onclick="showToast('Add phone number in Settings to call')">&#128222; Call</button><button class="cc-btn check" onclick="showToast('Maria marked safe')">&#10003; Safe</button></div>
-    </div>
-    <div class="cc-member checked-in">
-      <div class="cc-avi" style="background:#1A2A1A;">&#128102;<div class="cc-dot safe"></div></div>
-      <div class="cc-info"><div class="cc-name">Sione Family</div><div class="cc-detail">&#128205; 5 Rimu Rd - 0.4km</div><div style="display:flex;gap:6px;"><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:rgba(48,209,88,0.15);color:#30D158;">3 Children</span></div></div>
-      <div class="cc-actions"><button class="cc-btn call" onclick="showToast('Add phone number in Settings to call')">&#128222; Call</button><button class="cc-btn check" onclick="showToast('Sione family safe')">&#10003; Safe</button></div>
-    </div>
-    <button class="cc-add-btn" onclick="showAddMember()">+ Add Neighbour to Care Circle</button>
-    <div id="addMemberForm" style="display:none;background:#141414;border:1px solid #2A2A2A;border-radius:18px;padding:16px;margin-bottom:14px;">
-      <div style="font-size:15px;font-weight:800;color:white;margin-bottom:14px;">&#128100; Add to Care Circle</div>
-      <input id="newName" type="text" placeholder="Name" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:10px;padding:12px;color:white;font-size:14px;font-family:-apple-system,sans-serif;margin-bottom:10px;">
-      <input id="newAddress" type="text" placeholder="Address" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:10px;padding:12px;color:white;font-size:14px;font-family:-apple-system,sans-serif;margin-bottom:10px;">
-      <input id="newPhone" type="tel" placeholder="Phone number" style="width:100%;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:10px;padding:12px;color:white;font-size:14px;font-family:-apple-system,sans-serif;margin-bottom:14px;">
-      <div style="display:flex;gap:10px;">
-        <button onclick="addMember()" style="flex:1;background:#2B6052;color:white;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;">&#10003; Add to Circle</button>
-        <button onclick="hideAddMember()" style="background:#1A1A1A;color:#888;border:1px solid #2A2A2A;border-radius:12px;padding:14px;font-size:14px;cursor:pointer;">Cancel</button>
-      </div>
-    </div>
-    <div id="newMembers"></div>
-    <div class="cc-how">
-      <div class="cc-how-title">&#128153; How Care Circle Works</div>
-      <div class="cc-how-step"><div class="cc-how-num">1</div><div>Add vulnerable neighbours - elderly, disabled, families with young children, people living alone.</div></div>
-      <div class="cc-how-step"><div class="cc-how-num">2</div><div>During an emergency check on everyone in your circle. Alert if someone does not respond.</div></div>
-      <div class="cc-how-step"><div class="cc-how-num">3</div><div>Use the Help button to trigger SOS for a neighbour who needs emergency services.</div></div>
-      <div class="cc-how-step"><div class="cc-how-num">4</div><div>No one in your neighbourhood is forgotten. No one is left behind. Every person matters.</div></div>
-    </div>
-  </div>
-  <div class="bnav dark">
-    <button class="ntab" onclick="showScreen('daily')"><div class="nico">&#127968;</div><div class="nlbl">Home</div></button>
-    <button class="ntab" onclick="showScreen('mapscreen')"><div class="nico">&#127757;</div><div class="nlbl">Map</div></button>
-    <button class="ntab act"><div class="nico">&#128104;&#8205;&#128105;&#8205;&#128102;</div><div class="nlbl">Circle</div></button>
-    <button class="ntab" onclick="showScreen('firstaid')"><div class="nico">&#129514;&#65039;</div><div class="nlbl">First Aid</div></button>
-    <button class="ntab" onclick="showScreen('settings')"><div class="nico">&#9881;&#65039;</div><div class="nlbl">Settings</div></button>
-  </div>
-</div>
-
-<!-- SETTINGS -->
-<div id="settings" class="screen" style="display:none;background:#0A0A0A;">
-  <div class="set-hdr">
-    <div class="set-hdr-title">&#9881;&#65039; Settings</div>
-    <div class="set-hdr-sub">Personalise Anchor for your family</div>
-  </div>
-  <div class="set-pad">
-    <div class="set-section">
-      <div class="set-section-title">Your Profile</div>
-      <div class="set-card">
-        <div class="set-input-row"><div class="set-ico" style="background:rgba(43,96,82,0.2);">&#128100;</div><div class="set-row-label" style="flex:0;white-space:nowrap;">Name</div><input class="set-input" id="inputName" placeholder="Your name" onchange="saveSettings()"></div>
-        <div class="set-input-row"><div class="set-ico" style="background:rgba(43,96,82,0.2);">&#128222;</div><div class="set-row-label" style="flex:0;white-space:nowrap;">My Number</div><input class="set-input" id="inputPhone" placeholder="+64 21..." type="tel" onchange="saveSettings()"></div>
-        <div class="set-input-row"><div class="set-ico" style="background:rgba(43,96,82,0.2);">&#128205;</div><div class="set-row-label" style="flex:0;white-space:nowrap;">Location</div><input class="set-input" id="inputLocation" placeholder="Auckland, NZ" onchange="saveSettings()"></div>
-      </div>
-    </div>
-    <div class="set-section">
-      <div class="set-section-title">Emergency Contacts</div>
-      <div class="set-card">
-        <div class="set-input-row"><div class="set-ico" style="background:rgba(255,59,48,0.15);">&#128680;</div><div class="set-row-label" style="flex:0;white-space:nowrap;">Contact 1</div><input class="set-input" id="c1name" placeholder="Name" onchange="saveSettings()"></div>
-        <div class="set-input-row"><div class="set-ico" style="background:rgba(255,59,48,0.1);">&#128222;</div><div class="set-row-label" style="flex:0;white-space:nowrap;">Number</div><input class="set-input" id="c1phone" placeholder="+64..." type="tel" onchange="saveSettings()"></div>
-        <div class="set-input-row"><div class="set-ico" style="background:rgba(255,59,48,0.15);">&#128680;</div><div class="set-row-label" style="flex:0;white-space:nowrap;">Contact 2</div><input class="set-input" id="c2name" placeholder="Name" onchange="saveSettings()"></div>
-        <div class="set-input-row"><div class="set-ico" style="background:rgba(255,59,48,0.1);">&#128222;</div><div class="set-row-label" style="flex:0;white-space:nowrap;">Number</div><input class="set-input" id="c2phone" placeholder="+64..." type="tel" onchange="saveSettings()"></div>
-      </div>
-    </div>
-    <div class="set-section">
-      <div class="set-section-title">Family Communication</div>
-      <div class="set-card" style="padding:16px;">
-        <div style="font-size:13px;color:#888;line-height:1.6;margin-bottom:14px;">Set up a group chat with your family on any app you already use. Name it <strong style="color:white;">Anchor Family Emergency</strong> and pin it to top of your chats.</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <button onclick="openComms('whatsapp')" style="background:#25D366;color:white;border:none;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;">WhatsApp</button>
-          <button onclick="openComms('telegram')" style="background:#2AABEE;color:white;border:none;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;">Telegram</button>
-          <button onclick="openComms('signal')" style="background:#3A76F0;color:white;border:none;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;">Signal</button>
-          <button onclick="openComms('viber')" style="background:#7360F2;color:white;border:none;border-radius:12px;padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;">Viber</button>
-        </div>
-      </div>
-    </div>
-    <div class="set-section">
-      <div class="set-section-title">Driving and Hands-Free</div>
-      <div class="set-card">
-        <div class="set-row"><div class="set-ico" style="background:rgba(108,194,255,0.15);">&#128309;</div><div class="set-row-info"><div class="set-row-label">Bluetooth Audio</div><div class="set-row-val">Alerts read aloud via car speakers</div></div><button class="set-toggle on" onclick="toggleSetting(this)"></button></div>
-        <div class="set-row"><div class="set-ico" style="background:rgba(48,209,88,0.15);">&#128663;</div><div class="set-row-info"><div class="set-row-label">Driving Mode</div><div class="set-row-val">Large buttons, voice alerts</div></div><button class="set-toggle" onclick="toggleSetting(this)"></button></div>
-      </div>
-    </div>
-    <div class="set-section">
-      <div class="set-section-title">Language</div>
-      <div class="set-card" style="padding:14px 16px;">
-        <div style="font-size:12px;color:#555;margin-bottom:10px;">Most vulnerable populations first</div>
-        <div class="lang-grid">
-          <button class="lang-btn selected" onclick="selectLang(this)">Icons Only</button>
-          <button class="lang-btn" onclick="selectLang(this)">English</button>
-          <button class="lang-btn" onclick="selectLang(this)">Arabic</button>
-          <button class="lang-btn" onclick="selectLang(this)">Chinese</button>
-          <button class="lang-btn" onclick="selectLang(this)">Hindi</button>
-          <button class="lang-btn" onclick="selectLang(this)">Espanol</button>
-          <button class="lang-btn" onclick="selectLang(this)">Francais</button>
-          <button class="lang-btn" onclick="selectLang(this)">Bengali</button>
-          <button class="lang-btn" onclick="selectLang(this)">Tagalog</button>
-          <button class="lang-btn" onclick="selectLang(this)">Kiswahili</button>
-          <button class="lang-btn" onclick="selectLang(this)">Portugues</button>
-          <button class="lang-btn" onclick="selectLang(this)">Bahasa</button>
-          <button class="lang-btn" onclick="selectLang(this)">Russian</button>
-          <button class="lang-btn" onclick="selectLang(this)">Japanese</button>
-          <button class="lang-btn" onclick="selectLang(this)">Deutsch</button>
-          <button class="lang-btn" onclick="selectLang(this)">Hausa</button>
-        </div>
-      </div>
-    </div>
-    <div class="set-section">
-      <div class="set-section-title">Accessibility</div>
-      <div class="set-card">
-        <div class="set-row"><div class="set-ico" style="background:rgba(108,194,255,0.15);">&#128266;</div><div class="set-row-info"><div class="set-row-label">Audio Guidance</div><div class="set-row-val">Voice instructions during emergencies</div></div><button class="set-toggle" onclick="toggleSetting(this)"></button></div>
-        <div class="set-row"><div class="set-ico" style="background:rgba(255,214,10,0.15);">&#128243;</div><div class="set-row-info"><div class="set-row-label">Haptic Patterns</div><div class="set-row-val">Vibration alerts for deaf users</div></div><button class="set-toggle on" onclick="toggleSetting(this)"></button></div>
-        <div class="set-row"><div class="set-ico" style="background:rgba(43,96,82,0.2);">&#128292;</div><div class="set-row-info"><div class="set-row-label">Large Text</div><div class="set-row-val">Increase text size throughout app</div></div><button class="set-toggle" onclick="toggleSetting(this)"></button></div>
-      </div>
-    </div>
-    <div class="set-section">
-      <div class="set-section-title">About Anchor</div>
-      <div class="set-card">
-        <div class="set-row" onclick="showToast('anchorsafety.org - Safety for every human on earth')"><div class="set-ico" style="background:rgba(43,96,82,0.2);">&#9875;</div><div class="set-row-info"><div class="set-row-label">Anchor Safety</div><div class="set-row-val">anchorsafety.org - Version 1.0</div></div><div class="set-row-arr">&rsaquo;</div></div>
-        <div class="set-row" onclick="showToast('hello at anchorsafety.org')"><div class="set-ico" style="background:rgba(43,96,82,0.2);">&#9993;</div><div class="set-row-info"><div class="set-row-label">Contact Us</div><div class="set-row-val">hello at anchorsafety.org</div></div><div class="set-row-arr">&rsaquo;</div></div>
-        <div class="set-row" onclick="showToast('Anchor Gear coming soon - Bag, Dog Saddlebag, GPS Tracker, Head Torch')"><div class="set-ico" style="background:rgba(43,96,82,0.2);">&#128717;</div><div class="set-row-info"><div class="set-row-label">Anchor Gear - Coming Soon</div><div class="set-row-val">Emergency Bag, Dog Saddlebag, GPS Tracker, Head Torch</div></div><div class="set-row-arr">&rsaquo;</div></div>
-      </div>
-    </div>
-    <button class="set-save-btn" onclick="saveSettings()">&#128190; Save Settings</button>
-    <button class="set-danger-btn" onclick="clearData()">Clear All Data</button>
-    <div style="height:20px;"></div>
-  </div>
-  <div class="bnav dark">
-    <button class="ntab" onclick="showScreen('daily')"><div class="nico">&#127968;</div><div class="nlbl">Home</div></button>
-    <button class="ntab" onclick="showScreen('mapscreen')"><div class="nico">&#127757;</div><div class="nlbl">Map</div></button>
-    <button class="ntab" onclick="showScreen('carecircle')"><div class="nico">&#128104;&#8205;&#128105;&#8205;&#128102;</div><div class="nlbl">Circle</div></button>
-    <button class="ntab" onclick="showScreen('firstaid')"><div class="nico">&#129514;&#65039;</div><div class="nlbl">First Aid</div></button>
-    <button class="ntab act"><div class="nico">&#9881;&#65039;</div><div class="nlbl">Settings</div></button>
-  </div>
-</div>
-
-<!-- SOS MODAL -->
-<div class="modal" id="sosModal">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title">SOS - Send Help</div>
-    <div class="modal-sub">Your GPS location will be shared with emergency services and your contacts.</div>
-    <div class="c-row">
-      <div style="font-size:28px;" id="cFlag">&#127722;</div>
-      <div class="c-info"><div class="c-name" id="cName">New Zealand</div><div class="c-num" id="cNum">Emergency: 111</div></div>
-      <div class="c-auto">AUTO-DETECTED</div>
-    </div>
-    <div class="em-nums">
-      <div style="font-size:12px;color:#555;font-weight:600;">Global Emergency Numbers</div>
-      <div class="em-nums-grid">
-        <div class="em-num">NZ - 111</div><div class="em-num">USA - 911</div>
-        <div class="em-num">UK - 999</div><div class="em-num">AUS - 000</div>
-        <div class="em-num">France - 18</div><div class="em-num">Germany - 112</div>
-        <div class="em-num">Japan - 110</div><div class="em-num">EU - 112</div>
-      </div>
-    </div>
-    <button class="call-btn" id="callBtn" onclick="callEmergency()">Call 111 - Emergency Services</button>
-    <button class="loc-btn" onclick="shareLocation()">Share My GPS Location with Contacts</button>
-    <button class="cancel-btn" onclick="closeSOS()">Cancel</button>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toastEl"></div>
-
-<script>
-var SCREENS = ['consent','privacy','daily','mapscreen','emergency','firstaid','survival','missions','carecircle','settings'];
-
-function openGoogleMap(type) {
-  var queries = {
-    hospital: 'hospitals near me',
-    pharmacy: 'pharmacy near me',
-    police: 'police station near me',
-    shelter: 'community centre emergency shelter near me',
-    fire_station: 'fire station near me'
-  };
-  var query = queries[type] || type + ' near me';
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(pos) {
-      var lat = pos.coords.latitude;
-      var lng = pos.coords.longitude;
-      var url = 'https://www.google.com/maps/search/' + encodeURIComponent(query) + '/@' + lat + ',' + lng + ',14z';
-      window.open(url, '_blank');
-    }, function() {
-      var url = 'https://www.google.com/maps/search/' + encodeURIComponent(query);
-      window.open(url, '_blank');
-    });
-  } else {
-    var url = 'https://www.google.com/maps/search/' + encodeURIComponent(query);
-    window.open(url, '_blank');
-  }
+.cc-how-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #6CC2FF; color: #0A0A1A;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0;
 }
 
-function openGoogleMapsOffline() {
-  window.open('https://maps.google.com', '_blank');
-  showToast('In Google Maps: Profile photo > Offline maps > Download');
+
+/* ── PRIVACY & CONSENT ── */
+#consent {
+  background: #0A0A0A;
+  display: flex; flex-direction: column;
+  justify-content: center; padding: 30px 20px;
+  min-height: 100%;
+}
+.consent-logo { text-align: center; margin-bottom: 24px; }
+.consent-anchor { font-size: 52px; }
+.consent-brand { font-size: 24px; font-weight: 800; color: white; margin-top: 8px; }
+.consent-tagline { font-size: 13px; color: #666; margin-top: 4px; }
+.consent-card {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 20px; padding: 20px; margin-bottom: 16px;
+}
+.consent-card-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 14px; }
+.consent-item {
+  display: flex; gap: 12px; padding: 10px 0;
+  border-bottom: 1px solid #1E1E1E; align-items: flex-start;
+}
+.consent-item:last-child { border-bottom: none; padding-bottom: 0; }
+.consent-item-ico { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.consent-item-txt { flex: 1; font-size: 13px; color: #AAA; line-height: 1.5; }
+.consent-item-txt strong { color: white; }
+.consent-agree-btn {
+  width: 100%; background: var(--green); color: white;
+  border: none; border-radius: 16px; padding: 18px;
+  font-size: 16px; font-weight: 800; cursor: pointer;
+  margin-bottom: 12px; transition: transform 0.15s;
+}
+.consent-agree-btn:active { transform: scale(0.98); }
+.consent-privacy-btn {
+  width: 100%; background: transparent; color: #666;
+  border: none; padding: 12px;
+  font-size: 13px; cursor: pointer;
+  text-decoration: underline;
 }
 
-function shareMyLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(pos) {
-      var lat = pos.coords.latitude.toFixed(6);
-      var lng = pos.coords.longitude.toFixed(6);
-      var msg = encodeURIComponent('My location: https://maps.google.com/?q=' + lat + ',' + lng);
-      window.location.href = 'sms:?body=' + msg;
-      showToast('Location shared!');
-    }, function() {
-      showToast('Enable location access first');
-    });
-  }
+/* ── PRIVACY POLICY SCREEN ── */
+#privacy { background: #0A0A0A; }
+.priv-hdr {
+  background: #141414; padding: 50px 16px 20px;
+  border-bottom: 1px solid #2A2A2A;
 }
-var mapReady = false;
-var myMap = null;
-var uLat = -36.9042;
-var uLng = 174.9457;
-var layers = {};
-var layerVis = {hosp:true, fam:true, shel:true, dang:true, route:true};
-var totalXP = 350;
-var missionSteps = {
-  gobag: {total:10, checked:0},
-  blackout: {total:5, checked:0},
-  evac: {total:4, checked:0}
-};
-
-function showScreen(id) {
-  for (var i = 0; i < SCREENS.length; i++) {
-    var el = document.getElementById(SCREENS[i]);
-    if (el) el.style.display = 'none';
-  }
-  var target = document.getElementById(id);
-  if (!target) return;
-  if (id === 'mapscreen') {
-    target.style.display = 'flex';
-    target.style.flexDirection = 'column';
-    setTimeout(function() { initMap(); }, 200);
-  } else {
-    target.style.display = 'block';
-  }
-  target.scrollTop = 0;
-  var fab = document.getElementById('fab');
-  if (fab) fab.style.display = (id === 'emergency') ? 'block' : 'none';
+.priv-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+.priv-hdr-sub { font-size: 13px; color: #666; }
+.priv-pad { padding: 16px; }
+.priv-section { margin-bottom: 24px; }
+.priv-section-title {
+  font-size: 14px; font-weight: 800; color: white;
+  margin-bottom: 10px; padding-bottom: 8px;
+  border-bottom: 1px solid #2A2A2A;
+}
+.priv-text { font-size: 13px; color: #888; line-height: 1.7; margin-bottom: 10px; }
+.priv-highlight {
+  background: rgba(43,96,82,0.15); border: 1px solid rgba(43,96,82,0.3);
+  border-radius: 14px; padding: 14px 16px; margin-bottom: 12px;
+}
+.priv-highlight p { font-size: 13px; color: #A8D5C2; line-height: 1.6; }
+.priv-highlight strong { color: white; }
+.priv-table { width: 100%; margin-bottom: 12px; }
+.priv-row {
+  display: flex; gap: 10px; padding: 10px 0;
+  border-bottom: 1px solid #1E1E1E; font-size: 12px;
+}
+.priv-row:last-child { border-bottom: none; }
+.priv-row-type { color: white; font-weight: 600; flex: 1; }
+.priv-row-how { color: #888; flex: 1; }
+.priv-row-where { color: var(--emgreen); font-weight: 600; flex: 1; }
+.priv-back-btn {
+  width: 100%; background: var(--green); color: white;
+  border: none; border-radius: 16px; padding: 16px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  margin-bottom: 30px;
 }
 
-function agreeToTerms() {
-  try { localStorage.setItem('anchor_ok', '1'); } catch(e) {}
-  showScreen('daily');
+
+/* ── SURVIVAL BOOK ── */
+#survival { background: #0A0A0A; }
+.surv-hdr {
+  background: linear-gradient(135deg, #1A0A00, #3A1A00);
+  padding: 50px 16px 20px;
 }
-
-function checkConsent() {
-  try {
-    if (localStorage.getItem('anchor_ok') === '1') {
-      showScreen('daily');
-      return;
-    }
-  } catch(e) {}
-  showScreen('consent');
+.surv-hdr-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+.surv-hdr-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 14px; }
+.surv-lang-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+.surv-lang-row::-webkit-scrollbar { display: none; }
+.surv-lang-btn {
+  padding: 6px 12px; border-radius: 100px; border: none;
+  cursor: pointer; font-size: 11px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0;
+  background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
 }
-
-function setGreeting() {
-  var h = new Date().getHours();
-  var g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-  var el = document.getElementById('greetTxt');
-  if (el) el.textContent = g + ' - Auckland, NZ';
+.surv-lang-btn.active { background: var(--orange); color: white; }
+.surv-pad { padding: 16px; }
+.surv-cats { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
+.surv-cats::-webkit-scrollbar { display: none; }
+.surv-cat {
+  padding: 8px 16px; border-radius: 100px; border: none;
+  cursor: pointer; font-size: 12px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0;
 }
-
-function updateClock() {
-  var n = new Date();
-  var p = function(x) { return String(x).padStart(2,'0'); };
-  var el = document.getElementById('emClock');
-  if (el) el.textContent = p(n.getHours()) + ':' + p(n.getMinutes()) + ':' + p(n.getSeconds());
+.surv-cat.active { background: var(--orange); color: white; }
+.surv-cat.inactive { background: #1A1A1A; color: #666; border: 1px solid #2A2A2A; }
+.surv-card {
+  background: #141414; border: 1px solid #2A2A2A;
+  border-radius: 18px; overflow: hidden; margin-bottom: 12px; cursor: pointer;
 }
-
-function showToast(msg) {
-  var el = document.getElementById('toastEl');
-  if (!el) return;
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(function() { el.classList.remove('show'); }, 2800);
+.surv-card-head { display: flex; align-items: center; gap: 14px; padding: 16px; }
+.surv-card-ico {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; flex-shrink: 0;
 }
-
-function showDropCover() {
-  var p = document.getElementById('dropCoverPanel');
-  if (p) p.style.display = p.style.display === 'none' ? 'block' : 'none';
+.surv-card-info { flex: 1; }
+.surv-card-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 3px; }
+.surv-card-sub { font-size: 12px; color: #666; }
+.surv-card-arr { font-size: 20px; color: #444; }
+.surv-body { display: none; border-top: 1px solid #1E1E1E; }
+.surv-body.open { display: block; }
+.surv-rule { display: flex; gap: 14px; padding: 14px 16px; border-bottom: 1px solid #1E1E1E; align-items: flex-start; }
+.surv-rule:last-child { border-bottom: none; }
+.surv-rule-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; flex-shrink: 0; color: white;
 }
-
-function initMap() {
-  if (mapReady) {
-    if (myMap) myMap.invalidateSize();
-    return;
-  }
-  if (!window.L) { setTimeout(initMap, 500); return; }
-  mapReady = true;
-  // Fix map container height
-  var mapEl = document.getElementById('map');
-  if (mapEl) {
-    var screenH = window.innerHeight;
-    mapEl.style.height = (screenH - 280) + 'px';
-  }
-  layers = {
-    hosp: L.layerGroup(),
-    fam: L.layerGroup(),
-    shel: L.layerGroup(),
-    dang: L.layerGroup(),
-    route: L.layerGroup()
-  };
-  myMap = L.map('map', {zoomControl:true, attributionControl:false}).setView([uLat, uLng], 14);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(myMap);
-  Object.values(layers).forEach(function(l) { l.addTo(myMap); });
-  if (navigator.geolocation) {
-    showToast('Finding your location...');
-    navigator.geolocation.getCurrentPosition(
-      function(pos) {
-        uLat = pos.coords.latitude;
-        uLng = pos.coords.longitude;
-        myMap.setView([uLat, uLng], 14);
-        addMarkers();
-        loadHospitals();
-        var s = document.getElementById('mapStatus');
-        if (s) s.textContent = 'Live location - Real hospitals from OpenStreetMap';
-      },
-      function() {
-        addMarkers();
-        loadHospitals();
-        var s = document.getElementById('mapStatus');
-        if (s) s.textContent = 'Auckland area - Enable GPS for live location';
-      },
-      {timeout: 8000}
-    );
-  } else {
-    addMarkers();
-    loadHospitals();
-  }
-}
-
-function mkIcon(emoji, color, size) {
-  return L.divIcon({
-    html: '<div style="background:' + color + ';color:white;border-radius:50%;width:' + size + 'px;height:' + size + 'px;display:flex;align-items:center;justify-content:center;font-size:' + Math.floor(size*0.5) + 'px;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.5);">' + emoji + '</div>',
-    iconSize: [size, size],
-    iconAnchor: [size/2, size/2],
-    className: ''
-  });
-}
-
-function addMarkers() {
-  var youIcon = L.divIcon({
-    html: '<div style="width:20px;height:20px;background:#30D158;border-radius:50%;border:3px solid white;box-shadow:0 0 12px rgba(48,209,88,0.8);"></div>',
-    iconSize: [20,20], iconAnchor: [10,10], className: ''
-  });
-  L.marker([uLat, uLng], {icon: youIcon}).addTo(myMap)
-    .bindPopup('<div class="lp"><h3>You</h3><p>Live GPS location</p></div>');
-  var fam = [
-    {lat: uLat+0.005, lng: uLng+0.006, n: 'Liam (Son)', t: 'Safe at school', c: '#30D158'},
-    {lat: uLat-0.004, lng: uLng-0.007, n: 'David (Partner)', t: 'Last seen 18 min ago', c: '#FFD60A'},
-    {lat: uLat+0.002, lng: uLng+0.012, n: 'Margaret', t: 'Needs assistance', c: '#FF3B30'}
-  ];
-  fam.forEach(function(f) {
-    L.marker([f.lat, f.lng], {icon: mkIcon('F', f.c, 30)}).addTo(layers.fam)
-      .bindPopup('<div class="lp"><h3>' + f.n + '</h3><p>' + f.t + '</p></div>');
-  });
-  var shels = [
-    {lat: uLat+0.012, lng: uLng-0.008, n: 'Community Emergency Shelter', t: 'Capacity: 500 people'},
-    {lat: uLat-0.009, lng: uLng+0.015, n: 'Recreation Centre Shelter', t: 'Capacity: 300 people'},
-    {lat: uLat+0.018, lng: uLng+0.010, n: 'School Emergency Shelter', t: 'Capacity: 200 people'}
-  ];
-  shels.forEach(function(s) {
-    L.marker([s.lat, s.lng], {icon: mkIcon('S', '#2B6052', 32)}).addTo(layers.shel)
-      .bindPopup('<div class="lp"><h3>' + s.n + '</h3><p>' + s.t + '</p><p class="open">OPEN</p></div>');
-  });
-  L.circle([uLat-0.006, uLng-0.003], {
-    color: '#FF3B30', fillColor: '#FF3B30', fillOpacity: 0.12,
-    weight: 2, dashArray: '6,4', radius: 400
-  }).addTo(layers.dang)
-    .bindPopup('<div class="lp"><h3>Danger Zone</h3><p>Structural damage - Avoid this area</p></div>');
-  L.polyline([
-    [uLat, uLng], [uLat+0.004, uLng+0.003],
-    [uLat+0.008, uLng+0.005], [uLat+0.012, uLng-0.008]
-  ], {color: '#30D158', weight: 4, opacity: 0.85, dashArray: '10,6'}).addTo(layers.route);
-  setTimeout(function() { myMap.invalidateSize(); }, 300);
-}
-
-function loadHospitals() {
-  showToast('Loading real hospitals...');
-  var r = 0.05;
-  var q = '[out:json][timeout:15];(node["amenity"~"hospital|clinic|doctors|pharmacy"](' +
-    (uLat-r) + ',' + (uLng-r) + ',' + (uLat+r) + ',' + (uLng+r) + ');' +
-    'way["amenity"~"hospital|clinic"](' +
-    (uLat-r) + ',' + (uLng-r) + ',' + (uLat+r) + ',' + (uLng+r) + '););out center 20;';
-  fetch('https://overpass-api.de/api/interpreter', {
-    method: 'POST',
-    body: 'data=' + encodeURIComponent(q)
-  })
-  .then(function(res) { return res.json(); })
-  .then(function(data) {
-    layers.hosp.clearLayers();
-    var count = 0;
-    data.elements.forEach(function(el) {
-      var lat = el.lat || (el.center && el.center.lat);
-      var lng = el.lon || (el.center && el.center.lon);
-      if (!lat || !lng) return;
-      var name = (el.tags && el.tags.name) ? el.tags.name : 'Medical Facility';
-      var type = (el.tags && el.tags.amenity) ? el.tags.amenity : 'healthcare';
-      var label = type === 'hospital' ? 'Hospital' : type === 'clinic' ? 'Clinic' : type === 'doctors' ? 'Doctor' : type === 'pharmacy' ? 'Pharmacy' : 'Medical';
-      L.marker([lat, lng], {icon: mkIcon('H', '#FFD60A', 32)}).addTo(layers.hosp)
-        .bindPopup('<div class="lp"><h3>' + name + '</h3><p>' + label + '</p><p class="open">OPEN</p></div>');
-      count++;
-    });
-    if (count > 0) {
-      showToast(count + ' real hospitals loaded!');
-      var s = document.getElementById('mapStatus');
-      if (s) s.textContent = 'Live - ' + count + ' hospitals from OpenStreetMap';
-    }
-  })
-  .catch(function() {
-    showToast('Offline - cached locations shown');
-    var fb = [
-      {lat: uLat-0.015, lng: uLng+0.008, n: 'Middlemore Hospital', t: 'Major Hospital - 24hr ED'},
-      {lat: uLat+0.020, lng: uLng-0.012, n: 'Local Medical Centre', t: 'Medical Centre'}
-    ];
-    fb.forEach(function(h) {
-      L.marker([h.lat, h.lng], {icon: mkIcon('H', '#FFD60A', 32)}).addTo(layers.hosp)
-        .bindPopup('<div class="lp"><h3>' + h.n + '</h3><p>' + h.t + '</p></div>');
-    });
-  });
-}
-
-function centreMap() {
-  if (myMap) { myMap.setView([uLat, uLng], 14); showToast('Centred on your location'); }
-}
-
-function toggleLayer(type, btn) {
-  if (!myMap || !layers[type]) {
-    showToast('Open map first');
-    return;
-  }
-  layerVis[type] = !layerVis[type];
-  if (layerVis[type]) {
-    layers[type].addTo(myMap);
-    btn.classList.remove('foff');
-    btn.classList.add(type === 'dang' ? 'fon-red' : 'fon');
-    showToast('Layer shown');
-  } else {
-    myMap.removeLayer(layers[type]);
-    btn.classList.remove('fon', 'fon-red');
-    btn.classList.add('foff');
-    showToast('Layer hidden');
-  }
-}
-
-var emergNums = {
-  NZ: {flag: '&#127722;', name: 'New Zealand', num: '111'},
-  US: {flag: '&#127482;&#127480;', name: 'United States', num: '911'},
-  GB: {flag: '&#127468;&#127463;', name: 'United Kingdom', num: '999'},
-  AU: {flag: '&#127462;&#127482;', name: 'Australia', num: '000'},
-  FR: {flag: '&#127467;&#127479;', name: 'France', num: '18'},
-  DE: {flag: '&#127465;&#127466;', name: 'Germany', num: '112'},
-  JP: {flag: '&#127471;&#127477;', name: 'Japan', num: '110'},
-  DEFAULT: {flag: '&#127757;', name: 'International', num: '112'}
-};
-var detectedNum = '111';
-
-function detectCountry() {
-  var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  var c = 'DEFAULT';
-  if (tz.indexOf('Auckland') > -1 || tz.indexOf('Pacific/Auckland') > -1) c = 'NZ';
-  else if (tz.indexOf('America') > -1) c = 'US';
-  else if (tz.indexOf('London') > -1) c = 'GB';
-  else if (tz.indexOf('Sydney') > -1 || tz.indexOf('Melbourne') > -1) c = 'AU';
-  else if (tz.indexOf('Paris') > -1) c = 'FR';
-  else if (tz.indexOf('Berlin') > -1) c = 'DE';
-  else if (tz.indexOf('Tokyo') > -1) c = 'JP';
-  var info = emergNums[c];
-  var flagEl = document.getElementById('cFlag');
-  var nameEl = document.getElementById('cName');
-  var numEl = document.getElementById('cNum');
-  var btnEl = document.getElementById('callBtn');
-  if (flagEl) flagEl.innerHTML = info.flag;
-  if (nameEl) nameEl.textContent = info.name;
-  if (numEl) numEl.textContent = 'Emergency: ' + info.num;
-  if (btnEl) btnEl.textContent = 'Call ' + info.num + ' - Emergency Services';
-  detectedNum = info.num;
-}
-
-function openSOS() {
-  document.getElementById('sosModal').classList.add('open');
-  detectCountry();
-}
-
-function closeSOS() {
-  document.getElementById('sosModal').classList.remove('open');
-}
-
-function callEmergency() {
-  window.location.href = 'tel:' + detectedNum;
-  closeSOS();
-}
-
-function shareLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(pos) {
-      var la = pos.coords.latitude.toFixed(6);
-      var lo = pos.coords.longitude.toFixed(6);
-      var msg = encodeURIComponent('SOS ANCHOR ALERT - I need help! My location: https://maps.google.com/?q=' + la + ',' + lo);
-      window.location.href = 'sms:?body=' + msg;
-      closeSOS();
-      showToast('Location shared with contacts!');
-    }, function() {
-      showToast('Please enable location access first');
-    });
-  }
-}
-
-document.getElementById('sosModal').addEventListener('click', function(e) {
-  if (e.target === document.getElementById('sosModal')) closeSOS();
-});
-
-function checkStep(el, mission) {
-  var check = el.querySelector('.mis-step-check');
-  var txt = el.querySelector('.mis-step-txt');
-  if (!check || !txt) return;
-  var isChecked = check.classList.contains('checked');
-  if (isChecked) {
-    check.classList.remove('checked');
-    txt.classList.remove('checked');
-    missionSteps[mission].checked--;
-  } else {
-    check.classList.add('checked');
-    txt.classList.add('checked');
-    missionSteps[mission].checked++;
-  }
-  updateMissionProgress(mission);
-}
-
-function updateMissionProgress(mission) {
-  var data = missionSteps[mission];
-  if (!data) return;
-  var pct = Math.round((data.checked / data.total) * 100);
-  var bar = document.getElementById('bar-' + mission);
-  var txt = document.getElementById('txt-' + mission);
-  var pctEl = document.getElementById('pct-' + mission);
-  var btn = document.getElementById('btn-' + mission);
-  if (bar) bar.style.width = pct + '%';
-  if (txt) txt.textContent = data.checked + ' of ' + data.total + ' complete';
-  if (pctEl) pctEl.textContent = pct + '%';
-  if (btn) {
-    if (data.checked >= data.total) {
-      btn.disabled = false;
-      btn.textContent = 'Claim Badge and XP!';
-    } else {
-      btn.disabled = true;
-      btn.textContent = 'Complete Mission';
-    }
-  }
-}
-
-function completeMission(mission, name, xp) {
-  totalXP += xp;
-  var xpEl = document.getElementById('xpLabel');
-  var barEl = document.getElementById('xpBar');
-  if (xpEl) xpEl.textContent = totalXP + ' XP';
-  if (barEl) barEl.style.width = Math.min(100, Math.round((totalXP / 500) * 100)) + '%';
-  var card = document.getElementById('mis-' + mission);
-  if (card) {
-    card.classList.remove('active-mis');
-    card.classList.add('done-mis');
-  }
-  var xpBadge = document.getElementById('xp-' + mission);
-  if (xpBadge) {
-    xpBadge.classList.add('done');
-    xpBadge.textContent = xp + ' XP earned!';
-  }
-  var btn = document.getElementById('btn-' + mission);
-  if (btn) btn.style.display = 'none';
-  showToast(name + ' badge earned! +' + xp + ' XP');
-}
-
-function showAddMember() {
-  var form = document.getElementById('addMemberForm');
-  var btn = document.querySelector('.cc-add-btn');
-  if (form) form.style.display = 'block';
-  if (btn) btn.style.display = 'none';
-}
-
-function hideAddMember() {
-  var form = document.getElementById('addMemberForm');
-  var btn = document.querySelector('.cc-add-btn');
-  if (form) form.style.display = 'none';
-  if (btn) btn.style.display = 'block';
-}
-
-function addMember() {
-  var name = document.getElementById('newName').value.trim();
-  var address = document.getElementById('newAddress').value.trim();
-  var phone = document.getElementById('newPhone').value.trim();
-  if (!name) { showToast('Please enter a name'); return; }
-  var container = document.getElementById('newMembers');
-  var div = document.createElement('div');
-  div.style.cssText = 'background:#141414;border:1px solid rgba(48,209,88,0.3);border-radius:18px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;';
-  div.innerHTML = '<div style="width:48px;height:48px;border-radius:50%;background:#1A2A1A;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;position:relative;">' +
-    '&#128100;<div style="position:absolute;bottom:0;right:0;width:13px;height:13px;border-radius:50%;background:#30D158;border:2px solid #141414;"></div></div>' +
-    '<div style="flex:1;"><div style="font-size:15px;font-weight:700;color:white;margin-bottom:3px;">' + name + '</div>' +
-    (address ? '<div style="font-size:12px;color:#666;margin-bottom:4px;">' + address + '</div>' : '') +
-    '</div>' +
-    (phone ? '<button onclick="window.location.href=\'tel:' + phone + '\'" style="background:#30D158;color:white;border:none;border-radius:10px;padding:8px 12px;font-size:11px;font-weight:700;cursor:pointer;">Call</button>' : '');
-  container.appendChild(div);
-  document.getElementById('newName').value = '';
-  document.getElementById('newAddress').value = '';
-  document.getElementById('newPhone').value = '';
-  hideAddMember();
-  var total = document.getElementById('ccTotal');
-  if (total) total.textContent = parseInt(total.textContent) + 1;
-  showToast(name + ' added to Care Circle!');
-}
-
-function saveSettings() {
-  try {
-    var d = {
-      name: document.getElementById('inputName').value,
-      phone: document.getElementById('inputPhone').value,
-      location: document.getElementById('inputLocation').value,
-      c1name: document.getElementById('c1name').value,
-      c1phone: document.getElementById('c1phone').value,
-      c2name: document.getElementById('c2name').value,
-      c2phone: document.getElementById('c2phone').value
-    };
-    localStorage.setItem('anchor_settings', JSON.stringify(d));
-    showToast('Settings saved!');
-  } catch(e) { showToast('Settings saved to device'); }
-}
-
-function loadSettings() {
-  try {
-    var raw = localStorage.getItem('anchor_settings');
-    if (!raw) return;
-    var d = JSON.parse(raw);
-    if (d.name) document.getElementById('inputName').value = d.name;
-    if (d.phone) document.getElementById('inputPhone').value = d.phone;
-    if (d.location) document.getElementById('inputLocation').value = d.location;
-    if (d.c1name) document.getElementById('c1name').value = d.c1name;
-    if (d.c1phone) document.getElementById('c1phone').value = d.c1phone;
-    if (d.c2name) document.getElementById('c2name').value = d.c2name;
-    if (d.c2phone) document.getElementById('c2phone').value = d.c2phone;
-  } catch(e) {}
-}
-
-function clearData() {
-  if (confirm('Delete all Anchor data from this device?')) {
-    try { localStorage.clear(); } catch(e) {}
-    showToast('All data cleared');
-    setTimeout(function() { showScreen('consent'); }, 1500);
-  }
-}
-
-function toggleSetting(btn) {
-  btn.classList.toggle('on');
-  showToast(btn.classList.contains('on') ? 'Setting enabled' : 'Setting disabled');
-}
-
-function selectLang(btn) {
-  document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('selected'); });
-  btn.classList.add('selected');
-  showToast('Language set: ' + btn.textContent);
-}
-
-function openComms(app) {
-  var urls = {whatsapp: 'https://wa.me/', telegram: 'https://t.me/', signal: 'https://signal.me/', viber: 'viber://chat'};
-  window.open(urls[app] || 'https://wa.me/', '_blank');
-  showToast('Opening ' + app + '...');
-}
-
-function toggleFA(card) {
-  var body = card.querySelector('.fa-card-body');
-  var arr = card.querySelector('.fa-card-arr');
-  var isOpen = body.classList.contains('open');
-  document.querySelectorAll('.fa-card-body').forEach(function(b) { b.classList.remove('open'); });
-  document.querySelectorAll('.fa-card-arr').forEach(function(a) { a.textContent = '\u203a'; });
-  if (!isOpen) { body.classList.add('open'); arr.textContent = '\u2303'; }
-}
-
-function filterFACat(cat, btn) {
-  document.querySelectorAll('.fa-cat').forEach(function(b) { b.className = 'fa-cat inactive'; });
-  btn.className = 'fa-cat active';
-  document.querySelectorAll('.fa-card').forEach(function(card) {
-    card.style.display = (cat === 'all' || card.getAttribute('data-cat') === cat) ? 'block' : 'none';
-  });
-}
-
-function toggleSurv(card) {
-  var body = card.querySelector('.surv-body');
-  var arr = card.querySelector('.surv-card-arr');
-  var isOpen = body.classList.contains('open');
-  document.querySelectorAll('.surv-body').forEach(function(b) { b.classList.remove('open'); });
-  document.querySelectorAll('.surv-card-arr').forEach(function(a) { a.textContent = '\u203a'; });
-  if (!isOpen) { body.classList.add('open'); arr.textContent = '\u2303'; }
-}
-
-function survCat(cat, btn) {
-  document.querySelectorAll('.surv-cat').forEach(function(b) { b.className = 'surv-cat inactive'; });
-  btn.className = 'surv-cat active';
-  document.querySelectorAll('.surv-card').forEach(function(card) {
-    card.style.display = (cat === 'all' || card.getAttribute('data-cat') === cat) ? 'block' : 'none';
-  });
-}
-
-// INIT
-setGreeting();
-setInterval(updateClock, 1000);
-updateClock();
-loadSettings();
-
-// Animate mission bars
-setTimeout(function() {
-  document.querySelectorAll('.mbar[data-w]').forEach(function(b) {
-    var w = b.getAttribute('data-w');
-    b.style.transition = 'width 1s ease';
-    b.style.width = w;
-  });
-}, 800);
-
-// Consent button
-document.addEventListener('DOMContentLoaded', function() {
-  var btn = document.getElementById('agreeBtn');
-  if (btn) {
-    btn.addEventListener('click', agreeToTerms);
-    btn.addEventListener('touchend', function(e) { e.preventDefault(); agreeToTerms(); });
-  }
-  checkConsent();
-});
-
-// Fallback if DOMContentLoaded already fired
-if (document.readyState !== 'loading') {
-  var btn2 = document.getElementById('agreeBtn');
-  if (btn2 && !btn2._bound) {
-    btn2._bound = true;
-    btn2.addEventListener('click', agreeToTerms);
-    btn2.addEventListener('touchend', function(e) { e.preventDefault(); agreeToTerms(); });
-  }
-  checkConsent();
-}
-</script>
-</body>
-</html>
+.surv-rule-txt { flex: 1; }
+.surv-rule-cmd { font-size: 15px; font-weight: 800; color: white; margin-bottom: 4px; }
+.surv-rule-desc { font-size: 12px; color: #888; line-height: 1.5; }
+.surv-warning {
+  background: r
