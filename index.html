@@ -1,122 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Anchor — Emergency Safety App</title>
-<meta name="description" content="A digital survival companion for every human being on earth.">
-<meta name="theme-color" content="#2B6052">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anchor Safety</title>
 
-<style>
-/* ------------------- RESET & ROOT ------------------- */
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-:root {
-  --green: #2B6052;
-  --orange: #E8845A;
-  --cream: #F4F0E8;
-  --dark: #1A1A18;
-  --muted: #7A7A70;
-  --border: #E0DDD4;
-  --red: #FF3B30;
-  --yellow: #FFD60A;
-  --emgreen: #30D158;
-  --embg: #0A0A0A;
-  --emsurf: #141414;
-}
-html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; height: 100%; overflow: hidden; background: #000; }
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f2f2f;
+      color: white;
+      text-align: center;
+    }
 
-/* ------------------- SCREENS ------------------- */
-.screen { position: absolute; top:0; left:0; right:0; bottom:0; overflow-y:auto; display:none; padding-bottom:80px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
-.screen.active { display:block; }
-#mapscreen.active { display:flex; flex-direction:column; padding-bottom:0; }
+    header {
+      padding: 20px;
+      background: linear-gradient(135deg, #1c4d4d, #0f2f2f);
+    }
 
-/* ------------------- HERO / BADGES ------------------- */
-.hero { background: linear-gradient(135deg, #2B6052, #1A3D30); padding: 52px 20px 24px; position: relative; overflow:hidden; }
-.hero::after { content: '⚓'; position:absolute; right:-20px; top:-20px; font-size:130px; opacity:0.05; pointer-events:none; }
-.hero-greet { font-size:13px; color:rgba(255,255,255,0.55); margin-bottom:4px; }
-.hero-title { font-size:26px; font-weight:800; color:#fff; line-height:1.2; margin-bottom:14px; }
-.hero-title em { font-style:italic; color:#A8D5C2; }
-.hero-badge { display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); border-radius:100px; padding:7px 14px; font-size:12px; color:rgba(255,255,255,0.8); font-weight:500; }
-.badge-dot { width:7px; height:7px; background:#A8D5C2; border-radius:50%; }
+    h1 {
+      margin: 10px 0;
+      font-size: 28px;
+    }
 
-/* ------------------- BUTTONS ------------------- */
-.btn-green { background:var(--green); color:#fff; border:none; border-radius:100px; padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer; }
+    .level {
+      background: rgba(255,255,255,0.2);
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin-top: 10px;
+    }
 
-/* ------------------- MAP ------------------- */
-#map { flex:1; min-height:0; z-index:1; }
+    .container {
+      padding: 20px;
+    }
 
-/* ------------------- SOS ------------------- */
-.sos-btn { width:100%; background:linear-gradient(135deg, #CC1A1A, #FF3B30); border:none; border-radius:18px; padding:20px; margin-bottom:14px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:transform 0.15s; }
-.sos-btn:active { transform:scale(0.97); }
-.sos-ring { width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; animation:sos 2s infinite; }
-@keyframes sos { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
-.sos-txt { flex:1; text-align:left; }
-.sos-title { font-size:20px; font-weight:800; color:white; }
-.sos-sub { font-size:12px; color:rgba(255,255,255,0.7); margin-top:3px; }
-.sos-arr { font-size:22px; color:rgba(255,255,255,0.4); }
+    button {
+      padding: 15px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      margin: 10px;
+      background: #00b894;
+      color: white;
+      cursor: pointer;
+    }
 
-/* ------------------- TOAST ------------------- */
-.toast { position:fixed; top:60px; left:50%; transform:translateX(-50%) translateY(-20px); background:#1A1A1A; color:white; padding:12px 20px; border-radius:100px; font-size:13px; font-weight:600; z-index:600; opacity:0; transition:all 0.3s; pointer-events:none; }
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    button:hover {
+      background: #00a383;
+    }
 
-</style>
+    .box {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- DAILY SCREEN -->
-<div id="daily" class="screen active">
-  <div class="hero">
-    <div class="hero-greet">Welcome back,</div>
-    <div class="hero-title">Anchor <em>Safety</em></div>
-    <div class="hero-badge"><span class="badge-dot"></span> Level 4</div>
+  <header>
+    <h1>🚨 Anchor Safety</h1>
+    <div class="level">Level 4</div>
+  </header>
+
+  <div class="container">
+
+    <div class="box">
+      <h2>📍 Open Location</h2>
+      <p>Tap below to open your location in Google Maps</p>
+      <button onclick="openMaps()">Open Google Maps</button>
+    </div>
+
+    <div class="box">
+      <h2>👨‍👩‍👧 Family Check</h2>
+      <p>Simple check-in feature coming next</p>
+    </div>
+
   </div>
-  <div class="pad">
-    <button class="btn-green" onclick="alert('Check family / missions')">Check Family & Missions</button>
-  </div>
-</div>
 
-<!-- MAP SCREEN -->
-<div id="mapscreen" class="screen">
-  <div id="map"></div>
-</div>
+  <script>
+    function openMaps() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
 
-<!-- SOS BUTTON -->
-<button class="sos-btn" onclick="triggerSOS()">
-  <div class="sos-ring">🚨</div>
-  <div class="sos-txt">
-    <div class="sos-title">SOS Alert</div>
-    <div class="sos-sub">Send emergency alert to family</div>
-  </div>
-  <div class="sos-arr">➔</div>
-</button>
-
-<div class="toast" id="toast">SOS Sent!</div>
-
-<script>
-// ------------------- LEAFLET MAP -------------------
-var map = L.map('map').setView([0, 0], 2);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19 }).addTo(map);
-
-// ------------------- SOS -------------------
-function triggerSOS(){
-  document.getElementById('toast').classList.add('show');
-  setTimeout(()=>{document.getElementById('toast').classList.remove('show');},2000);
-}
-
-// ------------------- SWITCH SCREENS -------------------
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-// ------------------- GOOGLE MAP LINK EXAMPLE -------------------
-function openInGoogleMaps(lat,lng){
-  window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,'_blank');
-}
-</script>
+          const url = `https://www.google.com/maps?q=${lat},${lon}`;
+          window.open(url, "_blank");
+        }, function() {
+          alert("Location access denied.");
+        });
+      } else {
+        alert("Geolocation not supported.");
+      }
+    }
+  </script>
 
 </body>
 </html>
