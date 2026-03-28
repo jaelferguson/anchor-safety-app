@@ -45,6 +45,8 @@
       background: #00b894;
       color: white;
       cursor: pointer;
+      width: 90%;
+      max-width: 300px;
     }
 
     button:hover {
@@ -71,13 +73,13 @@
 
     <div class="box">
       <h2>📍 Open Location</h2>
-      <p>Tap below to open your location in Google Maps</p>
       <button onclick="openMaps()">Open Google Maps</button>
     </div>
 
     <div class="box">
-      <h2>👨‍👩‍👧 Family Check</h2>
-      <p>Simple check-in feature coming next</p>
+      <h2>👨‍👩‍👧 Care Circle</h2>
+      <p>Send "I'm safe" message with your location</p>
+      <button onclick="sendSafe()">I'm Safe</button>
     </div>
 
   </div>
@@ -91,6 +93,27 @@
 
           const url = `https://www.google.com/maps?q=${lat},${lon}`;
           window.open(url, "_blank");
+        }, function() {
+          alert("Location access denied.");
+        });
+      } else {
+        alert("Geolocation not supported.");
+      }
+    }
+
+    function sendSafe() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          const message = encodeURIComponent(
+            "I'm safe. My location: https://www.google.com/maps?q=" + lat + "," + lon
+          );
+
+          const smsLink = `sms:?body=${message}`;
+          window.location.href = smsLink;
+
         }, function() {
           alert("Location access denied.");
         });
