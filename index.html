@@ -1,135 +1,219 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Anchor Safety</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anchor Safety</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f2f2f;
-      color: white;
-      text-align: center;
-    }
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#0b0f0d;
+  color:white;
+}
 
-    header {
-      padding: 20px;
-      background: linear-gradient(135deg, #1c4d4d, #0f2f2f);
-    }
+/* SCREENS */
+.screen { display:none; padding:15px; }
+.active { display:block; }
 
-    h1 {
-      margin: 10px 0;
-      font-size: 28px;
-    }
+/* CARD */
+.card {
+  background:#151a18;
+  padding:15px;
+  border-radius:15px;
+  margin-top:15px;
+}
 
-    .level {
-      background: rgba(255,255,255,0.2);
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 20px;
-      margin-top: 10px;
-    }
+/* HEADER */
+.header {
+  background: linear-gradient(#1f5f4a,#0f3d2e);
+  padding:20px;
+  border-radius:15px;
+}
 
-    .container {
-      padding: 20px;
-    }
+/* BUTTONS */
+.btn {
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  color:white;
+  margin-top:10px;
+}
+.green { background:#2ecc71; }
+.red { background:#e74c3c; }
 
-    button {
-      padding: 15px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      margin: 10px;
-      background: #00b894;
-      color: white;
-      cursor: pointer;
-      width: 90%;
-      max-width: 300px;
-    }
+/* NAV */
+.nav {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:#111;
+  display:flex;
+  justify-content:space-around;
+  padding:10px 0;
+}
 
-    button:hover {
-      background: #00a383;
-    }
+.nav button {
+  background:none;
+  border:none;
+  color:white;
+}
 
-    .box {
-      background: rgba(255,255,255,0.1);
-      padding: 20px;
-      border-radius: 15px;
-      margin-top: 20px;
-    }
-  </style>
+/* PROGRESS */
+.bar {
+  height:6px;
+  background:#333;
+  border-radius:10px;
+  margin-top:10px;
+}
+.fill {
+  height:6px;
+  background:#2ecc71;
+  width:75%;
+  border-radius:10px;
+}
+
+/* INPUT */
+input {
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
+  border:none;
+}
+</style>
+
+<script>
+function show(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
+  document.getElementById(screen).classList.add('active')
+}
+</script>
+
 </head>
 
 <body>
 
-  <header>
-    <h1>🚨 Anchor Safety</h1>
-    <div class="level">Level 4</div>
-  </header>
+<!-- LOGIN -->
+<div id="login" class="screen active">
+  <div class="card">
+    <h2>Anchor Safety</h2>
+    <input placeholder="Email">
+    <input type="password" placeholder="Password">
+    <button class="btn green" onclick="show('home')">Login</button>
 
-  <div class="container">
-    <div class="box">
-  <h2>⭐ Go Premium</h2>
-  <p>Unlock family alerts & multiple contacts</p>
-  <button onclick="upgrade()">Upgrade Now</button>
-    </div>
+    <p style="font-size:12px;margin-top:10px;">
+      ⚠ No personal data is collected or stored.<br>
+      This app is for safety support only.
+    </p>
+  </div>
+</div>
 
-    <div class="box">
-      <h2>📍 Open Location</h2>
-      <button onclick="openMaps()">Open Google Maps</button>
-    </div>
-
-    <div class="box">
-      <h2>👨‍👩‍👧 Care Circle</h2>
-      <p>Send "I'm safe" message with your location</p>
-      <button onclick="sendSafe()">I'm Safe</button>
-    </div>
-
+<!-- HOME -->
+<div id="home" class="screen">
+  <div class="header">
+    <h2>Your family is ready.</h2>
+    <p>No active alerts · Monitoring zones</p>
   </div>
 
-  <script>
-    function openMaps() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
+  <div class="card" style="background:#5a1a1a;">
+    🚨 Call Emergency Services FIRST (111 NZ)
+  </div>
 
-          const url = `https://www.google.com/maps?q=${lat},${lon}`;
-          window.open(url, "_blank");
-        }, function() {
-          alert("Location access denied.");
-        });
-      } else {
-        alert("Geolocation not supported.");
-      }
-    }
+  <div class="card">
+    <h3>Preparedness Score</h3>
+    <p>75% Ready</p>
+    <div class="bar"><div class="fill"></div></div>
+  </div>
 
-    function sendSafe() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
+  <div class="card">
+    <h3>Official Alerts</h3>
+    <button class="btn green"
+      onclick="window.open('https://www.civildefence.govt.nz','_blank')">
+      View Government Warnings
+    </button>
+  </div>
+</div>
 
-          const message = encodeURIComponent(
-            "I'm safe. My location: https://www.google.com/maps?q=" + lat + "," + lon
-          );
+<!-- MAP -->
+<div id="map" class="screen">
+  <div class="card">
+    <h2>📍 Safety Map</h2>
+    <p>Find your location</p>
+    <button class="btn green"
+      onclick="navigator.geolocation.getCurrentPosition(
+        p=>alert('Lat: '+p.coords.latitude),
+        e=>alert('Enable location')
+      )">
+      Enable Location
+    </button>
+  </div>
+</div>
 
-          const smsLink = `sms:?body=${message}`;
-          window.location.href = smsLink;
+<!-- FAMILY -->
+<div id="family" class="screen">
+  <div class="card">
+    <h2>Care Circle</h2>
 
-        }, function() {
-          alert("Location access denied.");
-        });
-      } else {
-        alert("Geolocation not supported.");
-      }
-    }
-    function upgrade() {
-  alert("Premium version coming soon 🚀");
-    }
-  </script>
+    <p>Margaret (Safe)</p>
+    <button class="btn green" onclick="alert('Calling Margaret')">Call</button>
+
+    <p>Liam (Safe)</p>
+    <button class="btn green">Call</button>
+
+    <p>David (Away)</p>
+    <button class="btn green">Call</button>
+
+    <p>Mrs Chen (Needs Help)</p>
+    <button class="btn red">Help</button>
+  </div>
+</div>
+
+<!-- MISSIONS -->
+<div id="missions" class="screen">
+  <div class="card">
+    🎒 Pack the Go-Bag (+150 XP)
+  </div>
+
+  <div class="card">
+    🔦 Blackout Drill (+200 XP)
+  </div>
+
+  <div class="card">
+    📋 Emergency Plan ✔ Done
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="screen">
+  <div class="card">
+    <h2>Settings</h2>
+    <p>Name: </p>
+    <p>Location: </p>
+  </div>
+
+  <div class="card">
+    <h3>Contact Us</h3>
+    <p>anchorsafety.nz@gmail.com</p>
+  </div>
+
+  <div class="card">
+    <h3>Privacy</h3>
+    <p>No data is collected or stored.</p>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button onclick="show('home')">🏠</button>
+  <button onclick="show('map')">🗺️</button>
+  <button onclick="show('family')">👨‍👩‍👧</button>
+  <button onclick="show('missions')">🏅</button>
+  <button onclick="show('settings')">⚙️</button>
+</div>
 
 </body>
 </html>
+
+
+
