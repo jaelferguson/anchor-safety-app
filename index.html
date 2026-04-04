@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anchor Safety.org</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Anchor Safety . org</title>
     
     <style>
         :root {
@@ -61,17 +64,6 @@
         .premium { background: linear-gradient(#f1c40f, #e67e22); color: #111; font-weight: bold; }
         .install-btn { background: #f1c40f; color: #111; font-weight: bold; }
 
-        input {
-            width: 100%;
-            padding: 14px;
-            margin: 8px 0;
-            border-radius: 12px;
-            border: none;
-            font-size: 16px;
-            background: #2a3631;
-            color: white;
-        }
-
         .nav {
             position: fixed;
             bottom: 0;
@@ -100,49 +92,15 @@
         ul, ol { padding-left: 22px; }
         li { margin: 10px 0; }
         h2, h3 { margin: 0 0 14px 0; }
-
-        .privacy {
-            font-size: 13px;
-            text-align: center;
-            opacity: 0.8;
-            margin-top: 20px;
-        }
-        
-        .benefit { 
-            margin: 12px 0; 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-        }
     </style>
 </head>
 
 <body>
 
-    <!-- LOGIN SCREEN -->
-    <div id="login" class="screen active">
-        <div class="card">
-            <h2 style="text-align:center;">Anchor Safety</h2>
-            <p style="text-align:center; margin:12px 0 24px; opacity:0.9;">
-                Your family’s safety anchor
-            </p>
-            
-            <input type="email" placeholder="Email" id="email">
-            <input type="password" placeholder="Password" id="password">
-            
-            <button class="btn green" onclick="loginAndEnter()">Enter App</button>
-            
-            <p class="privacy">
-                No personal data is collected.<br>
-                Safety support only.
-            </p>
-        </div>
-    </div>
-
     <!-- HOME SCREEN -->
-    <div id="home" class="screen">
+    <div id="home" class="screen active">
         <div class="header">
-            <h2>You are prepared</h2>
+            <h2>Your family is ready</h2>
             <p>No active alerts • Auckland, NZ</p>
         </div>
 
@@ -167,7 +125,7 @@
 
         <div class="card">
             <h3>🔒 Go Premium</h3>
-            <p>Unlock Care Circle, personalized plans, offline maps & more.</p>
+            <p>Unlock Care Circle, personalized plans & more.</p>
             <button class="btn premium" onclick="show('premium')">Upgrade for NZ$6.99/month</button>
         </div>
 
@@ -181,7 +139,7 @@
         <!-- PWA Install -->
         <div class="card" id="installCard" style="display:none;">
             <h3>📱 Install Anchor Safety</h3>
-            <p style="margin:8px 0 12px;">Add to your home screen for quick offline access.</p>
+            <p>Add to home screen for quick access — works offline.</p>
             <button id="installBtn" class="btn install-btn">📲 Install App Now</button>
         </div>
     </div>
@@ -190,24 +148,16 @@
     <div id="premium" class="screen">
         <div class="card">
             <h2>🔒 Anchor Safety Premium</h2>
-            <p style="margin-bottom:20px;">Support the app and unlock powerful family safety tools.</p>
-            
-            <div class="benefit">✅ Unlimited Care Circle & family location sharing</div>
-            <div class="benefit">✅ Personalized preparedness score & custom plans</div>
-            <div class="benefit">✅ Advanced offline guides & maps</div>
-            <div class="benefit">✅ Priority emergency alerts & reminders</div>
-            <div class="benefit">✅ Ad-free + early access to new features</div>
-            
+            <p>Support development and unlock family safety tools.</p>
+            <div style="margin:12px 0;">✅ Family Care Circle & location sharing</div>
+            <div style="margin:12px 0;">✅ Personalized preparedness tools</div>
+            <div style="margin:12px 0;">✅ Advanced offline features</div>
             <button class="btn premium" onclick="subscribeNow()">Subscribe — NZ$6.99 / month</button>
             <button class="btn green" onclick="show('home')">Maybe later</button>
-            
-            <p style="font-size:13px; text-align:center; margin-top:20px; opacity:0.8;">
-                Cancel anytime. Helps keep Anchor Safety free for everyone.
-            </p>
         </div>
     </div>
 
-    <!-- GO BAG SCREEN -->
+    <!-- GO BAG -->
     <div id="gobag" class="screen">
         <div class="card">
             <h2>🎒 Go Bag Essentials</h2>
@@ -217,7 +167,7 @@
                 <li>First aid kit + medications</li>
                 <li>Flashlight + spare batteries</li>
                 <li>Phone charger & power bank</li>
-                <li>Important documents (in waterproof bag)</li>
+                <li>Important documents (waterproof)</li>
                 <li>Warm clothes & rain jacket</li>
                 <li>Glasses / contact lenses</li>
             </ul>
@@ -225,65 +175,40 @@
         </div>
     </div>
 
-    <!-- FIRE SCREEN -->
+    <!-- EMERGENCY GUIDES -->
     <div id="fire" class="screen">
         <div class="card">
             <h2>🔥 Fire Emergency</h2>
-            <ol>
-                <li>Get out immediately</li>
-                <li>Stay low to avoid smoke</li>
-                <li>Call 111 once safe</li>
-                <li>Do NOT go back inside</li>
-                <li>Alert others on the way out</li>
-            </ol>
+            <ol><li>Get out immediately</li><li>Stay low to avoid smoke</li><li>Call 111 once safe</li><li>Do NOT go back inside</li><li>Alert others</li></ol>
             <button class="btn green" onclick="show('home')">← Back to Home</button>
         </div>
     </div>
 
-    <!-- EARTHQUAKE SCREEN -->
     <div id="earthquake" class="screen">
         <div class="card">
             <h2>🌍 Earthquake</h2>
-            <ol>
-                <li>Drop, Cover, Hold On</li>
-                <li>Stay inside until shaking stops</li>
-                <li>Move away from windows & heavy objects</li>
-                <li>Check for injuries after shaking stops</li>
-                <li>Expect aftershocks</li>
-            </ol>
+            <ol><li>Drop, Cover, Hold On</li><li>Stay inside until shaking stops</li><li>Move away from windows</li><li>Check injuries after</li><li>Expect aftershocks</li></ol>
             <button class="btn green" onclick="show('home')">← Back to Home</button>
         </div>
     </div>
 
-    <!-- FLOOD SCREEN -->
     <div id="flood" class="screen">
         <div class="card">
             <h2>🌊 Flood</h2>
-            <ol>
-                <li>Move to higher ground immediately</li>
-                <li>Avoid walking or driving through flood water</li>
-                <li>Turn off electricity & gas if possible</li>
-                <li>Follow official evacuation orders</li>
-            </ol>
+            <ol><li>Move to higher ground</li><li>Avoid flood water</li><li>Turn off electricity if safe</li><li>Follow official orders</li></ol>
             <button class="btn green" onclick="show('home')">← Back to Home</button>
         </div>
     </div>
 
-    <!-- VOLCANO SCREEN -->
     <div id="volcano" class="screen">
         <div class="card">
             <h2>🌋 Volcanic Eruption</h2>
-            <ol>
-                <li>Stay indoors with windows closed</li>
-                <li>Wear a mask if you must go outside</li>
-                <li>Avoid areas with ash fall</li>
-                <li>Follow Civil Defence evacuation orders</li>
-            </ol>
+            <ol><li>Stay indoors with windows closed</li><li>Wear mask if outside</li><li>Avoid ash areas</li><li>Follow Civil Defence</li></ol>
             <button class="btn green" onclick="show('home')">← Back to Home</button>
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- NAV -->
     <div class="nav">
         <button onclick="show('home')">🏠<br>Home</button>
         <button onclick="show('gobag')">🎒<br>Go Bag</button>
@@ -292,33 +217,23 @@
     <script>
         let deferredPrompt;
 
-        // Show screen
         function show(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById(screenId);
-            if (target) target.classList.add('active');
+            document.getElementById(screenId).classList.add('active');
         }
 
-        // Call 111
         function call111() {
-            if (confirm("This will open your phone’s dialer to call 111.\n\nContinue?")) {
+            if (confirm("Open phone dialer to call 111?\n\nContinue?")) {
                 window.location.href = "tel:111";
             }
         }
 
-        // Login → Home
-        function loginAndEnter() {
-            show('home');
-        }
-
-        // Fake Subscribe (replace with real Stripe later)
         function subscribeNow() {
-            alert("💳 Payment flow would open here.\n\nIn the next step we'll connect real Stripe Checkout for subscriptions.");
-            // Example: window.location.href = "https://buy.stripe.com/your-link-here";
+            alert("Payment would open here (Stripe in future version).");
         }
 
-        // PWA Install Logic
-        function setupPWAInstall() {
+        // PWA Install
+        function setupPWA() {
             const installCard = document.getElementById('installCard');
             const installBtn = document.getElementById('installBtn');
 
@@ -331,14 +246,17 @@
             installBtn.addEventListener('click', () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then((choice) => {
-                        if (choice.outcome === 'accepted') {
-                            installCard.style.display = 'none';
-                        }
+                    deferredPrompt.userChoice.then(() => {
+                        installCard.style.display = 'none';
                         deferredPrompt = null;
                     });
                 }
             });
+        }
 
-            window.addEventListener('appinstalled', () => {
-                installCard.style.display = 'none
+        document.addEventListener('DOMContentLoaded', () => {
+            setupPWA();
+        });
+    </script>
+</body>
+                                                                                                                                                                                </html>
