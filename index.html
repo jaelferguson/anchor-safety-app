@@ -8,39 +8,42 @@
 body {
   margin:0;
   font-family: Arial;
-  background:#0b0f0d;
+  background:#0f1a17;
   color:white;
 }
 
 /* SCREENS */
-.screen { display:none; padding:15px; }
+.screen { display:none; padding:16px; }
 .active { display:block; }
-
-/* CARD */
-.card {
-  background:#151a18;
-  padding:15px;
-  border-radius:15px;
-  margin-top:15px;
-}
 
 /* HEADER */
 .header {
-  background: linear-gradient(#1f5f4a,#0f3d2e);
+  background: linear-gradient(#2e7d6b,#1b4d3e);
   padding:20px;
-  border-radius:15px;
+  border-radius:20px;
 }
 
-/* BUTTONS */
+/* CARD */
+.card {
+  background:#182320;
+  padding:16px;
+  border-radius:18px;
+  margin-top:14px;
+}
+
+/* BUTTON */
 .btn {
-  padding:10px;
+  width:100%;
+  padding:14px;
   border:none;
-  border-radius:10px;
+  border-radius:14px;
   color:white;
   margin-top:10px;
+  font-size:16px;
 }
 .green { background:#2ecc71; }
 .red { background:#e74c3c; }
+.blue { background:#3498db; }
 
 /* NAV */
 .nav {
@@ -53,34 +56,17 @@ body {
   padding:10px 0;
 }
 
-.nav button {
-  background:none;
-  border:none;
-  color:white;
-}
-
-/* PROGRESS */
-.bar {
-  height:6px;
-  background:#333;
-  border-radius:10px;
-  margin-top:10px;
-}
-.fill {
-  height:6px;
-  background:#2ecc71;
-  width:75%;
-  border-radius:10px;
-}
-
 /* INPUT */
 input {
   width:100%;
-  padding:10px;
+  padding:12px;
   margin-top:10px;
-  border-radius:10px;
+  border-radius:12px;
   border:none;
 }
+
+/* LIST */
+li { margin:8px 0; }
 </style>
 
 <script>
@@ -100,11 +86,10 @@ function show(screen){
     <h2>Anchor Safety</h2>
     <input placeholder="Email">
     <input type="password" placeholder="Password">
-    <button class="btn green" onclick="show('home')">Login</button>
+    <button class="btn green" onclick="show('home')">Enter App</button>
 
     <p style="font-size:12px;margin-top:10px;">
-      ⚠ No personal data is collected or stored.<br>
-      This app is for safety support only.
+      No personal data is collected. Safety support only.
     </p>
   </div>
 </div>
@@ -112,108 +97,117 @@ function show(screen){
 <!-- HOME -->
 <div id="home" class="screen">
   <div class="header">
-    <h2>Your family is ready.</h2>
-    <p>No active alerts · Monitoring zones</p>
+    <h2>You are prepared</h2>
+    <p>No active alerts</p>
   </div>
 
   <div class="card" style="background:#5a1a1a;">
     🚨 Call Emergency Services FIRST (111 NZ)
+    <button class="btn red" onclick="alert('Dial 111')">Call 111</button>
   </div>
 
   <div class="card">
-    <h3>Preparedness Score</h3>
-    <p>75% Ready</p>
-    <div class="bar"><div class="fill"></div></div>
+    <h3>Emergency Guides</h3>
+    <button class="btn blue" onclick="show('fire')">🔥 Fire</button>
+    <button class="btn blue" onclick="show('earthquake')">🌍 Earthquake</button>
+    <button class="btn blue" onclick="show('flood')">🌊 Flood</button>
+    <button class="btn blue" onclick="show('volcano')">🌋 Volcano</button>
+  </div>
+
+  <div class="card">
+    <h3>Go Bag Checklist</h3>
+    <button class="btn green" onclick="show('gobag')">View Checklist</button>
   </div>
 
   <div class="card">
     <h3>Official Alerts</h3>
     <button class="btn green"
       onclick="window.open('https://www.civildefence.govt.nz','_blank')">
-      View Government Warnings
+      Open Government Alerts
     </button>
   </div>
 </div>
 
-<!-- MAP -->
-<div id="map" class="screen">
+<!-- GO BAG -->
+<div id="gobag" class="screen">
   <div class="card">
-    <h2>📍 Safety Map</h2>
-    <p>Find your location</p>
-    <button class="btn green"
-      onclick="navigator.geolocation.getCurrentPosition(
-        p=>alert('Lat: '+p.coords.latitude),
-        e=>alert('Enable location')
-      )">
-      Enable Location
-    </button>
+    <h2>🎒 Go Bag Essentials</h2>
+    <ul>
+      <li>Water (3 days)</li>
+      <li>Non-perishable food</li>
+      <li>First aid kit</li>
+      <li>Flashlight + batteries</li>
+      <li>Phone charger / power bank</li>
+      <li>Important documents</li>
+      <li>Warm clothes</li>
+    </ul>
+    <button class="btn green" onclick="show('home')">Back</button>
   </div>
 </div>
 
-<!-- FAMILY -->
-<div id="family" class="screen">
+<!-- FIRE -->
+<div id="fire" class="screen">
   <div class="card">
-    <h2>Care Circle</h2>
-
-    <p>Margaret (Safe)</p>
-    <button class="btn green" onclick="alert('Calling Margaret')">Call</button>
-
-    <p>Liam (Safe)</p>
-    <button class="btn green">Call</button>
-
-    <p>David (Away)</p>
-    <button class="btn green">Call</button>
-
-    <p>Mrs Chen (Needs Help)</p>
-    <button class="btn red">Help</button>
+    <h2>🔥 Fire Emergency</h2>
+    <ol>
+      <li>Get out immediately</li>
+      <li>Stay low (avoid smoke)</li>
+      <li>Call 111</li>
+      <li>Do NOT go back inside</li>
+    </ol>
+    <button class="btn green" onclick="show('home')">Back</button>
   </div>
 </div>
 
-<!-- MISSIONS -->
-<div id="missions" class="screen">
+<!-- EARTHQUAKE -->
+<div id="earthquake" class="screen">
   <div class="card">
-    🎒 Pack the Go-Bag (+150 XP)
-  </div>
-
-  <div class="card">
-    🔦 Blackout Drill (+200 XP)
-  </div>
-
-  <div class="card">
-    📋 Emergency Plan ✔ Done
+    <h2>🌍 Earthquake</h2>
+    <ol>
+      <li>Drop, Cover, Hold</li>
+      <li>Stay inside</li>
+      <li>Move away from windows</li>
+      <li>Check injuries after</li>
+    </ol>
+    <button class="btn green" onclick="show('home')">Back</button>
   </div>
 </div>
 
-<!-- SETTINGS -->
-<div id="settings" class="screen">
+<!-- FLOOD -->
+<div id="flood" class="screen">
   <div class="card">
-    <h2>Settings</h2>
-    <p>Name: </p>
-    <p>Location: </p>
+    <h2>🌊 Flood</h2>
+    <ol>
+      <li>Move to higher ground</li>
+      <li>Avoid flood water</li>
+      <li>Turn off electricity</li>
+      <li>Follow official alerts</li>
+    </ol>
+    <button class="btn green" onclick="show('home')">Back</button>
   </div>
+</div>
 
+<!-- VOLCANO -->
+<div id="volcano" class="screen">
   <div class="card">
-    <h3>Contact Us</h3>
-    <p>anchorsafety.nz@gmail.com</p>
-  </div>
-
-  <div class="card">
-    <h3>Privacy</h3>
-    <p>No data is collected or stored.</p>
+    <h2>🌋 Volcanic Eruption</h2>
+    <ol>
+      <li>Stay indoors</li>
+      <li>Wear mask if outside</li>
+      <li>Avoid ash exposure</li>
+      <li>Follow evacuation orders</li>
+    </ol>
+    <button class="btn green" onclick="show('home')">Back</button>
   </div>
 </div>
 
 <!-- NAV -->
 <div class="nav">
   <button onclick="show('home')">🏠</button>
-  <button onclick="show('map')">🗺️</button>
-  <button onclick="show('family')">👨‍👩‍👧</button>
-  <button onclick="show('missions')">🏅</button>
-  <button onclick="show('settings')">⚙️</button>
+  <button onclick="show('gobag')">🎒</button>
 </div>
 
 </body>
-</html>
-
+  </html>
 
 
