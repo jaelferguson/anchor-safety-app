@@ -6,7 +6,11 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Anchor Safety . org</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2e7d6b">
+    <title>Anchor Safety - NZ</title>
     
     <style>
         :root {
@@ -144,7 +148,7 @@
         </div>
     </div>
 
-    <!-- PREMIUM SCREEN -->
+    <!-- PREMIUM, GO BAG, GUIDES (same as before) -->
     <div id="premium" class="screen">
         <div class="card">
             <h2>🔒 Anchor Safety Premium</h2>
@@ -157,7 +161,6 @@
         </div>
     </div>
 
-    <!-- GO BAG -->
     <div id="gobag" class="screen">
         <div class="card">
             <h2>🎒 Go Bag Essentials</h2>
@@ -175,7 +178,6 @@
         </div>
     </div>
 
-    <!-- EMERGENCY GUIDES -->
     <div id="fire" class="screen">
         <div class="card">
             <h2>🔥 Fire Emergency</h2>
@@ -232,11 +234,19 @@
             alert("Payment would open here (Stripe in future version).");
         }
 
-        // PWA Install
+        // Register Service Worker + PWA Install
         function setupPWA() {
             const installCard = document.getElementById('installCard');
             const installBtn = document.getElementById('installBtn');
 
+            // Register service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(() => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker error:', err));
+            }
+
+            // Install prompt
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
@@ -246,17 +256,15 @@
             installBtn.addEventListener('click', () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then(() => {
-                        installCard.style.display = 'none';
+                    deferredPrompt.userChoice.then((choice) => {
+                        if (choice.outcome === 'accepted') installCard.style.display = 'none';
                         deferredPrompt = null;
                     });
                 }
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            setupPWA();
-        });
+        document.addEventListener('DOMContentLoaded', setupPWA);
     </script>
 </body>
-                                                                                                                                                                                </html>
+            </html>
